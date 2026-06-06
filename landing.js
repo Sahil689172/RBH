@@ -63,32 +63,32 @@
   /* ── Hero word-by-word reveal ── */
   function initHeroAnimations() {
     const words = document.querySelectorAll('.hero-title .word');
-    const revealItems = document.querySelectorAll('.landing-hero .reveal-item');
+    const revealItems = document.querySelectorAll('.hero-support, .hero-actions');
 
     const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
 
     tl.to(words, {
       opacity: 1,
       y: 0,
-      duration: 0.9,
-      stagger: 0.12,
+      duration: 0.85,
+      stagger: 0.09,
     })
       .to(
         revealItems,
         {
           opacity: 1,
           y: 0,
-          duration: 0.8,
-          stagger: 0.15,
+          duration: 0.75,
+          stagger: 0.12,
         },
-        '-=0.4'
+        '-=0.35'
       );
   }
 
   /* ── Scroll reveal for sections ── */
   function initScrollReveals() {
     gsap.utils.toArray('.reveal-item').forEach((el) => {
-      if (el.closest('.landing-hero')) return;
+      if (el.closest('.cinematic-hero')) return;
 
       gsap.to(el, {
         opacity: 1,
@@ -140,10 +140,10 @@
     ScrollTrigger.create({
       trigger: hero,
       start: 'top top',
-      end: '+=600',
+      end: '+=800',
       scrub: true,
       onUpdate: (self) => {
-        gsap.set(hint, { opacity: 1 - self.progress * 2 });
+        gsap.set(hint, { opacity: Math.max(0, 1 - self.progress * 1.5) });
       },
     });
   }
@@ -189,7 +189,7 @@
 
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(196, 165, 116, ${p.a})`;
+        ctx.fillStyle = `rgba(212, 175, 55, ${p.a})`;
         ctx.fill();
       });
       raf = requestAnimationFrame(draw);
