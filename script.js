@@ -1,7 +1,7 @@
 // 1. Constants
 const TOTAL_FRAMES = 192;
 const FRAME_PATH = (i) =>
-  `frames/frame_${String(i + 1).padStart(4, '0')}.png`;
+  `/frames/frame_${String(i + 1).padStart(4, '0')}.png`;
 
 // 2. DOM references
 const canvas      = document.getElementById('canvas');
@@ -12,6 +12,9 @@ const loaderPct   = document.getElementById('loader-percent');
 const loaderFill  = document.getElementById('loader-bar-fill');
 
 // 3. State variables
+const SHOE_Y_OFFSET = 70;
+const SHOE_SCALE = 1.2;
+const SHOE_MAX_WIDTH = 980;
 const images = new Array(TOTAL_FRAMES);
 let frameIndex   = 0;   // current frame to draw
 let needsRender  = true; // dirty flag for rAF loop
@@ -54,10 +57,12 @@ function drawFrame(img) {
   const ch = window.innerHeight;
   const iw = img.naturalWidth;
   const ih = img.naturalHeight;
-  const scale = Math.max(cw / iw, ch / ih);
+  const targetW = Math.min(SHOE_MAX_WIDTH, cw * 0.92);
+  let scale = (targetW / iw) * SHOE_SCALE;
+  if (iw * scale > cw * 0.96) scale = (cw * 0.96) / iw;
   const x = (cw - iw * scale) / 2;
-  const y = (ch - ih * scale) / 2;
-  ctx.fillStyle = '#000';
+  const y = (ch - ih * scale) / 2 + SHOE_Y_OFFSET;
+  ctx.fillStyle = '#050505';
   ctx.fillRect(0, 0, cw, ch);
   ctx.drawImage(img, x, y, iw * scale, ih * scale);
 }

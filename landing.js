@@ -1,91 +1,37 @@
 /**
- * Rahi Boot House — Landing page interactions & animations
- * Uses GSAP (Framer Motion equivalent for this vanilla stack)
- * Does NOT touch scroll-driven canvas animation (script.js)
+ * Rahi Boot House — Homepage animations
+ * Shoe scroll animation lives in script.js (unchanged logic aside from Y offset)
  */
 
 (function () {
   'use strict';
 
+  if (!document.getElementById('loader')) return;
+
   gsap.registerPlugin(ScrollTrigger);
 
-  const navbar = document.getElementById('navbar');
-  const hamburger = document.getElementById('hamburger');
-  const navLinks = document.getElementById('nav-links');
-  const navLinkEls = document.querySelectorAll('.nav-link');
   const loader = document.getElementById('loader');
 
-  /* ── Navbar scroll state ── */
-  function updateNavbar() {
-    navbar.classList.toggle('scrolled', window.scrollY > 40);
-  }
-
-  window.addEventListener('scroll', updateNavbar, { passive: true });
-  updateNavbar();
-
-  /* ── Mobile menu ── */
-  hamburger.addEventListener('click', () => {
-    const open = navLinks.classList.toggle('open');
-    hamburger.classList.toggle('open', open);
-    hamburger.setAttribute('aria-expanded', open);
-  });
-
-  navLinkEls.forEach((link) => {
-    link.addEventListener('click', () => {
-      navLinks.classList.remove('open');
-      hamburger.classList.remove('open');
-      hamburger.setAttribute('aria-expanded', 'false');
-    });
-  });
-
-  /* ── Active nav link (scroll spy) ── */
-  const sections = ['home', 'about', 'brands', 'collection', 'contact'];
-
-  sections.forEach((id) => {
-    const el = document.getElementById(id);
-    if (!el) return;
-
-    ScrollTrigger.create({
-      trigger: el,
-      start: 'top 60%',
-      end: 'bottom 40%',
-      onEnter: () => setActiveNav(id),
-      onEnterBack: () => setActiveNav(id),
-    });
-  });
-
-  function setActiveNav(id) {
-    navLinkEls.forEach((link) => {
-      link.classList.toggle('active', link.dataset.section === id);
-    });
-  }
-
-  /* ── Hero word-by-word reveal ── */
   function initHeroAnimations() {
-    const words = document.querySelectorAll('.hero-title .word');
-    const revealItems = document.querySelectorAll('.hero-support, .hero-actions');
-
     const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
 
-    tl.to(words, {
-      opacity: 1,
-      y: 0,
-      duration: 0.85,
-      stagger: 0.09,
+    tl.from('.hero-label', {
+      opacity: 0,
+      y: 16,
+      duration: 0.7,
     })
-      .to(
-        revealItems,
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.75,
-          stagger: 0.12,
-        },
-        '-=0.35'
+      .from(
+        '.hero-heading, .hero-year',
+        { opacity: 0, y: 18, duration: 0.7, stagger: 0.1 },
+        '-=0.4'
+      )
+      .from(
+        '.reveal-hero:not(.hero-label)',
+        { opacity: 0, y: 18, duration: 0.7, stagger: 0.12 },
+        '-=0.25'
       );
   }
 
-  /* ── Scroll reveal for sections ── */
   function initScrollReveals() {
     gsap.utils.toArray('.reveal-item').forEach((el) => {
       if (el.closest('.cinematic-hero')) return;
@@ -104,7 +50,6 @@
     });
   }
 
-  /* ── Animated counters ── */
   function initCounters() {
     document.querySelectorAll('.trust-number').forEach((el) => {
       const target = parseInt(el.dataset.target, 10);
@@ -131,7 +76,6 @@
     });
   }
 
-  /* ── Scroll hint fade during shoe animation ── */
   function initScrollHint() {
     const hint = document.querySelector('.scroll-hint');
     const hero = document.getElementById('hero');
@@ -148,7 +92,6 @@
     });
   }
 
-  /* ── Subtle particle field ── */
   function initParticles() {
     const canvas = document.getElementById('particles');
     if (!canvas) return;
@@ -186,7 +129,6 @@
         if (p.x > w) p.x = 0;
         if (p.y < 0) p.y = h;
         if (p.y > h) p.y = 0;
-
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
         ctx.fillStyle = `rgba(212, 175, 55, ${p.a})`;
@@ -207,14 +149,12 @@
     window.addEventListener('beforeunload', () => cancelAnimationFrame(raf));
   }
 
-  /* ── Boot after loader finishes ── */
   function bootLanding() {
     initHeroAnimations();
     initScrollReveals();
     initCounters();
     initScrollHint();
     initParticles();
-
     setTimeout(() => ScrollTrigger.refresh(), 300);
   }
 

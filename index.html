@@ -3,14 +3,17 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Rahi Boot House — Trusted Footwear Since 1959</title>
+  <title>Rahi Boot House — Walking With You Since 1959</title>
   <meta name="description" content="Rahi Boot House — School, sports, men's, women's footwear and more. Trusted destination since 1959." />
+  <meta name="theme-color" content="#050505" />
+  <meta name="color-scheme" content="dark" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Outfit:wght@200;300;400;500;600&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="/style.css" />
 </head>
-<body>
+<body data-page="home">
 
   <!-- Loading overlay -->
   <div id="loader">
@@ -24,22 +27,30 @@
   <!-- Navbar -->
   <header id="navbar" class="navbar">
     <div class="navbar-inner">
-      <a href="#home" class="navbar-logo">
+      <a href="/" class="navbar-logo">
         <span class="logo-name">RAHI BOOT HOUSE</span>
         <span class="logo-tagline">Since 1959</span>
       </a>
 
       <nav class="navbar-links" id="nav-links" aria-label="Main navigation">
-        <a href="#home" class="nav-link active" data-section="home">Home</a>
-        <a href="#about" class="nav-link" data-section="about">About</a>
-        <a href="#brands" class="nav-link" data-section="brands">Brands</a>
-        <a href="#collection" class="nav-link" data-section="collection">Collection</a>
-        <a href="#contact" class="nav-link" data-section="contact">Contact</a>
+        <a href="/" class="nav-link" data-nav="home">Home</a>
+        <a href="/about/" class="nav-link" data-nav="about">About</a>
+        <a href="/brands/" class="nav-link" data-nav="brands">Brands</a>
+        <a href="/collection/" class="nav-link" data-nav="collection">Collection</a>
+        <a href="/contact/" class="nav-link" data-nav="contact">Contact</a>
       </nav>
 
       <div class="navbar-actions">
-        <a href="tel:+919876543210" class="btn btn-ghost btn-sm">Call Now</a>
-        <a href="https://wa.me/919876543210" class="btn btn-accent btn-sm" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+        <div class="call-dropdown">
+          <button type="button" class="btn btn-ghost btn-sm call-trigger" aria-expanded="false" aria-haspopup="true">
+            Call Now
+          </button>
+          <div class="call-menu" role="menu">
+            <a href="tel:9826270611" class="call-option" role="menuitem">9826270611</a>
+            <a href="tel:9993325524" class="call-option" role="menuitem">9993325524</a>
+          </div>
+        </div>
+        <a href="https://wa.me/919826270611" class="btn btn-accent btn-sm" target="_blank" rel="noopener noreferrer">WhatsApp</a>
         <button class="hamburger" id="hamburger" aria-label="Toggle menu" aria-expanded="false">
           <span></span>
           <span></span>
@@ -62,17 +73,22 @@
         <canvas id="canvas"></canvas>
 
         <div class="hero-overlay">
-          <div class="hero-top">
+          <div class="hero-copy-top">
+            <p class="hero-label reveal-hero">✦ RAHI BOOT HOUSE ✦</p>
             <h1 class="hero-title" id="hero-title">
-              <span class="word">Trusted</span>
-              <span class="word">Footwear</span>
-              <span class="word">Destination</span>
-              <span class="word">Since</span>
-              <span class="word">1959</span>
+              <span class="hero-heading">Walking With You</span>
+              <span class="hero-year">Since 1959</span>
             </h1>
           </div>
 
-          <div class="hero-bottom">
+          <div class="hero-shoe-zone" aria-hidden="true"></div>
+
+          <div class="hero-copy-bottom">
+            <p class="hero-support reveal-hero">Serving generations of customers with trusted footwear brands.</p>
+            <div class="hero-actions reveal-hero">
+              <a href="/collection/" class="btn btn-primary">Explore Collection</a>
+              <a href="/contact/" class="btn btn-outline">Contact Us</a>
+            </div>
             <div class="scroll-hint" aria-hidden="true">
               <span>Scroll to Explore</span>
               <div class="scroll-arrow">
@@ -81,11 +97,6 @@
                 </svg>
               </div>
             </div>
-            <p class="hero-support reveal-item">Serving generations of customers with trusted footwear brands.</p>
-            <div class="hero-actions reveal-item">
-              <a href="#collection" class="btn btn-primary">Explore Collection</a>
-              <a href="#contact" class="btn btn-outline">Contact Us</a>
-            </div>
           </div>
         </div>
       </section>
@@ -93,15 +104,24 @@
       <div class="hero-transition" aria-hidden="true"></div>
     </section>
 
-    <!-- Trust Section -->
-    <section id="about" class="trust-section">
+    <div class="section-divider" aria-hidden="true"></div>
+
+    <!-- Legacy Section -->
+    <section id="legacy" class="legacy-section">
       <div class="section-container">
         <div class="section-header reveal-item">
           <span class="section-label">Our Legacy</span>
           <h2 class="section-title">Built on Trust</h2>
           <p class="section-subtitle">Three generations of footwear expertise, serving families with care and quality.</p>
         </div>
+      </div>
+    </section>
 
+    <div class="section-divider" aria-hidden="true"></div>
+
+    <!-- Stats Section -->
+    <section id="stats" class="stats-section">
+      <div class="section-container">
         <div class="trust-grid">
           <article class="trust-card reveal-item">
             <span class="trust-number" data-target="65" data-suffix="+">0</span>
@@ -119,12 +139,14 @@
       </div>
     </section>
 
-    <!-- Featured Brands -->
-    <section id="brands" class="brands-section">
+    <div class="section-divider" aria-hidden="true"></div>
+
+    <!-- Brands We Deal In -->
+    <section id="home-brands" class="brands-section">
       <div class="section-container">
         <div class="section-header reveal-item">
           <span class="section-label">Partnerships</span>
-          <h2 class="section-title">Our Trusted Brands</h2>
+          <h2 class="section-title">Brands We Deal In</h2>
           <p class="section-subtitle">Partnering with India's leading footwear brands.</p>
         </div>
       </div>
@@ -146,6 +168,8 @@
             <span class="brand-logo">Abros</span>
             <span class="brand-logo">Glamour</span>
             <span class="brand-logo">Frankie</span>
+            <span class="brand-logo">Lakhani</span>
+            <span class="brand-logo">Spark</span>
           </div>
           <div class="marquee-content" aria-hidden="true">
             <span class="brand-logo">Campus</span>
@@ -162,85 +186,55 @@
             <span class="brand-logo">Abros</span>
             <span class="brand-logo">Glamour</span>
             <span class="brand-logo">Frankie</span>
+            <span class="brand-logo">Lakhani</span>
+            <span class="brand-logo">Spark</span>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Collection Preview -->
-    <section id="collection" class="collection-section">
+    <div class="section-divider" aria-hidden="true"></div>
+
+    <!-- Testimonials -->
+    <section id="testimonials" class="testimonials-section">
       <div class="section-container">
         <div class="section-header reveal-item">
-          <span class="section-label">Categories</span>
-          <h2 class="section-title">Footwear for Every Need</h2>
+          <span class="section-label">Voices of Trust</span>
+          <h2 class="section-title">What Our Customers Say</h2>
         </div>
 
-        <div class="collection-grid">
-          <article class="collection-card reveal-item">
-            <div class="collection-image" style="--card-hue: 30;">
-              <div class="collection-placeholder">
-                <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M8 40c8-4 16-4 24 0s16 4 24 0l-4 12H12L8 40z"/><path d="M16 40c6-8 14-12 24-12s18 4 24 12"/></svg>
-              </div>
-            </div>
-            <h3>School Shoes</h3>
-            <p>Durable, comfortable pairs for every school day.</p>
-          </article>
+        <div class="testimonials-grid">
+          <blockquote class="testimonial-card reveal-item">
+            <p class="testimonial-quote">&ldquo;Three generations of our family have trusted Rahi Boot House. Quality footwear and honest guidance every time.&rdquo;</p>
+            <footer class="testimonial-author">
+              <span class="testimonial-name">Rajesh Mehta</span>
+              <span class="testimonial-meta">Customer since 1998</span>
+            </footer>
+          </blockquote>
 
-          <article class="collection-card reveal-item">
-            <div class="collection-image" style="--card-hue: 200;">
-              <div class="collection-placeholder">
-                <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M8 40c8-4 16-4 24 0s16 4 24 0l-4 12H12L8 40z"/><circle cx="44" cy="28" r="6"/></svg>
-              </div>
-            </div>
-            <h3>Sports Shoes</h3>
-            <p>Performance-ready footwear for active lifestyles.</p>
-          </article>
+          <blockquote class="testimonial-card reveal-item">
+            <p class="testimonial-quote">&ldquo;The best selection of school and sports shoes in town. They always find the perfect fit for my children.&rdquo;</p>
+            <footer class="testimonial-author">
+              <span class="testimonial-name">Priya Sharma</span>
+              <span class="testimonial-meta">Local Parent</span>
+            </footer>
+          </blockquote>
 
-          <article class="collection-card reveal-item">
-            <div class="collection-image" style="--card-hue: 25;">
-              <div class="collection-placeholder">
-                <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M10 42c10-6 20-6 30 0s14 4 20 0l-3 10H13L10 42z"/></svg>
-              </div>
-            </div>
-            <h3>Men's Footwear</h3>
-            <p>Classic and contemporary styles for every occasion.</p>
-          </article>
-
-          <article class="collection-card reveal-item">
-            <div class="collection-image" style="--card-hue: 340;">
-              <div class="collection-placeholder">
-                <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M12 38c8-8 18-10 28-6s16 8 16 8l-2 10H14L12 38z"/></svg>
-              </div>
-            </div>
-            <h3>Women's Footwear</h3>
-            <p>Elegant designs combining comfort and style.</p>
-          </article>
-
-          <article class="collection-card reveal-item">
-            <div class="collection-image" style="--card-hue: 45;">
-              <div class="collection-placeholder">
-                <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M14 44h36l-4-8c-8 0-12-4-14-8s-8-4-14 0l-4 16z"/></svg>
-              </div>
-            </div>
-            <h3>Slippers &amp; Sandals</h3>
-            <p>Easy-wear comfort for home and outdoors.</p>
-          </article>
-
-          <article class="collection-card reveal-item">
-            <div class="collection-image" style="--card-hue: 160;">
-              <div class="collection-placeholder">
-                <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M16 42c6-10 14-14 22-12s12 6 14 12l-2 8H18l-2-8z"/><circle cx="24" cy="30" r="4"/></svg>
-              </div>
-            </div>
-            <h3>Kids Collection</h3>
-            <p>Playful, sturdy footwear for growing feet.</p>
-          </article>
+          <blockquote class="testimonial-card reveal-item">
+            <p class="testimonial-quote">&ldquo;A heritage store that truly understands footwear. Premium brands, fair prices, and warm service.&rdquo;</p>
+            <footer class="testimonial-author">
+              <span class="testimonial-name">Amit Verma</span>
+              <span class="testimonial-meta">Regular Customer</span>
+            </footer>
+          </blockquote>
         </div>
       </div>
     </section>
 
+    <div class="section-divider" aria-hidden="true"></div>
+
     <!-- Call to Action -->
-    <section id="contact" class="cta-section">
+    <section id="home-cta" class="cta-section">
       <div class="cta-glow cta-glow-1"></div>
       <div class="cta-glow cta-glow-2"></div>
       <div class="section-container cta-inner reveal-item">
@@ -248,11 +242,17 @@
         <h2 class="cta-title">Looking for the Perfect Pair?</h2>
         <p class="cta-text">Visit our store or contact us today for expert footwear recommendations tailored to your needs.</p>
         <div class="cta-actions">
-          <a href="tel:+919876543210" class="btn btn-primary btn-lg">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
-            Call Now
-          </a>
-          <a href="https://wa.me/919876543210" class="btn btn-outline btn-lg" target="_blank" rel="noopener noreferrer">
+          <div class="call-dropdown call-dropdown-lg">
+            <button type="button" class="btn btn-primary btn-lg call-trigger" aria-expanded="false" aria-haspopup="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+              Call Now
+            </button>
+            <div class="call-menu" role="menu">
+              <a href="tel:9826270611" class="call-option" role="menuitem">9826270611</a>
+              <a href="tel:9993325524" class="call-option" role="menuitem">9993325524</a>
+            </div>
+          </div>
+          <a href="https://wa.me/919826270611" class="btn btn-outline btn-lg" target="_blank" rel="noopener noreferrer">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.435 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
             WhatsApp
           </a>
@@ -273,7 +273,8 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-  <script src="script.js"></script>
-  <script src="landing.js"></script>
+  <script src="/site.js"></script>
+  <script src="/script.js"></script>
+  <script src="/landing.js"></script>
 </body>
 </html>
