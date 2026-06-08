@@ -1041,9 +1041,9 @@ img, canvas {
   --contact-section-pad: 56px;
   --contact-gap: 24px;
   --contact-card-gap: 16px;
-  --hero-title-gap: 20px;
-  --hero-divider-gap: 40px;
-  --divider-content-gap: 60px;
+  --hero-title-gap: 10px;
+  --hero-divider-gap: 24px;
+  --divider-content-gap: 40px;
   background: #050505;
 }
 
@@ -1069,7 +1069,17 @@ img, canvas {
   position: relative;
   text-align: center;
   overflow: hidden;
-  padding: calc(var(--nav-height) + 1.25rem) 0 0;
+  padding: calc(var(--nav-height) + 0.65rem) 0 0;
+}
+
+.contact-page .page-hero-title {
+  font-size: clamp(2rem, 4.5vw, 3.15rem);
+  margin: 0 0 var(--hero-title-gap);
+}
+
+.contact-page .page-hero-sub {
+  margin: 0 auto;
+  line-height: 1.5;
 }
 
 .contact-hero-divider {
@@ -1121,7 +1131,7 @@ img, canvas {
 }
 
 .contact-page .section-label {
-  margin-bottom: 0.65rem;
+  margin-bottom: 0.4rem;
 }
 
 .contact-page .contact-hero-label {
@@ -1148,7 +1158,7 @@ img, canvas {
 
 .contact-block-title {
   font-family: var(--font-display);
-  font-size: clamp(1.5rem, 2.5vw, 2rem);
+  font-size: clamp(1.65rem, 2.8vw, 2.25rem);
   font-weight: 500;
   color: var(--text-primary);
   margin: 0 0 var(--contact-gap);
@@ -1207,17 +1217,17 @@ img, canvas {
 }
 
 .contact-card-title {
-  font-size: 0.68rem;
+  font-size: 0.74rem;
   font-weight: 500;
   letter-spacing: 0.22em;
   text-transform: uppercase;
   color: var(--gold);
-  margin-bottom: 0.4rem;
+  margin-bottom: 0.45rem;
 }
 
 .contact-address {
   font-style: normal;
-  font-size: 0.9rem;
+  font-size: 1.05rem;
   font-weight: 300;
   line-height: 1.65;
   color: var(--text-secondary);
@@ -1231,7 +1241,7 @@ img, canvas {
 }
 
 .contact-link {
-  font-size: 0.98rem;
+  font-size: 1.12rem;
   font-weight: 400;
   letter-spacing: 0.02em;
   color: var(--text-primary);
@@ -1243,7 +1253,7 @@ img, canvas {
 }
 
 .contact-wa-number {
-  font-size: 0.98rem;
+  font-size: 1.12rem;
   color: var(--text-primary);
   margin-bottom: 0.55rem;
 }
@@ -1253,7 +1263,7 @@ img, canvas {
 }
 
 .contact-text {
-  font-size: 0.9rem;
+  font-size: 1.05rem;
   font-weight: 300;
   color: var(--text-secondary);
   line-height: 1.55;
@@ -1272,7 +1282,7 @@ img, canvas {
 }
 
 .contact-payments li {
-  font-size: 0.88rem;
+  font-size: 1rem;
   font-weight: 300;
   color: var(--text-secondary);
 }
@@ -1294,7 +1304,7 @@ img, canvas {
 .contact-gif-wrap {
   position: relative;
   width: 100%;
-  max-width: 440px;
+  max-width: 360px;
   border-radius: 18px;
   overflow: hidden;
   border: 1px solid var(--border-subtle);
@@ -1836,7 +1846,7 @@ img, canvas {
   }
 
   .contact-gif-wrap {
-    max-width: 380px;
+    max-width: 320px;
   }
 }
 
@@ -1851,7 +1861,7 @@ img, canvas {
   }
 
   .contact-gif-wrap {
-    max-width: min(100%, 360px);
+    max-width: min(100%, 300px);
     margin-inline: auto;
   }
 
