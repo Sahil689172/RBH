@@ -1727,6 +1727,21 @@ img, canvas {
   line-height: 1.7;
 }
 
+.timeline-card-values {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 500;
+  font-style: italic;
+  color: var(--gold);
+  letter-spacing: 0.03em;
+}
+
+.timeline-card-closing {
+  font-family: var(--font-display);
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
 .about-page.js-ready .timeline-dot,
 .about-page.js-ready .timeline-connector,
 .about-page.js-ready .timeline-card,
