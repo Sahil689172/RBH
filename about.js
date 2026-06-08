@@ -1,9 +1,25 @@
 /**
  * About page — hero fade & timeline ScrollTrigger animations
+ *
+ * Timeline GIFs (public2/, one per entry in order):
+ * g1.gif → 1959 | g2.gif → 1970 | g3.gif → 1984 | g4.gif → 1987 | g5.gif → 1990s
+ * g6.gif → 2009 | g7.gif → 2013 | g8.gif → 2024 | g9.gif → Today
  */
 
 (function () {
   'use strict';
+
+  const TIMELINE_GIFS = [
+    'g1.gif',
+    'g2.gif',
+    'g3.gif',
+    'g4.gif',
+    'g5.gif',
+    'g6.gif',
+    'g7.gif',
+    'g8.gif',
+    'g9.gif',
+  ];
 
   const page = document.querySelector('.about-page');
   if (!page) return;
@@ -14,6 +30,22 @@
 
   page.classList.add('js-ready');
   gsap.registerPlugin(ScrollTrigger);
+
+  function isMobileViewport() {
+    return window.matchMedia('(max-width: 767px)').matches;
+  }
+
+  function startGifFloat(gifEl) {
+    if (!gifEl || isMobileViewport()) return;
+
+    gsap.to(gifEl, {
+      y: -8,
+      duration: 3,
+      ease: 'sine.inOut',
+      yoyo: true,
+      repeat: -1,
+    });
+  }
 
   function initHeroFade() {
     gsap.set(['.about-hero-label', '.about-hero .page-hero-title', '.about-hero .page-hero-sub'], {
@@ -51,23 +83,29 @@
     const entries = gsap.utils.toArray('.timeline-entry');
     if (!entries.length) return;
 
-    entries.forEach((entry) => {
+    entries.forEach((entry, index) => {
       const isLeft = entry.classList.contains('timeline-entry--left');
       const dot = entry.querySelector('.timeline-dot');
       const connector = entry.querySelector('.timeline-connector');
       const card = entry.querySelector('.timeline-card');
       const year = entry.querySelector('.timeline-year');
+      const gif = entry.querySelector('.timeline-gif-container');
 
       if (!dot || !connector || !card || !year) return;
 
-      const isMobile = window.matchMedia('(max-width: 767px)').matches;
+      const isMobile = isMobileViewport();
       const xFrom = isMobile || isLeft ? -80 : 80;
       const connectorOrigin = isMobile || !isLeft ? 'left center' : 'right center';
+      const gifXFrom = isLeft ? 80 : -80;
 
       gsap.set(dot, { scale: 0, transformOrigin: 'center center' });
       gsap.set(connector, { scaleX: 0, transformOrigin: connectorOrigin });
       gsap.set(card, { x: xFrom, opacity: 0 });
       gsap.set(year, { y: 14, opacity: 0 });
+
+      if (gif && !isMobile) {
+        gsap.set(gif, { x: gifXFrom, opacity: 0, y: 0 });
+      }
 
       const tl = gsap.timeline({
         scrollTrigger: {
@@ -79,8 +117,30 @@
 
       tl.to(dot, { scale: 1, duration: 0.5, ease: 'power3.out' })
         .to(connector, { scaleX: 1, duration: 0.45, ease: 'power3.out' }, '+=0.1')
-        .to(card, { x: 0, opacity: 1, duration: 0.9, ease: 'power3.out' }, '+=0.1')
-        .to(year, { y: 0, opacity: 1, duration: 0.6, ease: 'power3.out' }, '+=0.1');
+        .to(card, { x: 0, opacity: 1, duration: 0.9, ease: 'power3.out' }, '+=0.1');
+
+      if (gif && !isMobile) {
+        tl.to(
+          gif,
+          {
+            x: 0,
+            opacity: 1,
+            duration: 0.9,
+            ease: 'power3.out',
+            onComplete: () => startGifFloat(gif),
+          },
+          '-=0.75'
+        );
+      }
+
+      tl.to(year, { y: 0, opacity: 1, duration: 0.6, ease: 'power3.out' }, '+=0.1');
+
+      if (TIMELINE_GIFS[index] && entry.dataset.gif) {
+        const expected = `../public2/${TIMELINE_GIFS[index]}`;
+        if (!entry.dataset.gif.endsWith(TIMELINE_GIFS[index])) {
+          console.warn(`Timeline entry ${index + 1}: expected GIF ${TIMELINE_GIFS[index]}`);
+        }
+      }
     });
   }
 

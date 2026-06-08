@@ -12,6 +12,99 @@
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Outfit:wght@200;300;400;500;600&display=swap" rel="stylesheet" />
   <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
   <link rel="stylesheet" href="../style.css" />
+  <style>
+    /* Timeline GIF visuals — scoped to about page (do not edit global style.css) */
+    .about-page .timeline-entry {
+      padding: 1.05rem 0;
+    }
+
+    .about-page .timeline-entries {
+      gap: 0.15rem;
+    }
+
+    .about-page .timeline-col--gif {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      align-self: stretch;
+    }
+
+    .about-page .timeline-entry--left .timeline-col--gif {
+      grid-column: 3;
+    }
+
+    .about-page .timeline-entry--right .timeline-col--gif {
+      grid-column: 1;
+    }
+
+    .about-page .timeline-gif-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .about-page .timeline-gif-glow {
+      position: absolute;
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(212, 175, 55, 0.06) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .about-page .timeline-gif-container {
+      position: relative;
+      z-index: 1;
+      width: 260px;
+      height: 260px;
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid rgba(212, 175, 55, 0.18);
+      box-shadow: 0 0 40px rgba(212, 175, 55, 0.07), 0 8px 32px rgba(0, 0, 0, 0.4);
+      background: rgba(255, 255, 255, 0.02);
+      flex-shrink: 0;
+    }
+
+    .about-page .timeline-gif-container img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      border-radius: 16px;
+    }
+
+    .about-page .timeline-card {
+      position: relative;
+      text-align: left;
+      overflow: hidden;
+    }
+
+    .about-page .timeline-entry--left .timeline-card,
+    .about-page .timeline-entry--right .timeline-card.card-right {
+      text-align: left;
+    }
+
+    .about-page .timeline-card-quote {
+      position: absolute;
+      top: 0.25rem;
+      right: 0.5rem;
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 120px;
+      line-height: 1;
+      color: #D4AF37;
+      opacity: 0.04;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    @media (max-width: 767px) {
+      .about-page .timeline-col--gif {
+        display: none !important;
+      }
+    }
+  </style>
 </head>
 <body data-page="about">
 
@@ -67,10 +160,11 @@
       <div class="section-container timeline-inner">
         <div class="timeline-entries">
 
-          <!-- ENTRY 1 — 1959 -->
-          <article class="timeline-entry timeline-entry--left">
+          <!-- ENTRY 1 — 1959 — g1.gif -->
+          <article class="timeline-entry timeline-entry--left" data-gif="../public2/g1.gif">
             <div class="timeline-col timeline-col--card">
               <div class="timeline-card">
+                <span class="timeline-card-quote" aria-hidden="true">❝</span>
                 <h3 class="timeline-card-title">The Beginning</h3>
                 <div class="timeline-card-body">
                   <p>In 1959, Shri Sita Ram Poply laid the foundation of Rahi Boot House with a simple vision — to provide quality footwear and honest service to the people of Gwalior. What began as a modest footwear shop soon became a trusted destination for families seeking comfort, durability, and value.</p>
@@ -82,19 +176,34 @@
               <span class="timeline-connector"></span>
               <span class="timeline-year">1959</span>
             </div>
-            <div class="timeline-col timeline-col--spacer" aria-hidden="true"></div>
+            <div class="timeline-col timeline-col--gif" aria-hidden="true">
+              <div class="timeline-gif-wrap">
+                <div class="timeline-gif-glow"></div>
+                <div class="timeline-gif-container">
+                  <img src="../public2/g1.gif" alt="" width="260" height="260" loading="lazy" decoding="async" />
+                </div>
+              </div>
+            </div>
           </article>
 
-          <!-- ENTRY 2 — 1970 -->
-          <article class="timeline-entry timeline-entry--right">
-            <div class="timeline-col timeline-col--spacer" aria-hidden="true"></div>
+          <!-- ENTRY 2 — 1970 — g2.gif -->
+          <article class="timeline-entry timeline-entry--right" data-gif="../public2/g2.gif">
+            <div class="timeline-col timeline-col--gif" aria-hidden="true">
+              <div class="timeline-gif-wrap">
+                <div class="timeline-gif-glow"></div>
+                <div class="timeline-gif-container">
+                  <img src="../public2/g2.gif" alt="" width="260" height="260" loading="lazy" decoding="async" />
+                </div>
+              </div>
+            </div>
             <div class="timeline-col timeline-col--axis">
               <span class="timeline-dot"></span>
               <span class="timeline-connector"></span>
               <span class="timeline-year">1970</span>
             </div>
             <div class="timeline-col timeline-col--card">
-              <div class="timeline-card">
+              <div class="timeline-card card-right">
+                <span class="timeline-card-quote" aria-hidden="true">❝</span>
                 <h3 class="timeline-card-title">A Milestone Partnership</h3>
                 <div class="timeline-card-body">
                   <p>A major turning point came in 1970 when Rahi Boot House became associated with Bata, one of India's most respected footwear brands. This partnership strengthened the store's reputation and gave customers access to high-quality footwear from a nationally trusted name.</p>
@@ -104,10 +213,11 @@
             </div>
           </article>
 
-          <!-- ENTRY 3 — 1984 -->
-          <article class="timeline-entry timeline-entry--left">
+          <!-- ENTRY 3 — 1984 — g3.gif -->
+          <article class="timeline-entry timeline-entry--left" data-gif="../public2/g3.gif">
             <div class="timeline-col timeline-col--card">
               <div class="timeline-card">
+                <span class="timeline-card-quote" aria-hidden="true">❝</span>
                 <h3 class="timeline-card-title">Rising From The Ashes</h3>
                 <div class="timeline-card-body">
                   <p>The year 1984 brought one of the greatest challenges in the store's history. During the period of unrest following the assassination of Prime Minister Indira Gandhi, the shop was completely destroyed by fire.</p>
@@ -122,19 +232,34 @@
               <span class="timeline-connector"></span>
               <span class="timeline-year">1984</span>
             </div>
-            <div class="timeline-col timeline-col--spacer" aria-hidden="true"></div>
+            <div class="timeline-col timeline-col--gif" aria-hidden="true">
+              <div class="timeline-gif-wrap">
+                <div class="timeline-gif-glow"></div>
+                <div class="timeline-gif-container">
+                  <img src="../public2/g3.gif" alt="" width="260" height="260" loading="lazy" decoding="async" />
+                </div>
+              </div>
+            </div>
           </article>
 
-          <!-- ENTRY 4 — 1987 -->
-          <article class="timeline-entry timeline-entry--right">
-            <div class="timeline-col timeline-col--spacer" aria-hidden="true"></div>
+          <!-- ENTRY 4 — 1987 — g4.gif -->
+          <article class="timeline-entry timeline-entry--right" data-gif="../public2/g4.gif">
+            <div class="timeline-col timeline-col--gif" aria-hidden="true">
+              <div class="timeline-gif-wrap">
+                <div class="timeline-gif-glow"></div>
+                <div class="timeline-gif-container">
+                  <img src="../public2/g4.gif" alt="" width="260" height="260" loading="lazy" decoding="async" />
+                </div>
+              </div>
+            </div>
             <div class="timeline-col timeline-col--axis">
               <span class="timeline-dot"></span>
               <span class="timeline-connector"></span>
               <span class="timeline-year">1987</span>
             </div>
             <div class="timeline-col timeline-col--card">
-              <div class="timeline-card">
+              <div class="timeline-card card-right">
+                <span class="timeline-card-quote" aria-hidden="true">❝</span>
                 <h3 class="timeline-card-title">A Legacy Passed Forward</h3>
                 <div class="timeline-card-body">
                   <p>As the business continued to grow, the responsibility of carrying forward its values was passed from the first generation to the second generation of the Poply family.</p>
@@ -144,10 +269,11 @@
             </div>
           </article>
 
-          <!-- ENTRY 5 — 1990s -->
-          <article class="timeline-entry timeline-entry--left">
+          <!-- ENTRY 5 — 1990s — g5.gif -->
+          <article class="timeline-entry timeline-entry--left" data-gif="../public2/g5.gif">
             <div class="timeline-col timeline-col--card">
               <div class="timeline-card">
+                <span class="timeline-card-quote" aria-hidden="true">❝</span>
                 <h3 class="timeline-card-title">Serving a Growing City</h3>
                 <div class="timeline-card-body">
                   <p>Throughout the 1990s, Rahi Boot House expanded its collection to meet the changing needs of customers. From school shoes and sports footwear to men's, women's, and children's collections, the store continued to grow while staying true to its values.</p>
@@ -160,19 +286,34 @@
               <span class="timeline-connector"></span>
               <span class="timeline-year">1990s</span>
             </div>
-            <div class="timeline-col timeline-col--spacer" aria-hidden="true"></div>
+            <div class="timeline-col timeline-col--gif" aria-hidden="true">
+              <div class="timeline-gif-wrap">
+                <div class="timeline-gif-glow"></div>
+                <div class="timeline-gif-container">
+                  <img src="../public2/g5.gif" alt="" width="260" height="260" loading="lazy" decoding="async" />
+                </div>
+              </div>
+            </div>
           </article>
 
-          <!-- ENTRY 6 — 2009 -->
-          <article class="timeline-entry timeline-entry--right">
-            <div class="timeline-col timeline-col--spacer" aria-hidden="true"></div>
+          <!-- ENTRY 6 — 2009 — g6.gif -->
+          <article class="timeline-entry timeline-entry--right" data-gif="../public2/g6.gif">
+            <div class="timeline-col timeline-col--gif" aria-hidden="true">
+              <div class="timeline-gif-wrap">
+                <div class="timeline-gif-glow"></div>
+                <div class="timeline-gif-container">
+                  <img src="../public2/g6.gif" alt="" width="260" height="260" loading="lazy" decoding="async" />
+                </div>
+              </div>
+            </div>
             <div class="timeline-col timeline-col--axis">
               <span class="timeline-dot"></span>
               <span class="timeline-connector"></span>
               <span class="timeline-year">2009</span>
             </div>
             <div class="timeline-col timeline-col--card">
-              <div class="timeline-card">
+              <div class="timeline-card card-right">
+                <span class="timeline-card-quote" aria-hidden="true">❝</span>
                 <h3 class="timeline-card-title">Fifty Years of Trust</h3>
                 <div class="timeline-card-body">
                   <p>In 2009, Rahi Boot House proudly celebrated 50 years of service.</p>
@@ -182,10 +323,11 @@
             </div>
           </article>
 
-          <!-- ENTRY 7 — 2013 -->
-          <article class="timeline-entry timeline-entry--left">
+          <!-- ENTRY 7 — 2013 — g7.gif -->
+          <article class="timeline-entry timeline-entry--left" data-gif="../public2/g7.gif">
             <div class="timeline-col timeline-col--card">
               <div class="timeline-card">
+                <span class="timeline-card-quote" aria-hidden="true">❝</span>
                 <h3 class="timeline-card-title">Recognition and Excellence</h3>
                 <div class="timeline-card-body">
                   <p>Years of dedication were recognized when Rahi Boot House received multiple awards and appreciations from leading footwear brands including Bata, Campus, Lakhani, and several others.</p>
@@ -198,19 +340,34 @@
               <span class="timeline-connector"></span>
               <span class="timeline-year">2013</span>
             </div>
-            <div class="timeline-col timeline-col--spacer" aria-hidden="true"></div>
+            <div class="timeline-col timeline-col--gif" aria-hidden="true">
+              <div class="timeline-gif-wrap">
+                <div class="timeline-gif-glow"></div>
+                <div class="timeline-gif-container">
+                  <img src="../public2/g7.gif" alt="" width="260" height="260" loading="lazy" decoding="async" />
+                </div>
+              </div>
+            </div>
           </article>
 
-          <!-- ENTRY 8 — 2024 -->
-          <article class="timeline-entry timeline-entry--right">
-            <div class="timeline-col timeline-col--spacer" aria-hidden="true"></div>
+          <!-- ENTRY 8 — 2024 — g8.gif -->
+          <article class="timeline-entry timeline-entry--right" data-gif="../public2/g8.gif">
+            <div class="timeline-col timeline-col--gif" aria-hidden="true">
+              <div class="timeline-gif-wrap">
+                <div class="timeline-gif-glow"></div>
+                <div class="timeline-gif-container">
+                  <img src="../public2/g8.gif" alt="" width="260" height="260" loading="lazy" decoding="async" />
+                </div>
+              </div>
+            </div>
             <div class="timeline-col timeline-col--axis">
               <span class="timeline-dot"></span>
               <span class="timeline-connector"></span>
               <span class="timeline-year">2024</span>
             </div>
             <div class="timeline-col timeline-col--card">
-              <div class="timeline-card">
+              <div class="timeline-card card-right">
+                <span class="timeline-card-quote" aria-hidden="true">❝</span>
                 <h3 class="timeline-card-title">65 Years of Legacy</h3>
                 <div class="timeline-card-body">
                   <p>In 2024, Rahi Boot House proudly marked 65 years of serving families across Gwalior.</p>
@@ -220,10 +377,11 @@
             </div>
           </article>
 
-          <!-- ENTRY 9 — Today -->
-          <article class="timeline-entry timeline-entry--left">
+          <!-- ENTRY 9 — Today — g9.gif -->
+          <article class="timeline-entry timeline-entry--left" data-gif="../public2/g9.gif">
             <div class="timeline-col timeline-col--card">
               <div class="timeline-card">
+                <span class="timeline-card-quote" aria-hidden="true">❝</span>
                 <h3 class="timeline-card-title">Walking With You Since 1959</h3>
                 <div class="timeline-card-body">
                   <p>More than six decades later, Rahi Boot House continues to serve the people of Gwalior with the same values on which it was founded:</p>
@@ -239,7 +397,14 @@
               <span class="timeline-connector"></span>
               <span class="timeline-year">Today</span>
             </div>
-            <div class="timeline-col timeline-col--spacer" aria-hidden="true"></div>
+            <div class="timeline-col timeline-col--gif" aria-hidden="true">
+              <div class="timeline-gif-wrap">
+                <div class="timeline-gif-glow"></div>
+                <div class="timeline-gif-container">
+                  <img src="../public2/g9.gif" alt="" width="260" height="260" loading="lazy" decoding="async" />
+                </div>
+              </div>
+            </div>
           </article>
 
         </div>
