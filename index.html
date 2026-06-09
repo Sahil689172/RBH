@@ -61,47 +61,61 @@
   </header>
 
   <main>
-    <!-- Cinematic Hero — shoe scroll animation is the centerpiece (#hero / #canvas unchanged) -->
-    <section id="home" class="cinematic-hero">
-      <section id="hero">
-        <div class="hero-bg" aria-hidden="true">
-          <div class="hero-radial"></div>
-          <div class="shoe-spotlight"></div>
-          <canvas id="particles"></canvas>
+    <!-- Scroll-driven shoe story hero -->
+    <section id="hero-story" class="hero-story" aria-label="Rahi Boot House story">
+      <div class="hero-story-pin">
+        <div class="hero-story-bg" aria-hidden="true">
+          <div class="hero-story-radial"></div>
+          <div class="hero-story-glow"></div>
         </div>
 
-        <canvas id="canvas"></canvas>
-
-        <div class="hero-overlay">
-          <div class="hero-copy-top">
-            <p class="hero-label reveal-hero">✦ RAHI BOOT HOUSE ✦</p>
-            <h1 class="hero-title" id="hero-title">
-              <span class="hero-heading">Walking With You</span>
-              <span class="hero-year">Since 1959</span>
-            </h1>
+        <div class="hero-story-layout hero-story-layout--text-left" id="hero-story-layout">
+          <div class="hero-story-text" id="hero-story-text">
+            <article class="story-panel" data-stage="0">
+              <h2 class="story-heading">Walking With You Since 1959</h2>
+              <p class="story-body">For over six decades, Rahi Boot House has been helping generations of families find the perfect pair for every step of life — walking with you <span class="story-kw">since 1959</span>.</p>
+            </article>
+            <article class="story-panel" data-stage="1">
+              <h2 class="story-heading">Built on Trust</h2>
+              <p class="story-body">From school shoes to sports footwear, our commitment to <span class="story-kw">trust</span>, <span class="story-kw">quality</span> and customer satisfaction has remained unchanged since <span class="story-kw">1959</span>.</p>
+            </article>
+            <article class="story-panel" data-stage="2">
+              <h2 class="story-heading">Trusted Brands</h2>
+              <p class="story-body">Featuring leading names including <span class="story-kw">Bata</span>, <span class="story-kw">Campus</span>, <span class="story-kw">Liberty</span>, <span class="story-kw">Red Chief</span>, Paragon, Abros, <span class="story-kw">Lakhani</span>, Spark and many more.</p>
+            </article>
+            <article class="story-panel" data-stage="3">
+              <h2 class="story-heading">Footwear For Every Generation</h2>
+              <p class="story-body">From children taking their first steps to professionals on their daily journey, we have proudly served customers of every age.</p>
+            </article>
+            <article class="story-panel" data-stage="4">
+              <h2 class="story-heading">65 Years of Legacy</h2>
+              <p class="story-body">A family business built on trust, quality and service — <span class="story-kw">65 years</span> of legacy continuing to walk alongside the people of <span class="story-kw">Gwalior</span> since <span class="story-kw">1959</span>.</p>
+            </article>
           </div>
 
-          <div class="hero-shoe-zone" aria-hidden="true"></div>
-
-          <div class="hero-copy-bottom">
-            <p class="hero-support reveal-hero">Serving generations of customers with trusted footwear brands.</p>
-            <div class="hero-actions reveal-hero">
-              <a href="/collection/" class="btn btn-primary">Explore Collection</a>
-              <a href="/contact/" class="btn btn-outline">Contact Us</a>
-            </div>
-            <div class="scroll-hint" aria-hidden="true">
-              <span>Scroll to Explore</span>
-              <div class="scroll-arrow">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                  <path d="M12 5v14M5 12l7 7 7-7"/>
-                </svg>
-              </div>
-            </div>
+          <div class="hero-story-canvas-wrap">
+            <canvas id="hero-canvas" aria-hidden="true"></canvas>
           </div>
         </div>
-      </section>
 
-      <div class="hero-transition" aria-hidden="true"></div>
+        <div class="hero-story-finale" id="hero-finale" aria-hidden="true">
+          <p class="hero-story-finale-label">✦ RAHI BOOT HOUSE ✦</p>
+          <h2 class="hero-story-finale-title">Walking With You Since 1959</h2>
+          <div class="hero-story-finale-actions">
+            <a href="/collection/" class="btn btn-primary">Explore Collection</a>
+            <a href="/contact/" class="btn btn-outline">Contact Us</a>
+          </div>
+        </div>
+
+        <div class="scroll-hint" id="scroll-hint" aria-hidden="true">
+          <span>Scroll to Explore</span>
+          <div class="scroll-arrow">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M12 5v14M5 12l7 7 7-7"/>
+            </svg>
+          </div>
+        </div>
+      </div>
     </section>
 
     <div class="section-divider" aria-hidden="true"></div>
