@@ -887,6 +887,122 @@ img, canvas {
   padding: 0 1.5rem 1.5rem;
 }
 
+/* ── Collection page hero (scroll-velocity) ── */
+.collection-page {
+  background: var(--bg);
+}
+
+.collection-hero {
+  position: relative;
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: calc(var(--nav-height) + 1.5rem) 0 2.5rem;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse 80% 55% at 50% 45%, rgba(212, 175, 55, 0.07) 0%, transparent 65%),
+    var(--bg);
+}
+
+.collection-hero-vignette {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    linear-gradient(to bottom, rgba(5, 5, 5, 0.55) 0%, transparent 22%, transparent 72%, rgba(5, 5, 5, 0.75) 100%),
+    linear-gradient(to right, rgba(5, 5, 5, 0.65) 0%, transparent 18%, transparent 82%, rgba(5, 5, 5, 0.65) 100%);
+}
+
+.collection-velocity-stack {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.85rem, 2.5vw, 1.35rem);
+  width: 100%;
+  padding-block: 0.5rem;
+}
+
+.scroll-velocity {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  margin: 0;
+  line-height: 0.8;
+}
+
+.scroll-velocity-track {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  width: max-content;
+  will-change: transform;
+}
+
+.scroll-velocity-item {
+  position: relative;
+  flex-shrink: 0;
+  width: 9rem;
+  height: 6rem;
+  margin-right: 1.5rem;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid rgba(212, 175, 55, 0.14);
+  background: var(--bg-elevated);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.42);
+}
+
+.scroll-velocity-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.scroll-velocity--text .scroll-velocity-track {
+  align-items: center;
+}
+
+.scroll-velocity--text .scroll-velocity-track span {
+  display: block;
+  flex-shrink: 0;
+  margin-right: 1.5rem;
+  font-family: var(--font-display);
+  font-size: clamp(1.25rem, 3.5vw, 2.25rem);
+  font-weight: 600;
+  letter-spacing: -0.04em;
+  text-transform: uppercase;
+  color: rgba(245, 245, 245, 0.92);
+  white-space: nowrap;
+}
+
+.collection-scroll-room {
+  min-height: 70vh;
+  background: linear-gradient(to bottom, transparent, var(--bg-elevated) 40%, var(--bg));
+}
+
+@media (min-width: 768px) {
+  .scroll-velocity-item {
+    width: 12rem;
+    height: 8rem;
+  }
+}
+
+@media (min-width: 1280px) {
+  .scroll-velocity-item {
+    width: 18rem;
+    height: 12rem;
+    border-radius: 18px;
+  }
+
+  .scroll-velocity--text .scroll-velocity-track span {
+    font-size: 2.5rem;
+  }
+}
+
 /* ── CTA ── */
 .cta-section {
   position: relative;
