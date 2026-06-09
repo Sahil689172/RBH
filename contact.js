@@ -47,19 +47,6 @@
 
   gsap.registerPlugin(ScrollTrigger);
 
-  function initHeroFade() {
-    gsap.set(['.contact-hero-label', '.page-hero-title', '.page-hero-sub'], {
-      opacity: 0,
-      y: 20,
-    });
-
-    gsap
-      .timeline({ defaults: { ease: 'power3.out' } })
-      .to('.contact-hero-label', { opacity: 1, y: 0, duration: 0.65 })
-      .to('.page-hero-title', { opacity: 1, y: 0, duration: 0.75 }, '-=0.35')
-      .to('.page-hero-sub', { opacity: 1, y: 0, duration: 0.7 }, '-=0.45');
-  }
-
   function initScrollReveals() {
     const cardEls = gsap.utils.toArray('.contact-cards .reveal-item');
     if (cardEls.length) {
@@ -94,7 +81,6 @@
     });
   }
 
-  initHeroFade();
   initScrollReveals();
   ScrollTrigger.refresh();
 })();

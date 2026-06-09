@@ -35,8 +35,15 @@
     return window.matchMedia('(max-width: 767px)').matches;
   }
 
+  function stopGifFloat(gifEl) {
+    if (!gifEl) return;
+    gsap.killTweensOf(gifEl);
+    gsap.set(gifEl, { y: 0 });
+  }
+
   function startGifFloat(gifEl) {
     if (!gifEl || isMobileViewport()) return;
+    stopGifFloat(gifEl);
 
     gsap.to(gifEl, {
       y: -8,
@@ -110,8 +117,11 @@
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: entry,
-          start: 'top 80%',
-          toggleActions: 'play none none none',
+          start: 'top 88%',
+          end: 'bottom 12%',
+          toggleActions: 'play reverse play reverse',
+          onLeave: () => stopGifFloat(gif),
+          onLeaveBack: () => stopGifFloat(gif),
         },
       });
 
@@ -128,6 +138,7 @@
             duration: 0.9,
             ease: 'power3.out',
             onComplete: () => startGifFloat(gif),
+            onReverseComplete: () => stopGifFloat(gif),
           },
           '-=0.75'
         );
@@ -158,8 +169,9 @@
       ease: 'power3.out',
       scrollTrigger: {
         trigger: closing,
-        start: 'top 85%',
-        toggleActions: 'play none none none',
+        start: 'top 88%',
+        end: 'bottom 12%',
+        toggleActions: 'play reverse play reverse',
       },
     });
   }

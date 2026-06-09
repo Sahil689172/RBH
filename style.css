@@ -1138,9 +1138,83 @@ img, canvas {
   display: block;
 }
 
+.contact-particle-hero {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.contact-particle-stage {
+  position: relative;
+  width: 100%;
+  max-width: 960px;
+  height: clamp(280px, 42vh, 400px);
+  margin: 0 auto;
+}
+
+.contact-particle-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.contact-particle-fallback {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 0 1rem;
+}
+
+.contact-particle-fallback .contact-hero-label {
+  display: block;
+}
+
+.contact-particle-fallback .page-hero-title {
+  margin: 0 0 var(--hero-title-gap, 10px);
+}
+
+.contact-particle-fallback .page-hero-sub {
+  margin: 0 auto;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .contact-particle-canvas {
+    display: none;
+  }
+
+  .contact-particle-stage {
+    height: auto;
+    min-height: 200px;
+  }
+
+  .contact-particle-fallback {
+    position: static;
+    padding: 1rem 0;
+  }
+}
+
 /* Contact info + GIF grid */
 .contact-info-section {
-  padding: var(--divider-content-gap) 0 var(--contact-gap);
+  padding: calc(var(--nav-height) + 24px) 0 var(--contact-gap);
   background: var(--bg);
 }
 
