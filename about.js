@@ -54,17 +54,70 @@
     });
   }
 
-  function initHeroFade() {
-    gsap.set(['.about-hero-label', '.about-hero .page-hero-title', '.about-hero .page-hero-sub'], {
-      opacity: 0,
-      y: 20,
+  function splitHeroWords(root) {
+    if (!root || root.dataset.splitReady === 'true') return;
+
+    const words = root.textContent.trim().split(/\s+/);
+    root.textContent = '';
+    root.dataset.splitReady = 'true';
+
+    words.forEach((word, index) => {
+      const wrap = document.createElement('span');
+      wrap.className = 'about-hero-word';
+
+      const inner = document.createElement('span');
+      inner.className = 'about-hero-word-inner';
+      inner.textContent = word;
+
+      wrap.appendChild(inner);
+      root.appendChild(wrap);
+
+      if (index < words.length - 1) {
+        root.appendChild(document.createTextNode(' '));
+      }
     });
+  }
+
+  function initHeroFade() {
+    const hero = document.querySelector('.about-hero');
+    if (!hero) return;
+
+    const label = hero.querySelector('.about-hero-label');
+    const labelText = hero.querySelector('.about-hero-label-text');
+    const sparks = hero.querySelectorAll('.about-hero-spark');
+    const title = hero.querySelector('.page-hero-title');
+    const sub = hero.querySelector('.page-hero-sub');
+    const divider = document.querySelector('.about-hero-divider');
+
+    splitHeroWords(title);
+    splitHeroWords(sub);
+
+    const titleWords = title.querySelectorAll('.about-hero-word-inner');
+    const subWords = sub.querySelectorAll('.about-hero-word-inner');
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (reducedMotion) {
+      gsap.set([label, titleWords, subWords, divider], { clearProps: 'all', opacity: 1 });
+      return;
+    }
+
+    gsap.set(label, { opacity: 0 });
+    gsap.set(labelText, { y: 14, opacity: 0, letterSpacing: '0.5em' });
+    gsap.set(sparks, { scale: 0, rotate: -45, opacity: 0, transformOrigin: 'center center' });
+    gsap.set(titleWords, { yPercent: 115, opacity: 0 });
+    gsap.set(subWords, { yPercent: 110, opacity: 0 });
+    if (divider) {
+      gsap.set(divider, { scaleX: 0, opacity: 0, transformOrigin: 'center center' });
+    }
 
     gsap
       .timeline({ defaults: { ease: 'power3.out' } })
-      .to('.about-hero-label', { opacity: 1, y: 0, duration: 0.65 })
-      .to('.about-hero .page-hero-title', { opacity: 1, y: 0, duration: 0.75 }, '-=0.35')
-      .to('.about-hero .page-hero-sub', { opacity: 1, y: 0, duration: 0.7 }, '-=0.45');
+      .to(label, { opacity: 1, duration: 0.4 })
+      .to(sparks, { scale: 1, rotate: 0, opacity: 1, duration: 0.65, stagger: 0.12, ease: 'back.out(2)' }, '-=0.2')
+      .to(labelText, { y: 0, opacity: 1, duration: 0.75, letterSpacing: '0.32em' }, '-=0.45')
+      .to(titleWords, { yPercent: 0, opacity: 1, duration: 0.82, stagger: 0.07 }, '-=0.5')
+      .to(subWords, { yPercent: 0, opacity: 1, duration: 0.72, stagger: 0.035 }, '-=0.58')
+      .to(divider, { scaleX: 1, opacity: 0.6, duration: 1, ease: 'power2.inOut' }, '-=0.4');
   }
 
   function initSpineDraw() {
