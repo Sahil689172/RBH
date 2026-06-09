@@ -11,13 +11,14 @@ const loader      = document.getElementById('loader');
 const loaderPct   = document.getElementById('loader-percent');
 const loaderFill  = document.getElementById('loader-bar-fill');
 
-// 3. State variables
-const SHOE_Y_OFFSET = 70;
-const SHOE_SCALE = 1.2;
-const SHOE_MAX_WIDTH = 980;
+// 3. State variables — viewport padding keeps the full shoe clear of hero copy
+const VIEWPORT_PAD_X = 0.06;
+const VIEWPORT_PAD_TOP = 0.13;
+const VIEWPORT_PAD_BOTTOM = 0.15;
 const images = new Array(TOTAL_FRAMES);
 let frameIndex   = 0;   // current frame to draw
 let needsRender  = true; // dirty flag for rAF loop
+let uniformScale = 1; // same scale for every frame (contain, no crop)
 let rafId        = null;
 let stInstance   = null;
 
@@ -37,7 +38,31 @@ function resizeCanvas() {
   ctx.imageSmoothingEnabled = true;
   ctx.imageSmoothingQuality = 'high';
 
+  computeUniformScale();
   needsRender = true;
+}
+
+// Fit every frame inside the viewport — uniform scale, centered, no cropping
+function computeUniformScale() {
+  const cw = window.innerWidth;
+  const ch = window.innerHeight;
+  const usableW = cw * (1 - VIEWPORT_PAD_X * 2);
+  const usableH = ch * (1 - VIEWPORT_PAD_TOP - VIEWPORT_PAD_BOTTOM);
+
+  let fitScale = Infinity;
+
+  for (let i = 0; i < TOTAL_FRAMES; i++) {
+    const img = images[i];
+    if (!img?.complete || !img.naturalWidth) continue;
+
+    const scale = Math.min(
+      usableW / img.naturalWidth,
+      usableH / img.naturalHeight
+    );
+    fitScale = Math.min(fitScale, scale);
+  }
+
+  uniformScale = Number.isFinite(fitScale) ? fitScale : 1;
 }
 
 // Call resizeCanvas() once on load.
@@ -50,21 +75,22 @@ window.addEventListener('resize', () => {
   ScrollTrigger.refresh();
 });
 
-// 5. drawFrame function — cover scaling, preserves aspect ratio, black fill
+// 5. drawFrame — object-fit: contain behavior, uniform scale, centered
 function drawFrame(img) {
-  if (!img || !img.complete) return;
+  if (!img || !img.complete || !img.naturalWidth) return;
+
   const cw = window.innerWidth;
   const ch = window.innerHeight;
   const iw = img.naturalWidth;
   const ih = img.naturalHeight;
-  const targetW = Math.min(SHOE_MAX_WIDTH, cw * 0.92);
-  let scale = (targetW / iw) * SHOE_SCALE;
-  if (iw * scale > cw * 0.96) scale = (cw * 0.96) / iw;
-  const x = (cw - iw * scale) / 2;
-  const y = (ch - ih * scale) / 2 + SHOE_Y_OFFSET;
+  const dw = iw * uniformScale;
+  const dh = ih * uniformScale;
+  const x = (cw - dw) / 2;
+  const y = (ch - dh) / 2;
+
   ctx.fillStyle = '#050505';
   ctx.fillRect(0, 0, cw, ch);
-  ctx.drawImage(img, x, y, iw * scale, ih * scale);
+  ctx.drawImage(img, x, y, dw, dh);
 }
 
 // 6. rAF render loop — never draw inside ScrollTrigger callback, only set dirty flag there
@@ -155,6 +181,7 @@ function boot() {
     },
     () => {
       // All images loaded
+      computeUniformScale();
       frameIndex  = 0;
       needsRender = true;
       hideLoader();

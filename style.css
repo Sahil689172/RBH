@@ -900,7 +900,8 @@ img, canvas {
   align-items: center;
   justify-content: center;
   padding: calc(var(--nav-height) + 1.5rem) 0 2.5rem;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: visible;
   background:
     radial-gradient(ellipse 80% 55% at 50% 45%, rgba(212, 175, 55, 0.07) 0%, transparent 65%),
     var(--bg);
@@ -929,9 +930,14 @@ img, canvas {
 .scroll-velocity {
   position: relative;
   width: 100%;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: visible;
   margin: 0;
   line-height: 0.8;
+}
+
+.scroll-velocity--text {
+  overflow: hidden;
 }
 
 .scroll-velocity-track {
@@ -945,20 +951,27 @@ img, canvas {
 .scroll-velocity-item {
   position: relative;
   flex-shrink: 0;
-  width: 9rem;
-  height: 6rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 11rem;
+  height: 8.5rem;
   margin-right: 1.5rem;
+  padding: 0.35rem;
   border-radius: 14px;
-  overflow: hidden;
+  overflow: visible;
   border: 1px solid rgba(212, 175, 55, 0.14);
   background: var(--bg-elevated);
   box-shadow: 0 16px 40px rgba(0, 0, 0, 0.42);
 }
 
 .scroll-velocity-item img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
   object-position: center;
 }
 
@@ -986,15 +999,17 @@ img, canvas {
 
 @media (min-width: 768px) {
   .scroll-velocity-item {
-    width: 12rem;
-    height: 8rem;
+    width: 14rem;
+    height: 10.5rem;
+    padding: 0.45rem;
   }
 }
 
 @media (min-width: 1280px) {
   .scroll-velocity-item {
-    width: 18rem;
-    height: 12rem;
+    width: 20rem;
+    height: 15rem;
+    padding: 0.55rem;
     border-radius: 18px;
   }
 
