@@ -1,15 +1,14 @@
 /**
- * Rahi Boot House — Homepage section animations (below hero story)
+ * Rahi Boot House — Homepage section animations (below hero)
  */
 
 (function () {
   'use strict';
 
-  if (!document.getElementById('loader')) return;
+  if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') return;
+  if (!document.querySelector('.reveal-item')) return;
 
   gsap.registerPlugin(ScrollTrigger);
-
-  const loader = document.getElementById('loader');
 
   function initScrollReveals() {
     gsap.utils.toArray('.reveal-item').forEach((el) => {
@@ -61,16 +60,43 @@
     setTimeout(() => ScrollTrigger.refresh(), 300);
   }
 
-  const observer = new MutationObserver(() => {
+  const loader = document.getElementById('loader');
+
+  if (loader) {
+    const observer = new MutationObserver(() => {
+      if (loader.classList.contains('hidden')) {
+        observer.disconnect();
+        bootLanding();
+      }
+    });
+
+    observer.observe(loader, { attributes: true, attributeFilter: ['class'] });
+
     if (loader.classList.contains('hidden')) {
-      observer.disconnect();
       bootLanding();
     }
-  });
+    return;
+  }
 
-  observer.observe(loader, { attributes: true, attributeFilter: ['class'] });
-
-  if (loader.classList.contains('hidden')) {
+  function tryBoot() {
+    if (!document.querySelector('.reveal-item')) return false;
     bootLanding();
+    return true;
+  }
+
+  function scheduleBoot() {
+    if (tryBoot()) return;
+
+    const root = document.getElementById('root') || document.body;
+    const observer = new MutationObserver(() => {
+      if (tryBoot()) observer.disconnect();
+    });
+    observer.observe(root, { childList: true, subtree: true });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', scheduleBoot);
+  } else {
+    scheduleBoot();
   }
 })();
