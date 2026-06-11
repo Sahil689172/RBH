@@ -13,7 +13,7 @@
 
   function initScrollReveals() {
     gsap.utils.toArray('.reveal-item').forEach((el) => {
-      if (el.closest('.hero-story')) return;
+      if (el.closest('#hero-scroll-section') || el.closest('#hero-cta')) return;
 
       gsap.to(el, {
         opacity: 1,

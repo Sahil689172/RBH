@@ -9,9 +9,10 @@
   <meta name="color-scheme" content="dark" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Outfit:wght@200;300;400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Outfit:wght@200;300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet" />
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
   <link rel="stylesheet" href="/style.css" />
+  <link rel="stylesheet" href="/hero.css" />
 </head>
 <body data-page="home">
 
@@ -61,60 +62,52 @@
   </header>
 
   <main>
-    <!-- Scroll-driven shoe story hero -->
-    <section id="hero-story" class="hero-story" aria-label="Rahi Boot House story">
-      <div class="hero-story-pin">
-        <div class="hero-story-bg" aria-hidden="true">
-          <div class="hero-story-radial"></div>
-          <div class="hero-story-glow"></div>
+    <section id="hero-scroll-section" aria-label="Rahi Boot House story">
+      <div id="hero-sticky">
+        <canvas id="hero-canvas"></canvas>
+        <div id="scroll-progress-bar"></div>
+
+        <div class="hero-beat" id="beat-1">
+          <span class="beat-eyebrow">+ Rahi Boot House +</span>
+          <h1 class="beat-headline">Walking With You<br>Since 1959</h1>
+          <p class="beat-body">
+            For over six decades, we have helped generations of families
+            find the perfect pair for every step of life.
+          </p>
         </div>
 
-        <div class="hero-story-layout hero-story-layout--text-left" id="hero-story-layout">
-          <div class="hero-story-text" id="hero-story-text">
-            <article class="story-panel" data-stage="0">
-              <h2 class="story-heading">Walking With You Since 1959</h2>
-              <p class="story-body">For over six decades, Rahi Boot House has been helping generations of families find the perfect pair for every step of life — walking with you <span class="story-kw">since 1959</span>.</p>
-            </article>
-            <article class="story-panel" data-stage="1">
-              <h2 class="story-heading">Built on Trust</h2>
-              <p class="story-body">From school shoes to sports footwear, our commitment to <span class="story-kw">trust</span>, <span class="story-kw">quality</span> and customer satisfaction has remained unchanged since <span class="story-kw">1959</span>.</p>
-            </article>
-            <article class="story-panel" data-stage="2">
-              <h2 class="story-heading">Trusted Brands</h2>
-              <p class="story-body">Featuring leading names including <span class="story-kw">Bata</span>, <span class="story-kw">Campus</span>, <span class="story-kw">Liberty</span>, <span class="story-kw">Red Chief</span>, Paragon, Abros, <span class="story-kw">Lakhani</span>, Spark and many more.</p>
-            </article>
-            <article class="story-panel" data-stage="3">
-              <h2 class="story-heading">Footwear For Every Generation</h2>
-              <p class="story-body">From children taking their first steps to professionals on their daily journey, we have proudly served customers of every age.</p>
-            </article>
-            <article class="story-panel" data-stage="4">
-              <h2 class="story-heading">65 Years of Legacy</h2>
-              <p class="story-body">A family business built on trust, quality and service — <span class="story-kw">65 years</span> of legacy continuing to walk alongside the people of <span class="story-kw">Gwalior</span> since <span class="story-kw">1959</span>.</p>
-            </article>
-          </div>
-
-          <div class="hero-story-canvas-wrap">
-            <canvas id="hero-canvas" aria-hidden="true"></canvas>
-          </div>
+        <div class="hero-beat" id="beat-2">
+          <span class="beat-eyebrow">Our Promise</span>
+          <h2 class="beat-headline">Built on Trust</h2>
+          <p class="beat-body">
+            From school shoes to sports footwear, our commitment to
+            trust, quality, and satisfaction has never wavered.
+          </p>
         </div>
 
-        <div class="hero-story-finale" id="hero-finale" aria-hidden="true">
-          <p class="hero-story-finale-label">✦ RAHI BOOT HOUSE ✦</p>
-          <h2 class="hero-story-finale-title">Walking With You Since 1959</h2>
-          <div class="hero-story-finale-actions">
-            <a href="/collection/" class="btn btn-primary">Explore Collection</a>
-            <a href="/contact/" class="btn btn-outline">Contact Us</a>
-          </div>
+        <div class="hero-beat" id="beat-3">
+          <span class="beat-eyebrow">Every Generation</span>
+          <h2 class="beat-headline">Footwear for<br>Every Step</h2>
+          <p class="beat-body">
+            From children taking their first steps to professionals
+            on their daily journey — we serve every age, every need.
+          </p>
         </div>
 
-        <div class="scroll-hint" id="scroll-hint" aria-hidden="true">
-          <span>Scroll to Explore</span>
-          <div class="scroll-arrow">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-              <path d="M12 5v14M5 12l7 7 7-7"/>
-            </svg>
-          </div>
+        <div id="hero-loader">
+          <div class="loader-dot"></div>
+          <div class="loader-dot"></div>
+          <div class="loader-dot"></div>
         </div>
+      </div>
+    </section>
+
+    <section id="hero-cta">
+      <span class="cta-eyebrow">+ Rahi Boot House +</span>
+      <h2 class="cta-headline">Walking With You Since 1959</h2>
+      <div class="cta-buttons">
+        <a href="/collection/" class="btn-primary">Explore Collection</a>
+        <a href="/contact/" class="btn-secondary">Contact Us</a>
       </div>
     </section>
 
@@ -288,7 +281,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
   <script src="/site.js"></script>
-  <script src="/script.js"></script>
+  <script src="/hero.js"></script>
   <script src="/landing.js"></script>
 </body>
 </html>
