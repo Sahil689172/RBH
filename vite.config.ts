@@ -18,9 +18,10 @@ const MIME: Record<string, string> = {
   '.gif': 'image/gif',
   '.webp': 'image/webp',
   '.json': 'application/json',
+  '.mp4': 'video/mp4',
 };
 
-const ROOT_ASSETS = ['i3.png', 'i4.png', 'favicon.svg'];
+const ROOT_ASSETS = ['i3.png', 'i4.png', 'favicon.svg', 'loader.mp4'];
 const ROOT_FILES = [
   'style.css',
   'site.js',
@@ -58,6 +59,11 @@ function resolveRootAsset(name: string): string | null {
     path.join(rootDir, 'public', name),
     path.join(rootDir, name),
   ];
+
+  if (name === 'loader.mp4') {
+    candidates.unshift(path.join(rootDir, 'Loader.mp4'));
+  }
+
   return candidates.find((candidate) => fs.existsSync(candidate)) ?? null;
 }
 

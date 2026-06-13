@@ -46,11 +46,17 @@ for (const file of files) {
   copyFile(path.join(root, file), path.join(dist, file));
 }
 
-for (const image of ['i3.png', 'i4.png']) {
-  const fromPublic = path.join(root, 'public', image);
-  const fromRoot = path.join(root, image);
-  const src = fs.existsSync(fromPublic) ? fromPublic : fromRoot;
-  copyFile(src, path.join(dist, image));
+for (const asset of ['i3.png', 'i4.png', 'loader.mp4']) {
+  const fromPublic = path.join(root, 'public', asset);
+  const fromRoot = path.join(root, asset);
+  const fromLoader = path.join(root, 'Loader.mp4');
+  const src =
+    asset === 'loader.mp4'
+      ? [fromPublic, fromRoot, fromLoader].find((p) => fs.existsSync(p))
+      : fs.existsSync(fromPublic)
+        ? fromPublic
+        : fromRoot;
+  if (src) copyFile(src, path.join(dist, asset));
 }
 
 console.log('Static pages and assets copied to dist/');

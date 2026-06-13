@@ -24,12 +24,14 @@ function BootLogo() {
   );
 }
 
-export function HeroNav() {
+export function HeroNav({ className = '' }: { className?: string }) {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
     <>
-      <nav className="hero-nav fixed top-0 left-0 right-0 z-[100] flex items-center justify-between px-5 sm:px-8 lg:px-12 py-4 sm:py-5">
+      <nav
+        className={`hero-nav fixed top-0 left-0 right-0 z-[100] flex items-center justify-between px-5 sm:px-8 lg:px-12 py-4 sm:py-5${className ? ` ${className}` : ''}`}
+      >
         <a href="/" className="flex items-center gap-2.5 shrink-0">
           <BootLogo />
           <span className="text-[#F5F5F5] text-lg sm:text-xl font-playfair italic tracking-[-0.01em]">
