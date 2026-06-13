@@ -72,3 +72,50 @@
     opacity: 1;
   }
 }
+
+/* Hero image color grading — luxury dark & gold, matches site #050505 / #D4AF37 */
+.hero-image-layer {
+  filter: brightness(0.78) contrast(1.14) saturate(0.86) sepia(0.07);
+}
+
+.hero-image-grade {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      ellipse 88% 78% at 50% 42%,
+      transparent 22%,
+      rgba(5, 5, 5, 0.28) 72%,
+      rgba(5, 5, 5, 0.52) 100%
+    ),
+    linear-gradient(
+      168deg,
+      rgba(212, 175, 55, 0.045) 0%,
+      transparent 42%,
+      rgba(5, 5, 5, 0.22) 100%
+    );
+}
+
+.hero-image-bottom-blend {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    transparent 58%,
+    rgba(5, 5, 5, 0.35) 82%,
+    #050505 100%
+  );
+}
+
+.hero-spotlight-glow {
+  mix-blend-mode: soft-light;
+  will-change: background;
+}
+
+.hero-bottom-fade {
+  background: linear-gradient(to bottom, transparent, #050505);
+  pointer-events: none;
+}

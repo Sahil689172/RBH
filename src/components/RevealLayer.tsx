@@ -48,10 +48,13 @@ export function RevealLayer({
       spotlightR,
     );
     gradient.addColorStop(0, 'rgba(255,255,255,1)');
-    gradient.addColorStop(0.4, 'rgba(255,255,255,1)');
-    gradient.addColorStop(0.6, 'rgba(255,255,255,0.75)');
-    gradient.addColorStop(0.75, 'rgba(255,255,255,0.4)');
-    gradient.addColorStop(0.88, 'rgba(255,255,255,0.12)');
+    gradient.addColorStop(0.22, 'rgba(255,255,255,1)');
+    gradient.addColorStop(0.38, 'rgba(255,255,255,0.92)');
+    gradient.addColorStop(0.52, 'rgba(255,255,255,0.72)');
+    gradient.addColorStop(0.65, 'rgba(255,255,255,0.48)');
+    gradient.addColorStop(0.76, 'rgba(255,255,255,0.26)');
+    gradient.addColorStop(0.86, 'rgba(255,255,255,0.11)');
+    gradient.addColorStop(0.93, 'rgba(255,255,255,0.04)');
     gradient.addColorStop(1, 'rgba(255,255,255,0)');
 
     ctx.fillStyle = gradient;
@@ -75,9 +78,11 @@ export function RevealLayer({
       />
       <div
         ref={revealRef}
-        className="absolute inset-0 bg-center bg-cover bg-no-repeat z-30 pointer-events-none"
+        className="absolute inset-0 bg-center bg-cover bg-no-repeat z-30 pointer-events-none hero-image-layer"
         style={{ backgroundImage: `url(${image})` }}
-      />
+      >
+        <div className="hero-image-grade" aria-hidden="true" />
+      </div>
     </>
   );
 }
