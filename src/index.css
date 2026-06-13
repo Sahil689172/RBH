@@ -67,13 +67,119 @@
 
 @media (prefers-reduced-motion: reduce) {
   .hero-anim,
-  .hero-zoom {
+  .hero-zoom,
+  .hero-word,
+  .hero-label-fade,
+  .hero-slide-up,
+  .hero-sub-fade,
+  .hero-btn-enter {
     animation: none;
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+}
+
+@keyframes heroLabelFade {
+  0% {
+    opacity: 0;
+  }
+  100% {
     opacity: 1;
   }
 }
 
+@keyframes heroWordReveal {
+  0% {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes heroSlideUp {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes heroSubFade {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.hero-label-fade {
+  opacity: 0;
+  animation: heroLabelFade 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.hero-word {
+  display: inline-block;
+  opacity: 0;
+  animation: heroWordReveal 0.85s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.hero-slide-up {
+  opacity: 0;
+  animation: heroSlideUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.hero-sub-fade {
+  opacity: 0;
+  animation: heroSubFade 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.hero-btn-enter {
+  opacity: 0;
+  animation: heroFadeUp 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.hero-btn-lift {
+  transition:
+    transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+    background-color 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.hero-btn-lift:hover {
+  transform: translateY(-2px);
+}
+
+.hero-btn-lift:active {
+  transform: translateY(0);
+}
+
 /* Hero image color grading — luxury dark & gold, matches site #050505 / #D4AF37 */
+.hero-image-position {
+  background-position: center 58%;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+@media (min-width: 768px) {
+  .hero-image-position {
+    background-position: center 62%;
+  }
+}
+
+@media (min-width: 1024px) {
+  .hero-image-position {
+    background-position: center 65%;
+  }
+}
 .hero-image-layer {
   filter: brightness(0.78) contrast(1.14) saturate(0.86) sepia(0.07);
 }
@@ -84,7 +190,7 @@
   pointer-events: none;
   background:
     radial-gradient(
-      ellipse 88% 78% at 50% 42%,
+      ellipse 88% 72% at 50% 58%,
       transparent 22%,
       rgba(5, 5, 5, 0.28) 72%,
       rgba(5, 5, 5, 0.52) 100%

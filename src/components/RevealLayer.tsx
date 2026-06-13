@@ -79,7 +79,7 @@ export function RevealLayer({
       />
       <div
         ref={revealRef}
-        className="absolute inset-0 bg-center bg-cover bg-no-repeat z-30 pointer-events-none hero-image-layer"
+        className="absolute inset-0 hero-image-layer hero-image-position z-30 pointer-events-none"
         style={{ backgroundImage: `url(${image})` }}
       >
         <div className="hero-image-grade" aria-hidden="true" />
