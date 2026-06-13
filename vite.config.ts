@@ -20,7 +20,7 @@ const MIME: Record<string, string> = {
   '.json': 'application/json',
 };
 
-const ROOT_ASSETS = ['i1.png', 'i2.png', 'favicon.svg'];
+const ROOT_ASSETS = ['i3.png', 'i4.png', 'favicon.svg'];
 const ROOT_FILES = [
   'style.css',
   'site.js',

@@ -46,7 +46,7 @@ for (const file of files) {
   copyFile(path.join(root, file), path.join(dist, file));
 }
 
-for (const image of ['i1.png', 'i2.png']) {
+for (const image of ['i3.png', 'i4.png']) {
   const fromPublic = path.join(root, 'public', image);
   const fromRoot = path.join(root, image);
   const src = fs.existsSync(fromPublic) ? fromPublic : fromRoot;

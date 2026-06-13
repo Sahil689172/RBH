@@ -48,13 +48,14 @@ export function RevealLayer({
       spotlightR,
     );
     gradient.addColorStop(0, 'rgba(255,255,255,1)');
-    gradient.addColorStop(0.22, 'rgba(255,255,255,1)');
-    gradient.addColorStop(0.38, 'rgba(255,255,255,0.92)');
-    gradient.addColorStop(0.52, 'rgba(255,255,255,0.72)');
-    gradient.addColorStop(0.65, 'rgba(255,255,255,0.48)');
-    gradient.addColorStop(0.76, 'rgba(255,255,255,0.26)');
-    gradient.addColorStop(0.86, 'rgba(255,255,255,0.11)');
-    gradient.addColorStop(0.93, 'rgba(255,255,255,0.04)');
+    gradient.addColorStop(0.18, 'rgba(255,255,255,1)');
+    gradient.addColorStop(0.32, 'rgba(255,255,255,0.94)');
+    gradient.addColorStop(0.46, 'rgba(255,255,255,0.78)');
+    gradient.addColorStop(0.58, 'rgba(255,255,255,0.55)');
+    gradient.addColorStop(0.68, 'rgba(255,255,255,0.34)');
+    gradient.addColorStop(0.78, 'rgba(255,255,255,0.18)');
+    gradient.addColorStop(0.86, 'rgba(255,255,255,0.08)');
+    gradient.addColorStop(0.92, 'rgba(255,255,255,0.03)');
     gradient.addColorStop(1, 'rgba(255,255,255,0)');
 
     ctx.fillStyle = gradient;
