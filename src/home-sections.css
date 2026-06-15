@@ -1,0 +1,240 @@
+.home-section-label {
+  display: block;
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: clamp(14px, 1.1vw, 16px);
+  font-weight: 500;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: #d4af37;
+  margin-bottom: 1rem;
+}
+
+.home-section-title {
+  font-family: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
+  font-size: clamp(2.5rem, 5vw, 3.75rem);
+  font-weight: 600;
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+  color: #f5f5f5;
+}
+
+.home-section-header {
+  text-align: center;
+  margin-bottom: clamp(2.5rem, 5vh, 4rem);
+  padding-inline: 1.5rem;
+}
+
+/* ── Brands marquee ── */
+.home-brands-section {
+  min-height: 60vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: #050505;
+  padding: clamp(3.5rem, 8vh, 5.5rem) 0;
+  overflow: hidden;
+}
+
+.home-marquee-wrap {
+  position: relative;
+  margin-top: clamp(1rem, 3vh, 2rem);
+  mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+}
+
+.home-marquee-track {
+  display: flex;
+  width: max-content;
+  animation: homeMarqueeScroll 55s linear infinite;
+  will-change: transform;
+}
+
+.home-marquee-wrap:hover .home-marquee-track {
+  animation-play-state: paused;
+}
+
+.home-marquee-row {
+  display: flex;
+  align-items: center;
+  gap: clamp(2rem, 4vw, 3.5rem);
+  padding-inline: clamp(1.25rem, 3vw, 2rem);
+}
+
+.home-brand-name {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: clamp(2.25rem, 4.5vw, 4rem);
+  font-weight: 600;
+  color: #f5f5f5;
+  white-space: nowrap;
+  transition:
+    color 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: default;
+}
+
+.home-brand-name:hover {
+  color: #d4af37;
+  transform: scale(1.06);
+}
+
+.home-brand-sep {
+  font-size: clamp(0.85rem, 1.5vw, 1.1rem);
+  color: #d4af37;
+  opacity: 0.85;
+  user-select: none;
+}
+
+@keyframes homeMarqueeScroll {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+/* ── Testimonials carousel ── */
+.home-testimonials-section {
+  background: #050505;
+  padding: clamp(4rem, 8vh, 6rem) 0;
+  overflow: hidden;
+}
+
+.home-testimonial-carousel {
+  position: relative;
+  margin-top: clamp(0.5rem, 2vh, 1.5rem);
+  mask-image: linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent);
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent);
+}
+
+.home-testimonial-track {
+  display: flex;
+  gap: clamp(1.25rem, 2.5vw, 1.75rem);
+  width: max-content;
+  animation: homeTestimonialScroll 90s linear infinite;
+  will-change: transform;
+}
+
+.home-testimonial-carousel:hover .home-testimonial-track {
+  animation-play-state: paused;
+}
+
+@keyframes homeTestimonialScroll {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.home-testimonial-card {
+  flex: 0 0 auto;
+  width: clamp(300px, 32vw, 400px);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(212, 175, 55, 0.14);
+  border-radius: 20px;
+  padding: clamp(1.75rem, 3vw, 2.25rem);
+  box-shadow: 0 20px 56px rgba(0, 0, 0, 0.35);
+  transition:
+    border-color 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.home-testimonial-card:hover {
+  border-color: rgba(212, 175, 55, 0.32);
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.45);
+  transform: translateY(-3px);
+}
+
+.home-testimonial-name {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: #f5f5f5;
+  margin-bottom: 0.65rem;
+}
+
+.home-testimonial-stars {
+  display: flex;
+  gap: 0.2rem;
+  margin-bottom: 1.1rem;
+  color: #d4af37;
+  font-size: 0.95rem;
+  letter-spacing: 0.08em;
+}
+
+.home-testimonial-text {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: clamp(0.95rem, 1.5vw, 1.05rem);
+  font-weight: 400;
+  line-height: 1.65;
+  color: #a8a8a8;
+}
+
+.home-testimonial-reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition:
+    opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.85s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.home-testimonial-reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── Trust statement ── */
+.home-trust-section {
+  background: #050505;
+  padding: clamp(5rem, 10vh, 7rem) 1.5rem clamp(6rem, 12vh, 8rem);
+  text-align: center;
+}
+
+.home-trust-headline {
+  font-family: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
+  font-size: clamp(2.75rem, 6vw, 4.5rem);
+  font-weight: 600;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  color: #f5f5f5;
+  margin-bottom: 0.75rem;
+}
+
+.home-trust-subline {
+  font-family: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
+  font-size: clamp(1.35rem, 2.5vw, 1.85rem);
+  font-weight: 500;
+  font-style: italic;
+  color: #a8a8a8;
+  margin-bottom: 2rem;
+}
+
+.home-trust-line {
+  width: min(120px, 28vw);
+  height: 1px;
+  margin-inline: auto;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    #d4af37 20%,
+    #d4af37 80%,
+    transparent
+  );
+  box-shadow: 0 0 24px rgba(212, 175, 55, 0.25);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-marquee-track,
+  .home-testimonial-track {
+    animation: none;
+  }
+
+  .home-testimonial-reveal {
+    opacity: 1;
+    transform: none;
+  }
+}

@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,400&family=Outfit:wght@300;400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=Inter:wght@400;500;600&family=Outfit:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,500;0,600;1,500&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -9,11 +9,51 @@
 }
 
 .font-cormorant {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
 }
 
-.font-dm {
-  font-family: 'DM Sans', sans-serif;
+.font-inter {
+  font-family: 'Inter', system-ui, sans-serif;
+}
+
+/* ── Hero typography ── */
+.hero-type-label {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: clamp(14px, 1.1vw, 16px);
+  font-weight: 500;
+  letter-spacing: 0.3em;
+  color: #d4af37;
+  text-transform: uppercase;
+}
+
+.hero-type-headline {
+  font-family: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
+  font-size: clamp(72px, 8vw, 120px);
+  font-weight: 600;
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+  color: #f5f5f5;
+}
+
+.hero-type-accent {
+  font-family: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
+  font-size: clamp(32px, 3vw, 52px);
+  font-weight: 500;
+  font-style: italic;
+  color: #d4af37;
+  text-shadow:
+    0 0 24px rgba(212, 175, 55, 0.15),
+    0 0 48px rgba(212, 175, 55, 0.15);
+}
+
+.hero-type-desc {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: clamp(20px, 1.75vw, 24px);
+  font-weight: 400;
+  line-height: 1.6;
+  color: #d8d8d8;
+  max-width: 700px;
+  text-align: center;
 }
 
 @keyframes heroReveal {
@@ -127,22 +167,24 @@
 @keyframes heroHeadlineReveal {
   0% {
     opacity: 0;
-    transform: translateY(18px);
+    transform: translateY(22px);
+    filter: blur(10px);
   }
   100% {
     opacity: 1;
     transform: translateY(0);
+    filter: blur(0);
   }
 }
 
 .hero-headline-reveal {
   opacity: 0;
-  animation: heroHeadlineReveal 1.15s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: heroHeadlineReveal 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 .hero-label-fade {
   opacity: 0;
-  animation: heroLabelFade 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: heroLabelFade 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 .hero-word {
@@ -153,17 +195,17 @@
 
 .hero-slide-up {
   opacity: 0;
-  animation: heroSlideUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: heroSlideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 .hero-sub-fade {
   opacity: 0;
-  animation: heroSubFade 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: heroSubFade 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 .hero-btn-enter {
   opacity: 0;
-  animation: heroFadeUp 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: heroFadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 .hero-btn-lift {

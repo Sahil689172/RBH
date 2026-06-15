@@ -65,54 +65,40 @@ export function Hero({ className = '' }: HeroProps) {
           cursorY={cursorPos.y}
         />
 
-        {/* Text — upper 35% only */}
+        {/* Text */}
         <div
-          className="absolute top-0 left-0 right-0 z-50 flex flex-col items-center justify-end text-center px-5 pointer-events-none"
-          style={{
-            height: '35%',
-            paddingTop: 'calc(var(--nav-height, 84px) + 0.25rem)',
-            paddingBottom: 'clamp(0.5rem, 2vh, 1.25rem)',
-          }}
+          className="absolute top-0 left-0 right-0 z-50 flex flex-col items-center text-center px-5 pointer-events-none"
+          style={{ paddingTop: 'calc(var(--nav-height, 84px) + 1.25rem)' }}
         >
-          <p
-            className="hero-label-fade text-[0.65rem] sm:text-xs tracking-[0.38em] uppercase text-white/65"
-            style={{ animationDelay: '0.15s' }}
-          >
+          <p className="hero-type-label hero-label-fade" style={{ animationDelay: '0.1s' }}>
             ✦ RAHI BOOT HOUSE ✦
           </p>
 
           <h1
-            className="hero-headline-reveal font-cormorant font-medium text-[#F5F5F5] text-4xl sm:text-5xl md:text-6xl leading-[1.05] mt-3 sm:mt-4"
-            style={{ animationDelay: '0.3s', letterSpacing: '-0.02em' }}
+            className="hero-type-headline hero-headline-reveal mt-6"
+            style={{ animationDelay: '0.2s' }}
           >
             Walking With You
           </h1>
 
           <p
-            className="hero-slide-up font-cormorant italic text-[#D4AF37] text-xl sm:text-2xl md:text-[1.65rem] mt-1 sm:mt-1.5"
-            style={{ animationDelay: '0.5s' }}
+            className="hero-type-accent hero-slide-up mt-[18px]"
+            style={{ animationDelay: '0.35s' }}
           >
             Since 1959
           </p>
 
           <p
-            className="hero-slide-up text-sm sm:text-base text-white/85 tracking-[0.06em] mt-2 sm:mt-3"
-            style={{ animationDelay: '0.65s' }}
-          >
-            Three Generations of Trust
-          </p>
-
-          <p
-            className="hero-sub-fade text-xs sm:text-sm text-white/60 max-w-sm mt-2 sm:mt-3 leading-relaxed"
-            style={{ animationDelay: '0.8s' }}
+            className="hero-type-desc hero-sub-fade mt-7 px-2"
+            style={{ animationDelay: '0.5s' }}
           >
             Serving generations of families with trusted footwear and leading brands
             since 1959.
           </p>
 
           <div
-            className="hero-btn-enter flex flex-wrap items-center justify-center gap-3 sm:gap-4 mt-7 sm:mt-8 pointer-events-auto"
-            style={{ animationDelay: '1s' }}
+            className="hero-btn-enter flex flex-wrap items-center justify-center gap-3 sm:gap-4 mt-9 pointer-events-auto"
+            style={{ animationDelay: '0.65s' }}
           >
             <a
               href="/about/"

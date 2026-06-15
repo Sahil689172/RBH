@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Hero } from './components/Hero';
 import { HeroNav } from './components/HeroNav';
+import { HomeSections } from './components/home/HomeSections';
 import { Loader } from './components/Loader';
 
 const LOADER_KEY = 'rbh_loader_shown';
@@ -42,6 +43,7 @@ export default function App() {
           activeNav="home"
         />
         <Hero className={siteReady ? 'site-reveal-main' : undefined} />
+        <HomeSections />
       </div>
     </>
   );
