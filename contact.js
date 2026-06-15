@@ -48,7 +48,7 @@
   gsap.registerPlugin(ScrollTrigger);
 
   function initScrollReveals() {
-    const cardEls = gsap.utils.toArray('.contact-cards .reveal-item');
+    const cardEls = gsap.utils.toArray('.contact-details-grid .reveal-item');
     if (cardEls.length) {
       gsap.to(cardEls, {
         opacity: 1,
@@ -57,7 +57,7 @@
         stagger: 0.07,
         ease: 'power3.out',
         scrollTrigger: {
-          trigger: '.contact-cards',
+          trigger: '.contact-details-grid',
           start: 'top 88%',
           toggleActions: 'play none none none',
         },
@@ -65,7 +65,7 @@
     }
 
     gsap.utils.toArray('.contact-page .reveal-item').forEach((el) => {
-      if (el.closest('.contact-cards')) return;
+      if (el.closest('.contact-details-grid')) return;
 
       gsap.to(el, {
         opacity: 1,
