@@ -1,19 +1,23 @@
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@1,400;1,500;1,600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,400;1,500;1,600&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,400&family=Outfit:wght@300;400;500;600&family=Syne:wght@500;600;700;800&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 * {
-  font-family: 'Inter', sans-serif;
+  font-family: 'Outfit', sans-serif;
 }
 
-.font-playfair {
-  font-family: 'Playfair Display', serif;
+.font-cormorant {
+  font-family: 'Cormorant Garamond', serif;
 }
 
-.font-display {
-  font-family: 'Cormorant Garamond', 'Playfair Display', serif;
+.font-syne {
+  font-family: 'Syne', sans-serif;
+}
+
+.font-dm {
+  font-family: 'DM Sans', sans-serif;
 }
 
 @keyframes heroReveal {
@@ -42,7 +46,7 @@
 
 @keyframes heroZoom {
   0% {
-    transform: scale(1.12);
+    transform: scale(1.1);
   }
   100% {
     transform: scale(1);
@@ -66,19 +70,12 @@
 }
 
 .hero-zoom {
-  animation: heroZoom 1.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: heroZoom 2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 @media (prefers-reduced-motion: reduce) {
   .hero-anim,
-  .hero-zoom,
-  .hero-word,
-  .hero-label-fade,
-  .hero-headline-reveal,
-  .hero-slide-up,
-  .hero-sub-fade,
-  .hero-btn-enter,
-  .hero-shoe-float {
+  .hero-zoom {
     animation: none;
     opacity: 1;
     transform: none;

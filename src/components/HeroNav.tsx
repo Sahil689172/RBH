@@ -1,105 +1,121 @@
-import { Menu, X } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 const SITE_LINKS = [
-  { label: 'Home', href: '/' },
-  { label: 'About', href: '/about/' },
-  { label: 'Brands', href: '/brands/' },
-  { label: 'Collection', href: '/collection/' },
-  { label: 'Contact', href: '/contact/' },
+  { label: 'Home', href: '/', nav: 'home' },
+  { label: 'About', href: '/about/', nav: 'about' },
+  { label: 'Brands', href: '/brands/', nav: 'brands' },
+  { label: 'Collection', href: '/collection/', nav: 'collection' },
+  { label: 'Contact', href: '/contact/', nav: 'contact' },
 ] as const;
 
-function BootLogo() {
-  return (
-    <svg
-      width="24"
-      height="24"
-      viewBox="0 0 256 256"
-      fill="#D4AF37"
-      aria-hidden="true"
-    >
-      <path d="M48 176c0-44 28-80 64-88 8-36 44-64 88-64 4 0 8 0 12 1-8 28-32 52-60 60-4 36-40 64-84 64-8 0-16-1-20-3zm32-8c32 0 56-24 60-56-24 8-44 28-52 52-4 2-8 4-8 4z" />
-      <path d="M72 192h128c8 0 16-4 20-12l16-40c4-12-4-24-16-24H88c-12 0-20 12-16 24l16 40c4 8 12 12 20 12z" />
-    </svg>
-  );
-}
+type NavKey = (typeof SITE_LINKS)[number]['nav'];
 
-export function HeroNav({ className = '' }: { className?: string }) {
+type HeroNavProps = {
+  className?: string;
+  activeNav?: NavKey;
+};
+
+export function HeroNav({ className = '', activeNav = 'home' }: HeroNavProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [callOpen, setCallOpen] = useState(false);
+  const callRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!callOpen) return;
+
+    const onClick = (e: MouseEvent) => {
+      if (callRef.current && !callRef.current.contains(e.target as Node)) {
+        setCallOpen(false);
+      }
+    };
+
+    document.addEventListener('click', onClick);
+    return () => document.removeEventListener('click', onClick);
+  }, [callOpen]);
+
+  const closeMobile = () => setMobileOpen(false);
 
   return (
-    <>
-      <nav
-        className={`hero-nav fixed top-0 left-0 right-0 z-[100] flex items-center justify-between px-5 sm:px-8 lg:px-12 py-4 sm:py-5${className ? ` ${className}` : ''}`}
-      >
-        <a href="/" className="flex items-center gap-2.5 shrink-0">
-          <BootLogo />
-          <span className="text-[#F5F5F5] text-lg sm:text-xl font-playfair italic tracking-[-0.01em]">
-            Rahi Boot House
-          </span>
+    <header
+      id="navbar"
+      className={`navbar scrolled${className ? ` ${className}` : ''}`}
+    >
+      <div className="navbar-inner">
+        <a href="/" className="navbar-logo">
+          <span className="logo-name">RAHI BOOT HOUSE</span>
+          <span className="logo-tagline">Since 1959</span>
         </a>
 
-        <div className="hidden md:flex absolute left-1/2 -translate-x-1/2 items-center gap-8 lg:gap-10">
-          {SITE_LINKS.map((link, index) => (
+        <nav
+          className={`navbar-links${mobileOpen ? ' open' : ''}`}
+          id="nav-links"
+          aria-label="Main navigation"
+        >
+          {SITE_LINKS.map((link) => (
             <a
-              key={link.label}
+              key={link.nav}
               href={link.href}
-              className={`hero-nav-link${index === 0 ? ' hero-nav-link--active' : ''}`}
+              className={`nav-link${activeNav === link.nav ? ' active' : ''}`}
+              data-nav={link.nav}
+              onClick={closeMobile}
             >
               {link.label}
             </a>
           ))}
-        </div>
+        </nav>
 
-        <div className="flex items-center gap-3">
+        <div className="navbar-actions">
+          <div className="call-dropdown" ref={callRef}>
+            <button
+              type="button"
+              className="btn btn-ghost btn-sm call-trigger"
+              aria-expanded={callOpen}
+              aria-haspopup="true"
+              onClick={() => setCallOpen((open) => !open)}
+            >
+              Call Now
+            </button>
+            <div className={`call-menu${callOpen ? ' open' : ''}`} role="menu">
+              <a
+                href="tel:9826270611"
+                className="call-option"
+                role="menuitem"
+                onClick={() => setCallOpen(false)}
+              >
+                9826270611
+              </a>
+              <a
+                href="tel:9993325524"
+                className="call-option"
+                role="menuitem"
+                onClick={() => setCallOpen(false)}
+              >
+                9993325524
+              </a>
+            </div>
+          </div>
+          <a
+            href="https://wa.me/919826270611"
+            className="btn btn-accent btn-sm"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            WhatsApp
+          </a>
           <button
             type="button"
-            className="md:hidden text-[#F5F5F5] p-2 transition-colors hover:text-[#D4AF37]"
-            aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
+            className={`hamburger${mobileOpen ? ' open' : ''}`}
+            id="hamburger"
+            aria-label="Toggle menu"
             aria-expanded={mobileOpen}
             onClick={() => setMobileOpen((open) => !open)}
           >
-            {mobileOpen ? <X size={22} strokeWidth={1.5} /> : <Menu size={22} strokeWidth={1.5} />}
+            <span />
+            <span />
+            <span />
           </button>
-
-          <a
-            href="/contact/"
-            className="hero-nav-cta hidden md:inline-block px-5 py-2 rounded-sm"
-          >
-            Visit Store
-          </a>
         </div>
-      </nav>
-
-      {mobileOpen && (
-        <div className="fixed inset-0 z-[99] md:hidden">
-          <button
-            type="button"
-            className="absolute inset-0 bg-black/50 backdrop-blur-[2px]"
-            aria-label="Close menu"
-            onClick={() => setMobileOpen(false)}
-          />
-          <div className="hero-mobile-menu absolute top-[68px] left-4 right-4 rounded-sm p-5 flex flex-col gap-4">
-            {SITE_LINKS.map((link, index) => (
-              <a
-                key={link.label}
-                href={link.href}
-                className={`hero-mobile-link py-1${index === 0 ? ' hero-mobile-link--active' : ''}`}
-                onClick={() => setMobileOpen(false)}
-              >
-                {link.label}
-              </a>
-            ))}
-            <a
-              href="/contact/"
-              className="hero-nav-cta mt-2 px-5 py-2.5 rounded-sm text-center"
-              onClick={() => setMobileOpen(false)}
-            >
-              Visit Store
-            </a>
-          </div>
-        </div>
-      )}
-    </>
+      </div>
+    </header>
   );
 }

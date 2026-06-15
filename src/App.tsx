@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Hero } from './components/Hero';
 import { HeroNav } from './components/HeroNav';
 import { Loader } from './components/Loader';
 
@@ -32,21 +33,15 @@ export default function App() {
       {showLoader && <Loader onComplete={handleLoaderComplete} />}
 
       <div
-        className={`site-shell min-h-screen bg-[#050505] flex flex-col tracking-[-0.02em]${
+        className={`site-shell${
           siteReady ? ' site-shell--visible' : ''
         }${loaderSkipped ? ' site-shell--instant' : ''}`}
-        style={{ fontFamily: "'Inter', sans-serif", minHeight: '100dvh' }}
       >
-        <HeroNav className={siteReady ? 'site-reveal-nav' : undefined} />
-        <main
-          className={`flex-1 flex items-center justify-center px-6${
-            siteReady ? ' site-reveal-main' : ''
-          }`}
-        >
-          <p className="font-display text-[#F5F5F5] text-2xl sm:text-3xl md:text-4xl tracking-[0.08em] uppercase">
-            Coming Soon
-          </p>
-        </main>
+        <HeroNav
+          className={siteReady ? 'site-reveal-nav' : undefined}
+          activeNav="home"
+        />
+        <Hero className={siteReady ? 'site-reveal-main' : undefined} />
       </div>
     </>
   );

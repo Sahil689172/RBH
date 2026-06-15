@@ -46,7 +46,7 @@ for (const file of files) {
   copyFile(path.join(root, file), path.join(dist, file));
 }
 
-for (const asset of ['loader.mp4', 'contact.mp4']) {
+for (const asset of ['i3.png', 'i4.png', 'loader.mp4', 'contact.mp4']) {
   const fromPublic = path.join(root, 'public', asset);
   const fromRoot = path.join(root, asset);
   const fromLoader = path.join(root, 'Loader.mp4');
