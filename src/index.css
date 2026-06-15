@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,400;1,500;1,600&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,400&family=Outfit:wght@300;400;500;600&family=Syne:wght@500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,400&family=Outfit:wght@300;400;500;600&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -10,10 +10,6 @@
 
 .font-cormorant {
   font-family: 'Cormorant Garamond', serif;
-}
-
-.font-syne {
-  font-family: 'Syne', sans-serif;
 }
 
 .font-dm {
@@ -75,7 +71,12 @@
 
 @media (prefers-reduced-motion: reduce) {
   .hero-anim,
-  .hero-zoom {
+  .hero-zoom,
+  .hero-headline-reveal,
+  .hero-label-fade,
+  .hero-slide-up,
+  .hero-sub-fade,
+  .hero-btn-enter {
     animation: none;
     opacity: 1;
     transform: none;

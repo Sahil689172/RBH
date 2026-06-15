@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
 import { RevealLayer } from './RevealLayer';
-import { SpecialText } from './SpecialText';
 
 const BG_IMAGE_1 = '/i3.png';
 const BG_IMAGE_2 = '/i4.png';
@@ -66,58 +65,68 @@ export function Hero({ className = '' }: HeroProps) {
           cursorY={cursorPos.y}
         />
 
-        {/* Heading */}
-        <div className="absolute top-[14%] left-0 right-0 z-50 flex flex-col items-center text-center px-5 pointer-events-none">
-          <h1
-            className="text-white leading-[0.95] font-syne font-semibold"
-            aria-label="Heritage in Every Step"
+        {/* Text — upper 35% only */}
+        <div
+          className="absolute top-0 left-0 right-0 z-50 flex flex-col items-center justify-end text-center px-5 pointer-events-none"
+          style={{
+            height: '35%',
+            paddingTop: 'calc(var(--nav-height, 84px) + 0.25rem)',
+            paddingBottom: 'clamp(0.5rem, 2vh, 1.25rem)',
+          }}
+        >
+          <p
+            className="hero-label-fade text-[0.65rem] sm:text-xs tracking-[0.38em] uppercase text-white/65"
+            style={{ animationDelay: '0.15s' }}
           >
-            <span className="block text-5xl sm:text-7xl md:text-8xl" style={{ letterSpacing: '-0.04em' }}>
-              <SpecialText
-                className="font-syne text-5xl sm:text-7xl md:text-8xl leading-[0.95]"
-                delay={0.25}
-                speed={18}
-              >
-                Heritage in
-              </SpecialText>
-            </span>
-            <span
-              className="block text-5xl sm:text-7xl md:text-8xl -mt-1"
-              style={{ letterSpacing: '-0.06em' }}
-            >
-              <SpecialText
-                className="font-syne text-5xl sm:text-7xl md:text-8xl leading-[0.95]"
-                delay={0.55}
-                speed={18}
-              >
-                Every Step
-              </SpecialText>
-            </span>
+            ✦ RAHI BOOT HOUSE ✦
+          </p>
+
+          <h1
+            className="hero-headline-reveal font-cormorant font-medium text-[#F5F5F5] text-4xl sm:text-5xl md:text-6xl leading-[1.05] mt-3 sm:mt-4"
+            style={{ animationDelay: '0.3s', letterSpacing: '-0.02em' }}
+          >
+            Walking With You
           </h1>
-        </div>
 
-        {/* Bottom-left */}
-        <div
-          className="hidden sm:block absolute bottom-14 left-10 md:left-14 max-w-[320px] z-50 pointer-events-none hero-anim hero-fade"
-          style={{ animationDelay: '0.7s' }}
-        >
-          <p className="font-dm text-base sm:text-lg text-white/85 leading-relaxed">
-            Rahi Boot House has been a trusted name in footwear since 1959, proudly
-            serving generations of families in Gwalior with quality, comfort, and
-            reliability.
+          <p
+            className="hero-slide-up font-cormorant italic text-[#D4AF37] text-xl sm:text-2xl md:text-[1.65rem] mt-1 sm:mt-1.5"
+            style={{ animationDelay: '0.5s' }}
+          >
+            Since 1959
           </p>
-        </div>
 
-        {/* Bottom-right */}
-        <div
-          className="absolute bottom-5 sm:bottom-14 left-5 right-5 sm:left-auto sm:right-10 md:right-14 max-w-full sm:max-w-[320px] z-50 hero-anim hero-fade"
-          style={{ animationDelay: '0.85s' }}
-        >
-          <p className="font-dm text-base sm:text-lg text-white/85 leading-relaxed pointer-events-none">
-            From school shoes to sports footwear, men&apos;s, women&apos;s, and kids&apos;
-            collections — partnered with Bata, Campus, Liberty, Red Chief, and more.
-            Walking With You Since 1959.
+          <p
+            className="hero-slide-up text-sm sm:text-base text-white/85 tracking-[0.06em] mt-2 sm:mt-3"
+            style={{ animationDelay: '0.65s' }}
+          >
+            Three Generations of Trust
           </p>
+
+          <p
+            className="hero-sub-fade text-xs sm:text-sm text-white/60 max-w-sm mt-2 sm:mt-3 leading-relaxed"
+            style={{ animationDelay: '0.8s' }}
+          >
+            Serving generations of families with trusted footwear and leading brands
+            since 1959.
+          </p>
+
+          <div
+            className="hero-btn-enter flex flex-wrap items-center justify-center gap-3 sm:gap-4 mt-7 sm:mt-8 pointer-events-auto"
+            style={{ animationDelay: '1s' }}
+          >
+            <a
+              href="/about/"
+              className="hero-btn-lift inline-flex items-center justify-center bg-[#D4AF37] hover:bg-[#e0bc4a] text-[#050505] text-sm font-medium tracking-[0.04em] px-7 py-3 rounded-full"
+            >
+              Explore Our Legacy
+            </a>
+            <a
+              href="/contact/"
+              className="hero-btn-lift inline-flex items-center justify-center bg-transparent border border-[#D4AF37] text-[#D4AF37] hover:bg-[#D4AF37]/10 text-sm font-medium tracking-[0.04em] px-7 py-3 rounded-full"
+            >
+              Contact Us
+            </a>
+          </div>
         </div>
       </section>
     </div>
