@@ -21,7 +21,7 @@ const MIME: Record<string, string> = {
   '.mp4': 'video/mp4',
 };
 
-const ROOT_ASSETS = ['i3.png', 'i4.png', 'favicon.svg', 'loader.mp4', 'contact.mp4'];
+const ROOT_ASSETS = ['favicon.svg', 'loader.mp4', 'contact.mp4'];
 const ROOT_FILES = [
   'style.css',
   'site.js',
@@ -31,7 +31,7 @@ const ROOT_FILES = [
   'contact.js',
   ...ROOT_ASSETS,
 ];
-const STATIC_DIRS = ['public2', 'public3'];
+const STATIC_DIRS = ['public2', 'public3', 'homepage_frames'];
 const HTML_PAGES: Record<string, string> = {
   '/about': 'about/index.html',
   '/about/': 'about/index.html',

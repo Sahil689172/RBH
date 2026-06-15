@@ -1,4 +1,8 @@
+import { useScrollReveal } from '../hooks/useScrollReveal';
+
 export function HomeBelowFold() {
+  useScrollReveal();
+
   return (
     <>
       <div className="section-divider" aria-hidden="true" />
