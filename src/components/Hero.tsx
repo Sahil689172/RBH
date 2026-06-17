@@ -48,7 +48,7 @@ export function Hero({ className = '' }: HeroProps) {
       >
         {/* Base image */}
         <div
-          className="absolute inset-0 w-full h-full bg-center bg-cover bg-no-repeat z-10 hero-zoom"
+          className="absolute inset-0 w-full h-full bg-cover bg-no-repeat z-10 hero-zoom hero-bg-shift"
           style={{ backgroundImage: `url(${BG_IMAGE_1})` }}
           aria-hidden="true"
         >
@@ -63,26 +63,24 @@ export function Hero({ className = '' }: HeroProps) {
           image={BG_IMAGE_2}
           cursorX={cursorPos.x}
           cursorY={cursorPos.y}
+          className="hero-bg-shift"
         />
 
         {/* Text gradient — readability only */}
         <div className="hero-text-gradient" aria-hidden="true" />
 
-        {/* Text — left luxury split */}
+        {/* Text — right luxury split */}
         <div className="hero-content-luxury">
-          <p className="hero-lux-est">EST. 1959</p>
+          <p className="hero-lux-label hero-lux-anim-label">✦ RAHI BOOT HOUSE ✦</p>
 
-          <h1 className="hero-lux-heading" aria-label="Walking With You">
-            <span className="hero-lux-word" style={{ animationDelay: '0.15s' }}>
-              Walking
-            </span>
-            <span className="hero-lux-word" style={{ animationDelay: '0.3s' }}>
-              With You
-            </span>
+          <h1 className="hero-lux-heading hero-lux-anim-headline" aria-label="Walking With You">
+            Walking With&nbsp;You
           </h1>
 
-          <p className="hero-lux-subtitle">
-            Premium footwear for generations.
+          <p className="hero-lux-since hero-lux-anim-since">Since 1959</p>
+
+          <p className="hero-lux-supporting hero-lux-anim-supporting">
+            Three Generations of Trust
           </p>
 
           <div className="hero-lux-actions">

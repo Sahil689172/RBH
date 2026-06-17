@@ -6,9 +6,10 @@ interface RevealLayerProps {
   image: string;
   cursorX: number;
   cursorY: number;
+  className?: string;
 }
 
-export function RevealLayer({ image, cursorX, cursorY }: RevealLayerProps) {
+export function RevealLayer({ image, cursorX, cursorY, className = '' }: RevealLayerProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const revealRef = useRef<HTMLDivElement>(null);
 
@@ -72,11 +73,10 @@ export function RevealLayer({ image, cursorX, cursorY }: RevealLayerProps) {
       />
       <div
         ref={revealRef}
-        className="absolute inset-0 w-full h-full bg-center bg-cover bg-no-repeat z-30 pointer-events-none"
+        className={`absolute inset-0 w-full h-full bg-center bg-cover bg-no-repeat z-30 pointer-events-none${className ? ` ${className}` : ''}`}
         style={{
           backgroundImage: `url(${image})`,
           backgroundSize: 'cover',
-          backgroundPosition: 'center',
         }}
         aria-hidden="true"
       />

@@ -63,47 +63,105 @@
   z-index: 40;
   pointer-events: none;
   background: linear-gradient(
-    90deg,
+    270deg,
     rgba(0, 0, 0, 0.75) 0%,
     rgba(0, 0, 0, 0.45) 35%,
     rgba(0, 0, 0, 0.15) 100%
   );
 }
 
+.hero-bg-shift {
+  background-position: center center;
+}
+
+@media (min-width: 768px) {
+  .hero-bg-shift {
+    background-position: calc(50% - 120px) center;
+  }
+}
+
 .hero-content-luxury {
   position: absolute;
   z-index: 50;
-  left: 8%;
+  left: auto;
+  right: max(2rem, 6%);
+  padding-right: 0;
   top: 50%;
   transform: translateY(-50%);
-  max-width: 600px;
-  width: min(600px, 84vw);
+  max-width: 560px;
+  width: min(560px, 86vw);
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  text-align: left;
+  align-items: flex-end;
+  text-align: right;
   pointer-events: none;
 }
 
-.hero-lux-est {
-  font-family: 'Inter', system-ui, sans-serif;
+.hero-lux-label {
+  font-family: 'Cormorant Garamond', Georgia, serif;
   font-size: clamp(0.72rem, 1vw, 0.85rem);
   font-weight: 500;
-  letter-spacing: 0.32em;
+  letter-spacing: 0.28em;
   text-transform: uppercase;
   color: #d4af37;
+}
+
+.hero-lux-anim-label {
   opacity: 0;
-  animation: heroLuxLabel 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: heroLuxLabel 0.65s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 .hero-lux-heading {
-  font-family: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
-  font-size: clamp(4rem, 8vw, 7rem);
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: clamp(3.25rem, 6.5vw, 5.75rem);
   font-weight: 500;
-  line-height: 0.9;
-  letter-spacing: -0.04em;
+  line-height: 1;
+  letter-spacing: -0.02em;
   color: #f8f6f2;
+  max-width: 100%;
   margin-top: 1.25rem;
+  white-space: nowrap;
+}
+
+.hero-lux-anim-headline {
+  opacity: 0;
+  animation: heroLuxWord 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation-delay: 0.15s;
+}
+
+.hero-lux-since {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: clamp(1.95rem, 3.9vw, 3.45rem);
+  font-weight: 500;
+  font-style: italic;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  color: #d4af37;
+  margin-top: 2rem;
+}
+
+.hero-lux-anim-since {
+  opacity: 0;
+  animation: heroLuxFadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation-delay: 0.35s;
+}
+
+.hero-lux-supporting {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: clamp(1.1rem, 1.8vw, 1.35rem);
+  font-weight: 400;
+  font-style: italic;
+  line-height: 1.5;
+  letter-spacing: 0.02em;
+  color: #a8a8a8;
+  margin-top: 1.75rem;
+  margin-left: auto;
+}
+
+.hero-lux-anim-supporting {
+  opacity: 0;
+  animation: heroLuxFadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation-delay: 0.5s;
 }
 
 .hero-lux-word {
@@ -112,29 +170,18 @@
   animation: heroLuxWord 0.85s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-.hero-lux-subtitle {
-  font-family: 'Inter', system-ui, sans-serif;
-  font-size: clamp(1rem, 1.6vw, 1.2rem);
-  font-weight: 400;
-  line-height: 1.55;
-  color: rgba(255, 255, 255, 0.75);
-  max-width: 28ch;
-  margin-top: 1.75rem;
-  opacity: 0;
-  animation: heroLuxFadeUp 0.75s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  animation-delay: 0.5s;
-}
-
 .hero-lux-actions {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 0.875rem 1rem;
-  margin-top: 2.25rem;
+  margin-top: 2.75rem;
   opacity: 0;
   animation: heroLuxFadeUp 0.75s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  animation-delay: 0.68s;
+  animation-delay: 0.62s;
   pointer-events: auto;
+  justify-content: flex-end;
+  width: 100%;
 }
 
 .hero-lux-btn-primary {
@@ -217,24 +264,39 @@
   from {
     opacity: 0;
     transform: translateY(24px);
+    filter: blur(6px);
   }
   to {
     opacity: 1;
     transform: translateY(0);
+    filter: blur(0);
   }
 }
 
 @media (max-width: 640px) {
   .hero-content-luxury {
-    left: 6%;
+    left: auto;
+    right: max(1.25rem, 5%);
     top: auto;
     bottom: 12%;
     transform: none;
     max-width: 88vw;
+    align-items: flex-end;
+    text-align: right;
   }
 
   .hero-lux-heading {
-    font-size: clamp(2.75rem, 12vw, 3.5rem);
+    font-size: clamp(2.5rem, 11vw, 3.25rem);
+    white-space: normal;
+  }
+
+  .hero-lux-since {
+    font-size: clamp(1.5rem, 6.6vw, 1.95rem);
+    margin-top: 1.5rem;
+  }
+
+  .hero-lux-supporting {
+    margin-top: 1.35rem;
   }
 }
 
@@ -300,6 +362,11 @@
   .hero-sub-fade,
   .hero-btn-enter,
   .hero-lux-est,
+  .hero-lux-label,
+  .hero-lux-anim-label,
+  .hero-lux-anim-headline,
+  .hero-lux-anim-since,
+  .hero-lux-anim-supporting,
   .hero-lux-word,
   .hero-lux-subtitle,
   .hero-lux-actions {
