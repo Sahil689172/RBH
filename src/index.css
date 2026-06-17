@@ -56,6 +56,188 @@
   text-align: center;
 }
 
+/* ── Hero luxury split layout (text only) ── */
+.hero-text-gradient {
+  position: absolute;
+  inset: 0;
+  z-index: 40;
+  pointer-events: none;
+  background: linear-gradient(
+    90deg,
+    rgba(0, 0, 0, 0.75) 0%,
+    rgba(0, 0, 0, 0.45) 35%,
+    rgba(0, 0, 0, 0.15) 100%
+  );
+}
+
+.hero-content-luxury {
+  position: absolute;
+  z-index: 50;
+  left: 8%;
+  top: 50%;
+  transform: translateY(-50%);
+  max-width: 600px;
+  width: min(600px, 84vw);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+  pointer-events: none;
+}
+
+.hero-lux-est {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: clamp(0.72rem, 1vw, 0.85rem);
+  font-weight: 500;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: #d4af37;
+  opacity: 0;
+  animation: heroLuxLabel 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.hero-lux-heading {
+  font-family: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
+  font-size: clamp(4rem, 8vw, 7rem);
+  font-weight: 500;
+  line-height: 0.9;
+  letter-spacing: -0.04em;
+  color: #f8f6f2;
+  margin-top: 1.25rem;
+}
+
+.hero-lux-word {
+  display: block;
+  opacity: 0;
+  animation: heroLuxWord 0.85s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.hero-lux-subtitle {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: clamp(1rem, 1.6vw, 1.2rem);
+  font-weight: 400;
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.75);
+  max-width: 28ch;
+  margin-top: 1.75rem;
+  opacity: 0;
+  animation: heroLuxFadeUp 0.75s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation-delay: 0.5s;
+}
+
+.hero-lux-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.875rem 1rem;
+  margin-top: 2.25rem;
+  opacity: 0;
+  animation: heroLuxFadeUp 0.75s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation-delay: 0.68s;
+  pointer-events: auto;
+}
+
+.hero-lux-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.9rem 2rem;
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #050505;
+  background: #d4af37;
+  border-radius: 9999px;
+  border: 1px solid #d4af37;
+  transition:
+    transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+    background-color 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.hero-lux-btn-primary:hover {
+  background: #e0bc4a;
+  transform: translateY(-2px);
+  box-shadow: 0 12px 32px rgba(212, 175, 55, 0.28);
+}
+
+.hero-lux-btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.85rem 1.75rem;
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #d4af37;
+  background: transparent;
+  border: 1px solid rgba(212, 175, 55, 0.55);
+  border-radius: 9999px;
+  transition:
+    transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+    background-color 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.hero-lux-btn-secondary:hover {
+  background: rgba(212, 175, 55, 0.08);
+  border-color: #d4af37;
+  transform: translateY(-2px);
+}
+
+@keyframes heroLuxLabel {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes heroLuxWord {
+  from {
+    opacity: 0;
+    transform: translateY(50px);
+    filter: blur(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+@keyframes heroLuxFadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 640px) {
+  .hero-content-luxury {
+    left: 6%;
+    top: auto;
+    bottom: 12%;
+    transform: none;
+    max-width: 88vw;
+  }
+
+  .hero-lux-heading {
+    font-size: clamp(2.75rem, 12vw, 3.5rem);
+  }
+}
+
 @keyframes heroReveal {
   0% {
     opacity: 0;
@@ -116,7 +298,11 @@
   .hero-label-fade,
   .hero-slide-up,
   .hero-sub-fade,
-  .hero-btn-enter {
+  .hero-btn-enter,
+  .hero-lux-est,
+  .hero-lux-word,
+  .hero-lux-subtitle,
+  .hero-lux-actions {
     animation: none;
     opacity: 1;
     transform: none;

@@ -65,51 +65,31 @@ export function Hero({ className = '' }: HeroProps) {
           cursorY={cursorPos.y}
         />
 
-        {/* Text */}
-        <div
-          className="absolute top-0 left-0 right-0 z-50 flex flex-col items-center text-center px-5 pointer-events-none"
-          style={{ paddingTop: 'calc(var(--nav-height, 84px) + 1.25rem)' }}
-        >
-          <p className="hero-type-label hero-label-fade" style={{ animationDelay: '0.1s' }}>
-            ✦ RAHI BOOT HOUSE ✦
-          </p>
+        {/* Text gradient — readability only */}
+        <div className="hero-text-gradient" aria-hidden="true" />
 
-          <h1
-            className="hero-type-headline hero-headline-reveal mt-6"
-            style={{ animationDelay: '0.2s' }}
-          >
-            Walking With You
+        {/* Text — left luxury split */}
+        <div className="hero-content-luxury">
+          <p className="hero-lux-est">EST. 1959</p>
+
+          <h1 className="hero-lux-heading" aria-label="Walking With You">
+            <span className="hero-lux-word" style={{ animationDelay: '0.15s' }}>
+              Walking
+            </span>
+            <span className="hero-lux-word" style={{ animationDelay: '0.3s' }}>
+              With You
+            </span>
           </h1>
 
-          <p
-            className="hero-type-accent hero-slide-up mt-[18px]"
-            style={{ animationDelay: '0.35s' }}
-          >
-            Since 1959
+          <p className="hero-lux-subtitle">
+            Premium footwear for generations.
           </p>
 
-          <p
-            className="hero-type-desc hero-sub-fade mt-7 px-2"
-            style={{ animationDelay: '0.5s' }}
-          >
-            Serving generations of families with trusted footwear and leading brands
-            since 1959.
-          </p>
-
-          <div
-            className="hero-btn-enter flex flex-wrap items-center justify-center gap-3 sm:gap-4 mt-9 pointer-events-auto"
-            style={{ animationDelay: '0.65s' }}
-          >
-            <a
-              href="/about/"
-              className="hero-btn-lift inline-flex items-center justify-center bg-[#D4AF37] hover:bg-[#e0bc4a] text-[#050505] text-sm font-medium tracking-[0.04em] px-7 py-3 rounded-full"
-            >
+          <div className="hero-lux-actions">
+            <a href="/about/" className="hero-lux-btn-primary">
               Explore Our Legacy
             </a>
-            <a
-              href="/contact/"
-              className="hero-btn-lift inline-flex items-center justify-center bg-transparent border border-[#D4AF37] text-[#D4AF37] hover:bg-[#D4AF37]/10 text-sm font-medium tracking-[0.04em] px-7 py-3 rounded-full"
-            >
+            <a href="/contact/" className="hero-lux-btn-secondary">
               Contact Us
             </a>
           </div>
