@@ -118,6 +118,11 @@ function staticSitePlugin(): Plugin {
 
 export default defineConfig({
   plugins: [react(), staticSitePlugin()],
+  resolve: {
+    alias: {
+      '@': path.resolve(rootDir, 'src'),
+    },
+  },
   publicDir: 'public',
   server: {
     port: 5173,

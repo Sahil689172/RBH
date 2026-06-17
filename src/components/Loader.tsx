@@ -1,79 +1,41 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { AnimatedScanLoader } from '@/components/ui/animated-scan-loader';
 
-const LOADER_VIDEO = '/loader.mp4';
-const FADE_MS = 1000;
-const ERROR_FALLBACK_MS = 8000;
+const HOLD_MS = 2400;
+const FADE_MS = 600;
 
 interface LoaderProps {
   onComplete: () => void;
 }
 
 export function Loader({ onComplete }: LoaderProps) {
-  const videoRef = useRef<HTMLVideoElement>(null);
   const [fading, setFading] = useState(false);
   const finishedRef = useRef(false);
-  const fadeTimerRef = useRef<number | null>(null);
-  const errorTimerRef = useRef<number | null>(null);
 
-  const clearTimers = useCallback(() => {
-    if (fadeTimerRef.current !== null) {
-      window.clearTimeout(fadeTimerRef.current);
-      fadeTimerRef.current = null;
-    }
-    if (errorTimerRef.current !== null) {
-      window.clearTimeout(errorTimerRef.current);
-      errorTimerRef.current = null;
-    }
-  }, []);
+  useEffect(() => {
+    const fadeTimer = window.setTimeout(() => setFading(true), HOLD_MS);
+    const completeTimer = window.setTimeout(() => {
+      if (finishedRef.current) return;
+      finishedRef.current = true;
+      onComplete();
+    }, HOLD_MS + FADE_MS);
 
-  const finishLoader = useCallback(() => {
-    if (finishedRef.current) return;
-    finishedRef.current = true;
-    clearTimers();
-    onComplete();
-  }, [clearTimers, onComplete]);
-
-  const startFadeOut = useCallback(() => {
-    if (finishedRef.current) return;
-    setFading(true);
-    fadeTimerRef.current = window.setTimeout(finishLoader, FADE_MS);
-  }, [finishLoader]);
-
-  const handleEnded = useCallback(() => {
-    if (finishedRef.current) return;
-
-    if (errorTimerRef.current !== null) {
-      window.clearTimeout(errorTimerRef.current);
-      errorTimerRef.current = null;
-    }
-
-    videoRef.current?.pause();
-    startFadeOut();
-  }, [startFadeOut]);
-
-  const handleError = useCallback(() => {
-    if (finishedRef.current || errorTimerRef.current !== null) return;
-    errorTimerRef.current = window.setTimeout(startFadeOut, ERROR_FALLBACK_MS);
-  }, [startFadeOut]);
-
-  useEffect(() => clearTimers, [clearTimers]);
+    return () => {
+      window.clearTimeout(fadeTimer);
+      window.clearTimeout(completeTimer);
+    };
+  }, [onComplete]);
 
   return (
     <div
       className={`rbh-loader${fading ? ' rbh-loader--fading' : ''}`}
-      aria-hidden={fading}
+      role="status"
+      aria-label="Loading"
     >
-      <video
-        ref={videoRef}
-        className="rbh-loader__video"
-        src={LOADER_VIDEO}
-        autoPlay
-        muted
-        playsInline
-        preload="auto"
-        onEnded={handleEnded}
-        onError={handleError}
-      />
+      <div className="rbh-loader__inner">
+        <AnimatedScanLoader />
+        <p className="rbh-loader__tagline">Since 1959</p>
+      </div>
     </div>
   );
 }
