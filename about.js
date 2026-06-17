@@ -208,6 +208,85 @@
     });
   }
 
+  function initTimelineTextInertia() {
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reducedMotion) return;
+
+    const paragraphs = document.querySelectorAll('.about-page .timeline-card-body > p');
+    if (!paragraphs.length) return;
+
+    paragraphs.forEach((paragraph) => {
+      const text = paragraph.textContent?.trim();
+      if (!text) return;
+
+      paragraph.textContent = '';
+      paragraph.classList.add('timeline-inertia-line');
+      paragraph.setAttribute('aria-label', text);
+
+      const wordSpans = [];
+      const words = text.split(/\s+/);
+
+      words.forEach((word, index) => {
+        const span = document.createElement('span');
+        span.className = 'timeline-inertia-word';
+        span.textContent = word;
+        paragraph.appendChild(span);
+        wordSpans.push(span);
+
+        if (index < words.length - 1) {
+          paragraph.appendChild(document.createTextNode(' '));
+        }
+      });
+
+      const velocity = { x: 0, y: 0 };
+      let lastPoint = null;
+
+      paragraph.addEventListener('pointermove', (event) => {
+        if (lastPoint) {
+          velocity.x = event.clientX - lastPoint.x;
+          velocity.y = event.clientY - lastPoint.y;
+        }
+        lastPoint = { x: event.clientX, y: event.clientY };
+      });
+
+      paragraph.addEventListener('pointerleave', () => {
+        lastPoint = null;
+        velocity.x = 0;
+        velocity.y = 0;
+        gsap.to(wordSpans, {
+          x: 0,
+          y: 0,
+          rotation: 0,
+          scale: 1,
+          duration: 0.55,
+          ease: 'power3.out',
+          stagger: 0.01,
+        });
+      });
+
+      wordSpans.forEach((span, index) => {
+        span.addEventListener('pointerenter', () => {
+          const direction = index % 2 === 0 ? 1 : -1;
+          const baseX = direction * (22 + Math.random() * 26);
+          const baseY = (Math.random() - 0.5) * 34;
+          const kickX =
+            Math.abs(velocity.x) > 1 ? velocity.x * 1.35 + baseX * 0.35 : baseX;
+          const kickY =
+            Math.abs(velocity.y) > 1 ? velocity.y * 1.35 + baseY * 0.35 : baseY;
+
+          gsap.to(span, {
+            x: Math.max(-64, Math.min(64, kickX)),
+            y: Math.max(-48, Math.min(48, kickY)),
+            rotation: direction * (14 + Math.random() * 22),
+            scale: 1.06 + Math.random() * 0.14,
+            duration: 0.38,
+            ease: 'power3.out',
+          });
+        });
+      });
+    });
+  }
+
   function initClosingReveal() {
     const closing = document.querySelector('.about-closing-inner');
     if (!closing) return;
@@ -232,6 +311,7 @@
   initHeroFade();
   initSpineDraw();
   initTimelineEntries();
+  initTimelineTextInertia();
   initClosingReveal();
   ScrollTrigger.refresh();
 })();

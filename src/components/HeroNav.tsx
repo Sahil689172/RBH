@@ -1,14 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 
-const SITE_LINKS = [
-  { label: 'Home', href: '/', nav: 'home' },
-  { label: 'About', href: '/about/', nav: 'about' },
-  { label: 'Brands', href: '/brands/', nav: 'brands' },
-  { label: 'Collection', href: '/collection/', nav: 'collection' },
-  { label: 'Contact', href: '/contact/', nav: 'contact' },
-] as const;
+import { SITE_TUBELIGHT_ITEMS, TubelightNav } from '@/components/TubelightSiteNav';
 
-type NavKey = (typeof SITE_LINKS)[number]['nav'];
+type NavKey = (typeof SITE_TUBELIGHT_ITEMS)[number]['nav'];
 
 type HeroNavProps = {
   className?: string;
@@ -47,21 +41,15 @@ export function HeroNav({ className = '', activeNav = 'home' }: HeroNavProps) {
         </a>
 
         <nav
-          className={`navbar-links${mobileOpen ? ' open' : ''}`}
+          className={`navbar-links tubelight-nav${mobileOpen ? ' open' : ''}`}
           id="nav-links"
           aria-label="Main navigation"
         >
-          {SITE_LINKS.map((link) => (
-            <a
-              key={link.nav}
-              href={link.href}
-              className={`nav-link${activeNav === link.nav ? ' active' : ''}`}
-              data-nav={link.nav}
-              onClick={closeMobile}
-            >
-              {link.label}
-            </a>
-          ))}
+          <TubelightNav
+            activeNav={activeNav}
+            items={SITE_TUBELIGHT_ITEMS}
+            onItemClick={closeMobile}
+          />
         </nav>
 
         <div className="navbar-actions">

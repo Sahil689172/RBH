@@ -5,7 +5,7 @@ import { fileURLToPath } from 'node:url';
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const dist = path.join(root, 'dist');
 
-const dirs = ['about', 'brands', 'collection', 'contact', 'public2', 'public3', 'homepage_frames'];
+const dirs = ['brands', 'collection', 'public2', 'public3', 'homepage_frames'];
 const files = [
   'style.css',
   'site.js',

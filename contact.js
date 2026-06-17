@@ -39,6 +39,64 @@
 
   initForm();
 
+  function initHeroHoverText() {
+    const lines = document.querySelectorAll('.contact-hero-hover-text[data-hover-text]');
+    if (!lines.length) return;
+
+    lines.forEach((line) => {
+      const text = line.textContent?.trim() ?? '';
+      if (!text) return;
+
+      line.textContent = '';
+      line.setAttribute('aria-label', text);
+      line.setAttribute('tabindex', '0');
+
+      const chars = [...text].map((char) => {
+        const span = document.createElement('span');
+        span.className = 'contact-hero-char';
+        span.textContent = char === ' ' ? '\u00A0' : char;
+        line.appendChild(span);
+        return span;
+      });
+
+      const scatter = () => {
+        if (typeof gsap === 'undefined') return;
+        chars.forEach((span, index) => {
+          const direction = index % 2 === 0 ? -1 : 1;
+          gsap.to(span, {
+            x: direction * (8 + Math.random() * 22),
+            y: (Math.random() - 0.5) * 28,
+            rotation: direction * (6 + Math.random() * 18),
+            scale: 0.92 + Math.random() * 0.2,
+            duration: 0.45,
+            ease: 'power3.out',
+            delay: index * 0.012,
+          });
+        });
+      };
+
+      const reset = () => {
+        if (typeof gsap === 'undefined') return;
+        gsap.to(chars, {
+          x: 0,
+          y: 0,
+          rotation: 0,
+          scale: 1,
+          duration: 0.55,
+          ease: 'power3.out',
+          stagger: 0.008,
+        });
+      };
+
+      line.addEventListener('mouseenter', scatter);
+      line.addEventListener('mouseleave', reset);
+      line.addEventListener('focusin', scatter);
+      line.addEventListener('focusout', reset);
+    });
+  }
+
+  initHeroHoverText();
+
   if (typeof gsap === 'undefined') {
     return;
   }

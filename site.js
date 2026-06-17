@@ -7,6 +7,44 @@
 
   const navbar = document.getElementById('navbar');
 
+  function initTubelightNav() {
+    const track = document.getElementById('tubelight-nav-track');
+    const lamp = document.getElementById('tubelight-lamp');
+    if (!track || !lamp) return;
+
+    const items = track.querySelectorAll('.tubelight-nav-item[data-nav]');
+
+    function moveLamp(target) {
+      if (!target) return;
+      const trackRect = track.getBoundingClientRect();
+      const rect = target.getBoundingClientRect();
+      lamp.style.width = `${rect.width}px`;
+      lamp.style.transform = `translateX(${rect.left - trackRect.left}px)`;
+    }
+
+    function setActive(nav) {
+      items.forEach((item) => {
+        item.classList.toggle('active', item.dataset.nav === nav);
+      });
+      moveLamp(track.querySelector('.tubelight-nav-item.active'));
+    }
+
+    const currentPage = document.body.dataset.page || 'home';
+    setActive(currentPage);
+
+    items.forEach((item) => {
+      item.addEventListener('click', () => setActive(item.dataset.nav));
+    });
+
+    window.addEventListener('resize', () => {
+      moveLamp(track.querySelector('.tubelight-nav-item.active'));
+    });
+
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(() => moveLamp(track.querySelector('.tubelight-nav-item.active')));
+    }
+  }
+
   if (navbar) {
     const hamburger = document.getElementById('hamburger');
     const navLinks = document.getElementById('nav-links');
@@ -16,6 +54,8 @@
     navLinkEls.forEach((link) => {
       link.classList.toggle('active', link.dataset.nav === currentPage);
     });
+
+    initTubelightNav();
 
     function updateNavbar() {
       navbar.classList.toggle('scrolled', window.scrollY > 40);

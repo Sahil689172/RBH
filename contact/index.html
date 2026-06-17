@@ -21,12 +21,19 @@
         <span class="logo-name">RAHI BOOT HOUSE</span>
         <span class="logo-tagline">Since 1959</span>
       </a>
-      <nav class="navbar-links" id="nav-links" aria-label="Main navigation">
-        <a href="/" class="nav-link" data-nav="home">Home</a>
-        <a href="/about/" class="nav-link" data-nav="about">About</a>
-        <a href="/brands/" class="nav-link" data-nav="brands">Brands</a>
-        <a href="/collection/" class="nav-link" data-nav="collection">Collection</a>
-        <a href="/contact/" class="nav-link" data-nav="contact">Contact</a>
+      <nav class="navbar-links tubelight-nav" id="nav-links" aria-label="Main navigation">
+        <div class="tubelight-nav-track" id="tubelight-nav-track">
+          <a href="/" class="nav-link tubelight-nav-item" data-nav="home"><span class="tubelight-nav-label">Home</span></a>
+          <a href="/about/" class="nav-link tubelight-nav-item" data-nav="about"><span class="tubelight-nav-label">About</span></a>
+          <a href="/collection/" class="nav-link tubelight-nav-item" data-nav="collection"><span class="tubelight-nav-label">Collection</span></a>
+          <a href="/contact/" class="nav-link tubelight-nav-item" data-nav="contact"><span class="tubelight-nav-label">Contact</span></a>
+          <div class="tubelight-lamp tubelight-lamp--static" id="tubelight-lamp" aria-hidden="true">
+            <div class="tubelight-lamp-bar"></div>
+            <div class="tubelight-lamp-glow tubelight-lamp-glow--wide"></div>
+            <div class="tubelight-lamp-glow tubelight-lamp-glow--mid"></div>
+            <div class="tubelight-lamp-glow tubelight-lamp-glow--core"></div>
+          </div>
+        </div>
       </nav>
       <div class="navbar-actions">
         <div class="call-dropdown">
@@ -49,10 +56,9 @@
     <!-- Hero -->
     <section class="contact-hero" aria-labelledby="contact-hero-title">
       <div class="page-hero-bg" aria-hidden="true"></div>
-      <div class="section-container page-hero-inner">
-        <span class="section-label contact-hero-label reveal-item">Visit Us</span>
-        <h1 class="page-hero-title reveal-item" id="contact-hero-title">Rahi Boot House</h1>
-        <p class="page-hero-sub reveal-item">Hazira Chowk, Gwalior — walking with families since 1959.</p>
+      <div class="section-container page-hero-inner contact-hero-animated">
+        <span class="section-label contact-hero-label contact-hero-hover-text" data-hover-text>Visit Us</span>
+        <h1 class="page-hero-title contact-hero-hover-text" id="contact-hero-title" data-hover-text>Rahi Boot House</h1>
       </div>
       <div class="contact-hero-divider reveal-item" aria-hidden="true"></div>
     </section>
