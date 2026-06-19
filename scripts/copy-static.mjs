@@ -8,6 +8,8 @@ const dist = path.join(root, 'dist');
 const dirs = ['brands', 'collection', 'public2', 'public3', 'homepage_frames'];
 const files = [
   'style.css',
+  'mobile.css',
+  'hero-mobile.css',
   'site.js',
   'landing.js',
   'about.js',

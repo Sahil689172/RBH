@@ -24,6 +24,8 @@ const MIME: Record<string, string> = {
 const ROOT_ASSETS = ['i3.png', 'i4.png', 'favicon.svg', 'loader.mp4', 'contact.mp4'];
 const ROOT_FILES = [
   'style.css',
+  'mobile.css',
+  'hero-mobile.css',
   'site.js',
   'landing.js',
   'about.js',
@@ -73,7 +75,13 @@ function staticSitePlugin(): Plugin {
     configureServer(server) {
       server.middlewares.use(
         (req: IncomingMessage, res: ServerResponse, next: () => void) => {
-          const url = req.url?.split('?')[0];
+          const rawUrl = req.url ?? '';
+          // Let Vite handle CSS/JS module imports (e.g. /mobile.css?import)
+          if (rawUrl.includes('?import') || rawUrl.startsWith('/@') || rawUrl.startsWith('/src/')) {
+            return next();
+          }
+
+          const url = rawUrl.split('?')[0];
           if (!url) return next();
 
           const page = HTML_PAGES[url];

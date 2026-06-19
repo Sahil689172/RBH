@@ -23,6 +23,10 @@
       if (!this.track) return;
 
       this.velocity = parseFloat(root.dataset.velocity, 10) || 5;
+      const isMobile = window.matchMedia('(max-width: 767px)').matches;
+      if (isMobile) {
+        this.velocity *= 0.62;
+      }
       this.movable = root.dataset.movable !== 'false';
       this.baseX = 0;
       this.directionFactor = 1;

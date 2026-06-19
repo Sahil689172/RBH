@@ -1,4 +1,4 @@
-import { Fragment } from 'react';
+import { Fragment, useEffect, useRef } from 'react';
 
 const BRANDS = [
   'Campus',
@@ -31,6 +31,34 @@ function MarqueeRow({ hidden }: { hidden?: boolean }) {
 }
 
 export function BrandsMarqueeSection() {
+  const wrapRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const wrap = wrapRef.current;
+    if (!wrap) return;
+
+    const track = wrap.querySelector<HTMLElement>('.home-marquee-track');
+    if (!track) return;
+
+    const pause = () => {
+      track.style.animationPlayState = 'paused';
+    };
+
+    const resume = () => {
+      track.style.animationPlayState = 'running';
+    };
+
+    wrap.addEventListener('touchstart', pause, { passive: true });
+    wrap.addEventListener('touchend', resume, { passive: true });
+    wrap.addEventListener('touchcancel', resume, { passive: true });
+
+    return () => {
+      wrap.removeEventListener('touchstart', pause);
+      wrap.removeEventListener('touchend', resume);
+      wrap.removeEventListener('touchcancel', resume);
+    };
+  }, []);
+
   return (
     <section className="home-brands-section" aria-labelledby="home-brands-title">
       <div className="home-section-header reveal-item">
@@ -40,7 +68,7 @@ export function BrandsMarqueeSection() {
         </h2>
       </div>
 
-      <div className="home-marquee-wrap" aria-label="Partner brands">
+      <div ref={wrapRef} className="home-marquee-wrap" aria-label="Partner brands">
         <div className="home-marquee-track">
           <MarqueeRow />
           <MarqueeRow hidden />

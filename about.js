@@ -31,6 +31,8 @@
   page.classList.add('js-ready');
   gsap.registerPlugin(ScrollTrigger);
 
+  const timelineEntries = [];
+
   function isMobileViewport() {
     return window.matchMedia('(max-width: 767px)').matches;
   }
@@ -42,16 +44,65 @@
   }
 
   function startGifFloat(gifEl) {
-    if (!gifEl || isMobileViewport()) return;
+    if (!gifEl) return;
     stopGifFloat(gifEl);
 
     gsap.to(gifEl, {
-      y: -8,
-      duration: 3,
+      y: isMobileViewport() ? -4 : -8,
+      duration: isMobileViewport() ? 3.5 : 3,
       ease: 'sine.inOut',
       yoyo: true,
       repeat: -1,
     });
+  }
+
+  function preloadTimelineGifs() {
+    TIMELINE_GIFS.forEach((name, index) => {
+      const img = new Image();
+      img.decoding = 'async';
+      img.loading = index < 2 ? 'eager' : 'lazy';
+      img.src = `../public2/${name}`;
+    });
+
+    document.querySelectorAll('.timeline-gif-container img').forEach((img) => {
+      if (img.dataset.fallbackReady === 'true') return;
+      img.dataset.fallbackReady = 'true';
+
+      img.addEventListener('error', () => {
+        const entry = img.closest('.timeline-entry');
+        const src = entry?.dataset.gif;
+        if (src && img.src !== new URL(src, window.location.href).href) {
+          img.src = src;
+        }
+      });
+    });
+  }
+
+  function syncInitialTimelineState() {
+    timelineEntries.forEach((entry) => {
+      const trigger = ScrollTrigger.getById(entry.dataset.timelineTriggerId);
+      const anim = trigger?.animation;
+      const gif = entry.querySelector('.timeline-gif-container');
+      if (!trigger || !anim) return;
+
+      if (trigger.isActive) {
+        anim.progress(1);
+        if (gif) startGifFloat(gif);
+      } else {
+        anim.progress(0);
+        if (gif) stopGifFloat(gif);
+      }
+    });
+  }
+
+  function refreshScrollTriggers(runInitialSync) {
+    ScrollTrigger.refresh(true);
+
+    if (runInitialSync) {
+      requestAnimationFrame(() => {
+        syncInitialTimelineState();
+      });
+    }
   }
 
   function splitHeroWords(root) {
@@ -134,7 +185,8 @@
         trigger: section,
         start: 'top 70%',
         end: 'bottom 85%',
-        scrub: 1,
+        scrub: isMobileViewport() ? 0.6 : 1,
+        invalidateOnRefresh: true,
       },
     });
   }
@@ -142,6 +194,8 @@
   function initTimelineEntries() {
     const entries = gsap.utils.toArray('.timeline-entry');
     if (!entries.length) return;
+
+    timelineEntries.length = 0;
 
     entries.forEach((entry, index) => {
       const isLeft = entry.classList.contains('timeline-entry--left');
@@ -153,54 +207,87 @@
 
       if (!dot || !connector || !card || !year) return;
 
+      timelineEntries.push(entry);
+
       const isMobile = isMobileViewport();
       const xFrom = isMobile || isLeft ? -80 : 80;
       const connectorOrigin = isMobile || !isLeft ? 'left center' : 'right center';
-      const gifXFrom = isLeft ? 80 : -80;
+      const gifXFrom = isMobile ? 0 : isLeft ? 80 : -80;
+      const gifYFrom = isMobile ? 36 : 0;
+      const triggerId = `timeline-entry-${index}`;
+      const animDuration = isMobile ? 0.75 : 0.9;
+
+      entry.dataset.timelineTriggerId = triggerId;
+
+      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      if (reducedMotion) {
+        gsap.set(dot, { scale: 1 });
+        gsap.set(connector, { scaleX: 1 });
+        gsap.set(card, { x: 0, opacity: 1 });
+        gsap.set(year, { y: 0, opacity: 1 });
+        if (gif) {
+          gsap.set(gif, { x: 0, y: 0, opacity: 1, visibility: 'visible' });
+          startGifFloat(gif);
+        }
+        return;
+      }
 
       gsap.set(dot, { scale: 0, transformOrigin: 'center center' });
       gsap.set(connector, { scaleX: 0, transformOrigin: connectorOrigin });
       gsap.set(card, { x: xFrom, opacity: 0 });
       gsap.set(year, { y: 14, opacity: 0 });
 
-      if (gif && !isMobile) {
-        gsap.set(gif, { x: gifXFrom, opacity: 0, y: 0 });
+      if (gif) {
+        gsap.set(gif, {
+          x: gifXFrom,
+          y: gifYFrom,
+          opacity: 1,
+          visibility: 'visible',
+        });
       }
 
       const tl = gsap.timeline({
         scrollTrigger: {
+          id: triggerId,
           trigger: entry,
           start: 'top 88%',
           end: 'bottom 12%',
           toggleActions: 'play reverse play reverse',
+          invalidateOnRefresh: true,
+          onEnter: () => {
+            if (gif) startGifFloat(gif);
+          },
           onLeave: () => stopGifFloat(gif),
           onLeaveBack: () => stopGifFloat(gif),
+          onEnterBack: () => {
+            if (gif) startGifFloat(gif);
+          },
         },
       });
 
       tl.to(dot, { scale: 1, duration: 0.5, ease: 'power3.out' })
         .to(connector, { scaleX: 1, duration: 0.45, ease: 'power3.out' }, '+=0.1')
-        .to(card, { x: 0, opacity: 1, duration: 0.9, ease: 'power3.out' }, '+=0.1');
+        .to(card, { x: 0, opacity: 1, duration: animDuration, ease: 'power3.out' }, '+=0.1');
 
-      if (gif && !isMobile) {
+      if (gif) {
         tl.to(
           gif,
           {
             x: 0,
-            opacity: 1,
-            duration: 0.9,
+            y: 0,
+            duration: animDuration,
             ease: 'power3.out',
             onComplete: () => startGifFloat(gif),
             onReverseComplete: () => stopGifFloat(gif),
           },
-          '-=0.75'
+          '-=0.75',
         );
       }
 
       tl.to(year, { y: 0, opacity: 1, duration: 0.6, ease: 'power3.out' }, '+=0.1');
 
       if (TIMELINE_GIFS[index] && entry.dataset.gif) {
-        const expected = `../public2/${TIMELINE_GIFS[index]}`;
         if (!entry.dataset.gif.endsWith(TIMELINE_GIFS[index])) {
           console.warn(`Timeline entry ${index + 1}: expected GIF ${TIMELINE_GIFS[index]}`);
         }
@@ -216,27 +303,33 @@
     if (!paragraphs.length) return;
 
     paragraphs.forEach((paragraph) => {
+      if (paragraph.dataset.inertiaReady === 'true') return;
+
       const text = paragraph.textContent?.trim();
       if (!text) return;
 
       paragraph.textContent = '';
       paragraph.classList.add('timeline-inertia-line');
       paragraph.setAttribute('aria-label', text);
+      paragraph.dataset.inertiaReady = 'true';
 
       const wordSpans = [];
       const words = text.split(/\s+/);
+      const fragment = document.createDocumentFragment();
 
       words.forEach((word, index) => {
         const span = document.createElement('span');
         span.className = 'timeline-inertia-word';
         span.textContent = word;
-        paragraph.appendChild(span);
+        fragment.appendChild(span);
         wordSpans.push(span);
 
         if (index < words.length - 1) {
-          paragraph.appendChild(document.createTextNode(' '));
+          fragment.appendChild(document.createTextNode(' '));
         }
       });
+
+      paragraph.appendChild(fragment);
 
       const velocity = { x: 0, y: 0 };
       let lastPoint = null;
@@ -264,11 +357,13 @@
         });
       });
 
-      wordSpans.forEach((span, index) => {
-        span.addEventListener('pointerenter', () => {
-          const direction = index % 2 === 0 ? 1 : -1;
-          const baseX = direction * (22 + Math.random() * 26);
-          const baseY = (Math.random() - 0.5) * 34;
+      const kickStrength = isMobileViewport() ? 0.75 : 1;
+
+      wordSpans.forEach((span, wordIndex) => {
+        const activate = () => {
+          const direction = wordIndex % 2 === 0 ? 1 : -1;
+          const baseX = direction * (22 + Math.random() * 26) * kickStrength;
+          const baseY = (Math.random() - 0.5) * 34 * kickStrength;
           const kickX =
             Math.abs(velocity.x) > 1 ? velocity.x * 1.35 + baseX * 0.35 : baseX;
           const kickY =
@@ -277,12 +372,15 @@
           gsap.to(span, {
             x: Math.max(-64, Math.min(64, kickX)),
             y: Math.max(-48, Math.min(48, kickY)),
-            rotation: direction * (14 + Math.random() * 22),
-            scale: 1.06 + Math.random() * 0.14,
+            rotation: direction * (14 + Math.random() * 22) * kickStrength,
+            scale: 1.04 + Math.random() * 0.1,
             duration: 0.38,
             ease: 'power3.out',
           });
-        });
+        };
+
+        span.addEventListener('pointerenter', activate);
+        span.addEventListener('click', activate);
       });
     });
   }
@@ -308,10 +406,23 @@
     });
   }
 
+  preloadTimelineGifs();
   initHeroFade();
   initSpineDraw();
   initTimelineEntries();
   initTimelineTextInertia();
   initClosingReveal();
-  ScrollTrigger.refresh();
+  refreshScrollTriggers(true);
+
+  let resizeTimer;
+  window.addEventListener(
+    'resize',
+    () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => refreshScrollTriggers(false), 150);
+    },
+    { passive: true },
+  );
+
+  window.addEventListener('load', () => refreshScrollTriggers(true), { once: true });
 })();

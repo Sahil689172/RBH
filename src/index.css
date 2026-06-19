@@ -277,33 +277,6 @@
   }
 }
 
-@media (max-width: 640px) {
-  .hero-content-luxury {
-    left: auto;
-    right: max(1.25rem, 5%);
-    top: auto;
-    bottom: 12%;
-    transform: none;
-    max-width: 88vw;
-    align-items: flex-end;
-    text-align: right;
-  }
-
-  .hero-lux-heading {
-    font-size: clamp(2.5rem, 11vw, 3.25rem);
-    white-space: normal;
-  }
-
-  .hero-lux-since {
-    font-size: clamp(1.5rem, 6.6vw, 1.95rem);
-    margin-top: 1.5rem;
-  }
-
-  .hero-lux-supporting {
-    margin-top: 1.35rem;
-  }
-}
-
 @keyframes heroReveal {
   0% {
     opacity: 0;

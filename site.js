@@ -65,18 +65,31 @@
     updateNavbar();
 
     if (hamburger && navLinks) {
-      hamburger.addEventListener('click', () => {
-        const open = navLinks.classList.toggle('open');
+      const setMenuOpen = (open) => {
+        navLinks.classList.toggle('open', open);
         hamburger.classList.toggle('open', open);
-        hamburger.setAttribute('aria-expanded', open);
+        hamburger.setAttribute('aria-expanded', String(open));
+        document.body.classList.toggle('nav-menu-open', open);
+      };
+
+      hamburger.addEventListener('click', () => {
+        setMenuOpen(!navLinks.classList.contains('open'));
       });
 
       navLinkEls.forEach((link) => {
-        link.addEventListener('click', () => {
-          navLinks.classList.remove('open');
-          hamburger.classList.remove('open');
-          hamburger.setAttribute('aria-expanded', 'false');
-        });
+        link.addEventListener('click', () => setMenuOpen(false));
+      });
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && navLinks.classList.contains('open')) {
+          setMenuOpen(false);
+        }
+      });
+
+      navLinks.addEventListener('click', (e) => {
+        if (e.target === navLinks) {
+          setMenuOpen(false);
+        }
       });
     }
   }

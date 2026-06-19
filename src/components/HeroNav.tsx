@@ -27,7 +27,26 @@ export function HeroNav({ className = '', activeNav = 'home' }: HeroNavProps) {
     return () => document.removeEventListener('click', onClick);
   }, [callOpen]);
 
-  const closeMobile = () => setMobileOpen(false);
+  const closeMobile = () => {
+    setMobileOpen(false);
+    document.body.classList.remove('nav-menu-open');
+  };
+
+  useEffect(() => {
+    document.body.classList.toggle('nav-menu-open', mobileOpen);
+    return () => document.body.classList.remove('nav-menu-open');
+  }, [mobileOpen]);
+
+  useEffect(() => {
+    if (!mobileOpen) return;
+
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') closeMobile();
+    };
+
+    document.addEventListener('keydown', onKeyDown);
+    return () => document.removeEventListener('keydown', onKeyDown);
+  }, [mobileOpen]);
 
   return (
     <header
