@@ -30,6 +30,7 @@ const ROOT_FILES = [
   'landing.js',
   'about.js',
   'collection.js',
+  'collection-catalog.js',
   'contact.js',
   ...ROOT_ASSETS,
 ];
@@ -83,6 +84,15 @@ function staticSitePlugin(): Plugin {
 
           const url = rawUrl.split('?')[0];
           if (!url) return next();
+
+          const decodedUrl = decodeURIComponent(url);
+          if (
+            decodedUrl === '/Leather Shoes' ||
+            decodedUrl.startsWith('/Leather Shoes/')
+          ) {
+            const filePath = path.join(rootDir, decodedUrl.slice(1));
+            if (sendFile(res, filePath)) return;
+          }
 
           const page = HTML_PAGES[url];
           if (page) {

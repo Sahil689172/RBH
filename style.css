@@ -921,6 +921,321 @@ img, canvas {
   background: linear-gradient(to bottom, transparent, var(--bg-elevated) 40%, var(--bg));
 }
 
+/* ── Leather shoe catalog ── */
+.collection-catalog-section {
+  position: relative;
+  padding: clamp(3.5rem, 8vh, 6rem) 0 clamp(4.5rem, 10vh, 7rem);
+  background:
+    radial-gradient(ellipse 70% 45% at 50% 0%, rgba(212, 175, 55, 0.06) 0%, transparent 70%),
+    var(--bg);
+}
+
+.collection-catalog-header {
+  text-align: center;
+  margin-bottom: clamp(2.5rem, 5vh, 4rem);
+}
+
+.collection-catalog-subtitle {
+  margin-top: 1rem;
+  font-family: var(--font-body);
+  font-size: clamp(1rem, 1.6vw, 1.125rem);
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+.leather-catalog-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(1rem, 2.5vw, 1.75rem);
+}
+
+.leather-catalog-empty {
+  grid-column: 1 / -1;
+  text-align: center;
+  font-family: var(--font-body);
+  color: var(--text-muted);
+  padding: 3rem 1rem;
+}
+
+.leather-product-card {
+  display: flex;
+  flex-direction: column;
+  border-radius: 18px;
+  overflow: hidden;
+  background: linear-gradient(165deg, #121212 0%, #080808 100%);
+  border: 1px solid rgba(212, 175, 55, 0.12);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.42);
+  cursor: pointer;
+  transition:
+    transform 300ms ease,
+    box-shadow 300ms ease,
+    border-color 300ms ease;
+}
+
+.leather-product-card:hover,
+.leather-product-card:focus-visible {
+  transform: translateY(-8px);
+  border-color: rgba(212, 175, 55, 0.35);
+  box-shadow:
+    0 24px 52px rgba(0, 0, 0, 0.55),
+    0 0 0 1px rgba(212, 175, 55, 0.18),
+    0 0 28px rgba(212, 175, 55, 0.12);
+  outline: none;
+}
+
+.leather-product-card__media {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background: #0a0a0a;
+}
+
+.leather-product-card__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  transform: scale(1);
+  transition: transform 300ms ease;
+}
+
+.leather-product-card:hover .leather-product-card__media img,
+.leather-product-card:focus-visible .leather-product-card__media img {
+  transform: scale(1.05);
+}
+
+.leather-product-card__body {
+  padding: 1.25rem 1.35rem 1.5rem;
+  text-align: left;
+}
+
+.leather-product-card__title {
+  font-family: var(--font-display);
+  font-size: clamp(1.2rem, 2vw, 1.45rem);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: #f5f5f5;
+  margin: 0;
+}
+
+.leather-product-card__price {
+  margin: 0.65rem 0 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.35rem, 2.2vw, 1.65rem);
+  font-weight: 600;
+  font-style: italic;
+  color: var(--gold);
+  transition:
+    color 300ms ease,
+    text-shadow 300ms ease;
+}
+
+.leather-product-card:hover .leather-product-card__price,
+.leather-product-card:focus-visible .leather-product-card__price {
+  color: #f0d878;
+  text-shadow: 0 0 18px rgba(212, 175, 55, 0.45);
+}
+
+/* ── Leather gallery modal ── */
+body.leather-gallery-open {
+  overflow: hidden;
+}
+
+.leather-gallery {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(1rem, 3vw, 2rem);
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 300ms ease,
+    visibility 300ms ease;
+}
+
+.leather-gallery.is-open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.leather-gallery__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(4, 4, 4, 0.82);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+.leather-gallery__panel {
+  position: relative;
+  z-index: 1;
+  width: min(920px, 100%);
+  padding: clamp(1.25rem, 3vw, 2rem);
+  border-radius: 22px;
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  background: linear-gradient(160deg, rgba(18, 18, 18, 0.96) 0%, rgba(8, 8, 8, 0.98) 100%);
+  box-shadow:
+    0 28px 80px rgba(0, 0, 0, 0.65),
+    0 0 0 1px rgba(212, 175, 55, 0.08);
+  transform: translateY(12px) scale(0.98);
+  transition: transform 300ms ease;
+}
+
+.leather-gallery.is-open .leather-gallery__panel {
+  transform: translateY(0) scale(1);
+}
+
+.leather-gallery__close {
+  position: absolute;
+  top: 0.85rem;
+  right: 0.85rem;
+  width: 2.5rem;
+  height: 2.5rem;
+  border: 1px solid rgba(212, 175, 55, 0.25);
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.35);
+  color: #f5f5f5;
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+  transition:
+    border-color 300ms ease,
+    color 300ms ease,
+    background-color 300ms ease;
+}
+
+.leather-gallery__close:hover {
+  border-color: var(--gold);
+  color: var(--gold);
+  background: rgba(212, 175, 55, 0.08);
+}
+
+.leather-gallery__stage {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: clamp(0.5rem, 2vw, 1rem);
+  margin-top: 1.5rem;
+}
+
+.leather-gallery__image-wrap {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  border-radius: 16px;
+  overflow: hidden;
+  background: #0a0a0a;
+}
+
+.leather-gallery__image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+  opacity: 0;
+  transition: opacity 300ms ease;
+}
+
+.leather-gallery__image.is-visible {
+  opacity: 1;
+}
+
+.leather-gallery__nav {
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 999px;
+  border: 1px solid rgba(212, 175, 55, 0.28);
+  background: rgba(0, 0, 0, 0.45);
+  color: var(--gold);
+  font-size: 1.25rem;
+  cursor: pointer;
+  transition:
+    transform 300ms ease,
+    border-color 300ms ease,
+    background-color 300ms ease;
+}
+
+.leather-gallery__nav:hover:not(:disabled) {
+  transform: translateY(-2px);
+  border-color: var(--gold);
+  background: rgba(212, 175, 55, 0.1);
+}
+
+.leather-gallery__nav:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.leather-gallery__meta {
+  margin-top: 1.5rem;
+  text-align: center;
+}
+
+.leather-gallery__title {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: 600;
+  color: #f5f5f5;
+  margin: 0;
+}
+
+.leather-gallery__price {
+  margin: 0.5rem 0 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.35rem, 2.5vw, 1.85rem);
+  font-weight: 600;
+  font-style: italic;
+  color: var(--gold);
+}
+
+.leather-gallery__counter {
+  margin: 0.75rem 0 0;
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+@media (min-width: 640px) {
+  .leather-catalog-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .leather-catalog-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 639px) {
+  .leather-gallery__stage {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto;
+  }
+
+  .leather-gallery__nav {
+    justify-self: center;
+  }
+
+  .leather-gallery__nav--prev {
+    order: 2;
+  }
+
+  .leather-gallery__image-wrap {
+    order: 1;
+  }
+
+  .leather-gallery__nav--next {
+    order: 3;
+  }
+}
+
 @media (min-width: 768px) {
   .collection-showcase-card {
     width: 10rem;

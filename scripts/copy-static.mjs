@@ -5,7 +5,7 @@ import { fileURLToPath } from 'node:url';
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const dist = path.join(root, 'dist');
 
-const dirs = ['brands', 'collection', 'public2', 'public3', 'homepage_frames', 'frames'];
+const dirs = ['brands', 'collection', 'public2', 'public3', 'homepage_frames', 'frames', 'Leather Shoes'];
 const files = [
   'style.css',
   'mobile.css',
@@ -14,6 +14,7 @@ const files = [
   'landing.js',
   'about.js',
   'collection.js',
+  'collection-catalog.js',
   'contact.js',
   'favicon.svg',
 ];
@@ -47,6 +48,11 @@ for (const dir of dirs) {
 for (const file of files) {
   copyFile(path.join(root, file), path.join(dist, file));
 }
+
+copyFile(
+  path.join(root, 'public', 'leather-shoes-catalog.json'),
+  path.join(dist, 'leather-shoes-catalog.json'),
+);
 
 for (const asset of ['i3.png', 'i4.png', 'loader.mp4', 'contact.mp4']) {
   const fromPublic = path.join(root, 'public', asset);

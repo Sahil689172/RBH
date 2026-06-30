@@ -1,0 +1,123 @@
+{
+  "generatedAt": "2026-06-30T08:27:55.038Z",
+  "source": "C:\\Users\\hp\\OneDrive\\Desktop\\leather shoes",
+  "products": [
+    {
+      "id": "s1",
+      "folder": "S1 850",
+      "price": 850,
+      "thumbnail": "/Leather%20Shoes/S1%20850/A1.jpeg",
+      "images": [
+        "/Leather%20Shoes/S1%20850/A1.jpeg"
+      ]
+    },
+    {
+      "id": "s2",
+      "folder": "s2 850",
+      "price": 850,
+      "thumbnail": "/Leather%20Shoes/s2%20850/A1.jpeg",
+      "images": [
+        "/Leather%20Shoes/s2%20850/A1.jpeg"
+      ]
+    },
+    {
+      "id": "s3",
+      "folder": "S3 400",
+      "price": 400,
+      "thumbnail": "/Leather%20Shoes/S3%20400/A1.jpeg",
+      "images": [
+        "/Leather%20Shoes/S3%20400/A1.jpeg"
+      ]
+    },
+    {
+      "id": "s4",
+      "folder": "S4 700",
+      "price": 700,
+      "thumbnail": "/Leather%20Shoes/S4%20700/A1.jpeg",
+      "images": [
+        "/Leather%20Shoes/S4%20700/A1.jpeg"
+      ]
+    },
+    {
+      "id": "s5",
+      "folder": "S5 650",
+      "price": 650,
+      "thumbnail": "/Leather%20Shoes/S5%20650/A1.jpeg",
+      "images": [
+        "/Leather%20Shoes/S5%20650/A1.jpeg"
+      ]
+    },
+    {
+      "id": "s6",
+      "folder": "S6 750",
+      "price": 750,
+      "thumbnail": "/Leather%20Shoes/S6%20750/A1.jpeg",
+      "images": [
+        "/Leather%20Shoes/S6%20750/A1.jpeg"
+      ]
+    },
+    {
+      "id": "s7",
+      "folder": "S7 700",
+      "price": 700,
+      "thumbnail": "/Leather%20Shoes/S7%20700/A1.jpeg",
+      "images": [
+        "/Leather%20Shoes/S7%20700/A1.jpeg"
+      ]
+    },
+    {
+      "id": "s8",
+      "folder": "S8 650",
+      "price": 650,
+      "thumbnail": "/Leather%20Shoes/S8%20650/A1.jpeg",
+      "images": [
+        "/Leather%20Shoes/S8%20650/A1.jpeg"
+      ]
+    },
+    {
+      "id": "s9",
+      "folder": "S9 650",
+      "price": 650,
+      "thumbnail": "/Leather%20Shoes/S9%20650/A1.jpeg",
+      "images": [
+        "/Leather%20Shoes/S9%20650/A1.jpeg"
+      ]
+    },
+    {
+      "id": "s10",
+      "folder": "S10 850",
+      "price": 850,
+      "thumbnail": "/Leather%20Shoes/S10%20850/A1.jpeg",
+      "images": [
+        "/Leather%20Shoes/S10%20850/A1.jpeg"
+      ]
+    },
+    {
+      "id": "s12",
+      "folder": "S12 850",
+      "price": 850,
+      "thumbnail": "/Leather%20Shoes/S12%20850/A1.jpeg",
+      "images": [
+        "/Leather%20Shoes/S12%20850/A1.jpeg"
+      ]
+    },
+    {
+      "id": "s16",
+      "folder": "S16 400",
+      "price": 400,
+      "thumbnail": "/Leather%20Shoes/S16%20400/A1.jpeg",
+      "images": [
+        "/Leather%20Shoes/S16%20400/A1.jpeg"
+      ]
+    },
+    {
+      "id": "s17",
+      "folder": "S17 850",
+      "price": 850,
+      "thumbnail": "/Leather%20Shoes/S17%20850/A1.jpeg",
+      "images": [
+        "/Leather%20Shoes/S17%20850/A1.jpeg"
+      ]
+    }
+  ]
+}

@@ -3,7 +3,9 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "predev": "node scripts/generate-leather-products.mjs",
     "dev": "vite",
+    "prebuild": "node scripts/generate-leather-products.mjs",
     "build": "vite build && node scripts/copy-static.mjs",
     "preview": "serve dist",
     "serve:static": "serve ."
