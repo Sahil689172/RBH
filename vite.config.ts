@@ -33,7 +33,7 @@ const ROOT_FILES = [
   'contact.js',
   ...ROOT_ASSETS,
 ];
-const STATIC_DIRS = ['public2', 'public3', 'homepage_frames'];
+const STATIC_DIRS = ['public2', 'public3', 'homepage_frames', 'frames'];
 const HTML_PAGES: Record<string, string> = {
   '/about': 'about/index.html',
   '/about/': 'about/index.html',
