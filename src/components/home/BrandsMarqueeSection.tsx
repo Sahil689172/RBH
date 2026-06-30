@@ -15,6 +15,7 @@ const BRANDS = [
   'Abros',
   'Glamour',
   'Frankie',
+  'Lee Cooper',
 ] as const;
 
 function MarqueeRow({ hidden }: { hidden?: boolean }) {

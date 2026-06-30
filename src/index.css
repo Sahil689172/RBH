@@ -90,14 +90,36 @@
   height: 100%;
   display: block;
   background: #050505;
+  pointer-events: none;
+}
+
+.scroll-hero-reveal-canvas {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  display: block;
+  pointer-events: none;
+  background: transparent;
+}
+
+.scroll-hero-reveal-interaction {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  cursor: default;
+  background: transparent;
 }
 
 .scroll-hero-sticky .hero-text-gradient {
   z-index: 40;
+  pointer-events: none;
 }
 
 .scroll-hero-sticky .hero-content-luxury {
   z-index: 50;
+  pointer-events: none;
 }
 
 .scroll-hero-sticky .scroll-hero-content {

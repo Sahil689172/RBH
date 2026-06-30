@@ -2,6 +2,7 @@ import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { HeroChapterText } from './HeroChapterText';
+import { HeroHoverReveal } from './HeroHoverReveal';
 import { HERO_CHAPTERS } from './heroChapters';
 import {
   chapterForProgress,
@@ -54,8 +55,16 @@ export function ScrollFrameHero({ className = '' }: ScrollFrameHeroProps) {
   const progressRef = useRef(0);
   const scrollTriggerRef = useRef<ScrollTrigger | null>(null);
   const textCtrlRef = useRef<HeroTextTransitionController | null>(null);
+  const hoverRevealActiveRef = useRef(true);
   const [framesReady, setFramesReady] = useState(false);
+  const [hoverRevealActive, setHoverRevealActive] = useState(true);
   const [chapterIndex, setChapterIndex] = useState(0);
+
+  const syncHoverReveal = useCallback((atFirstFrame: boolean) => {
+    if (hoverRevealActiveRef.current === atFirstFrame) return;
+    hoverRevealActiveRef.current = atFirstFrame;
+    setHoverRevealActive(atFirstFrame);
+  }, []);
 
   const resolveFrameIndex = useCallback((target: number, frames: HTMLImageElement[]) => {
     if (frames[target]?.complete && frames[target].naturalWidth > 0) {
@@ -112,12 +121,14 @@ export function ScrollFrameHero({ className = '' }: ScrollFrameHeroProps) {
     const targetIndex = Math.round(progressRef.current * (FRAME_COUNT - 1));
     const frameIndex = resolveFrameIndex(targetIndex, framesRef.current);
 
+    syncHoverReveal(frameIndex === 0);
+
     if (frameIndex !== frameIndexRef.current) {
       drawFrame(frameIndex);
     }
 
     textCtrlRef.current?.sync(progressRef.current);
-  }, [drawFrame, resolveFrameIndex]);
+  }, [drawFrame, syncHoverReveal, resolveFrameIndex]);
 
   useLayoutEffect(() => {
     const block = textBlockRef.current;
@@ -219,6 +230,7 @@ export function ScrollFrameHero({ className = '' }: ScrollFrameHeroProps) {
       framesRef.current,
     );
     drawFrame(initialFrame);
+    syncHoverReveal(initialFrame === 0);
 
     const tick = () => {
       renderFrameForProgress();
@@ -244,7 +256,7 @@ export function ScrollFrameHero({ className = '' }: ScrollFrameHeroProps) {
       scrollTriggerRef.current?.kill();
       scrollTriggerRef.current = null;
     };
-  }, [framesReady, drawFrame, renderFrameForProgress, resolveFrameIndex]);
+  }, [framesReady, drawFrame, renderFrameForProgress, resolveFrameIndex, syncHoverReveal]);
 
   const chapter = HERO_CHAPTERS[chapterIndex] ?? HERO_CHAPTERS[0];
 
@@ -265,6 +277,13 @@ export function ScrollFrameHero({ className = '' }: ScrollFrameHeroProps) {
             className="scroll-hero-canvas"
             aria-hidden="true"
           />
+
+          {framesReady && (
+            <HeroHoverReveal
+              containerRef={stickyRef}
+              active={hoverRevealActive}
+            />
+          )}
 
           <div className="hero-text-gradient" aria-hidden="true" />
 
