@@ -27,6 +27,7 @@
     imageB: null,
     imageActive: 'a',
     title: null,
+    subtitle: null,
     price: null,
     counter: null,
     prev: null,
@@ -34,14 +35,11 @@
     close: null,
   };
 
+  const CARD_TITLE = 'RBH Signature Collection';
+  const CARD_SUBTITLE = 'Premium Leather Footwear';
+
   function formatPrice(value) {
     return `₹${Number(value).toLocaleString('en-IN')}`;
-  }
-
-  function formatProductTitle(product) {
-    const num = product.number ?? Number.parseInt(String(product.id).replace(/^s/i, ''), 10);
-    const padded = String(num).padStart(2, '0');
-    return `Leather Shoe ${padded}`;
   }
 
   function escapeHtml(value) {
@@ -180,25 +178,25 @@
 
     els.grid.innerHTML = products
       .map((product, index) => {
-        const title = formatProductTitle(product);
         return `
       <article
         class="leather-product-card"
         data-product-index="${index}"
         tabindex="0"
         role="button"
-        aria-label="View ${escapeHtml(title)}, ${formatPrice(product.price)}"
+        aria-label="View ${escapeHtml(CARD_TITLE)}, ${formatPrice(product.price)}"
       >
         <div class="leather-product-card__media">
           <img
             src="${escapeHtml(product.thumbnail)}"
-            alt="${escapeHtml(title)}"
+            alt="${escapeHtml(CARD_TITLE)}"
             loading="lazy"
             decoding="async"
           />
         </div>
         <div class="leather-product-card__body">
-          <h3 class="leather-product-card__title">${escapeHtml(title)}</h3>
+          <h3 class="leather-product-card__title">${escapeHtml(CARD_TITLE)}</h3>
+          <p class="leather-product-card__subtitle">${escapeHtml(CARD_SUBTITLE)}</p>
           <p class="leather-product-card__price">${formatPrice(product.price)}</p>
           <div class="leather-product-card__sizes">
             <p class="leather-product-card__sizes-label">Available Sizes</p>
@@ -215,7 +213,8 @@
   }
 
   function updateGalleryMeta(product) {
-    els.title.textContent = formatProductTitle(product);
+    els.title.textContent = CARD_TITLE;
+    if (els.subtitle) els.subtitle.textContent = CARD_SUBTITLE;
     els.price.textContent = formatPrice(product.price);
     els.counter.textContent = `${galleryImageIndex + 1} / ${product.images.length}`;
     const hasMultiple = product.images.length > 1;
@@ -397,7 +396,8 @@
             <button type="button" class="leather-gallery__nav leather-gallery__nav--next" data-gallery-next aria-label="Next image">&#8594;</button>
           </div>
           <div class="leather-gallery__meta">
-            <h3 class="leather-gallery__title" data-gallery-title>Leather Shoe</h3>
+            <h3 class="leather-gallery__title" data-gallery-title>RBH Signature Collection</h3>
+            <p class="leather-gallery__subtitle" data-gallery-subtitle>Premium Leather Footwear</p>
             <p class="leather-gallery__price" data-gallery-price></p>
             <p class="leather-gallery__counter" data-gallery-counter>1 / 3</p>
           </div>
@@ -412,11 +412,37 @@
     els.imageA = root.querySelector('[data-gallery-image-a]');
     els.imageB = root.querySelector('[data-gallery-image-b]');
     els.title = root.querySelector('[data-gallery-title]');
+    els.subtitle = root.querySelector('[data-gallery-subtitle]');
     els.price = root.querySelector('[data-gallery-price]');
     els.counter = root.querySelector('[data-gallery-counter]');
     els.prev = root.querySelector('[data-gallery-prev]');
     els.next = root.querySelector('[data-gallery-next]');
     els.close = root.querySelector('[data-gallery-close]');
+  }
+
+  function initCatalogIntroReveal() {
+    const intro = document.querySelector('[data-catalog-intro]');
+    if (!intro) return;
+
+    const reveal = () => intro.classList.add('is-visible');
+
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      reveal();
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          reveal();
+          observer.unobserve(entry.target);
+        });
+      },
+      { threshold: 0.15, rootMargin: '0px 0px -32px 0px' },
+    );
+
+    observer.observe(intro);
   }
 
   async function init() {
@@ -449,6 +475,7 @@
     }
 
     renderGrid();
+    initCatalogIntroReveal();
   }
 
   if (document.readyState === 'loading') {
