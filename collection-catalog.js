@@ -88,38 +88,73 @@
     return Boolean(loaded);
   }
 
+  async function fetchFolderImages(product) {
+    if (!product?.folder) return null;
+
+    try {
+      const response = await fetch(
+        `/api/leather-product-images?folder=${encodeURIComponent(product.folder)}`,
+        { cache: 'no-store' },
+      );
+      if (!response.ok) return null;
+      const data = await response.json();
+      return Array.isArray(data.images) ? data.images : null;
+    } catch {
+      return null;
+    }
+  }
+
+  function preferA1Thumbnail(images) {
+    if (!images?.length) return null;
+    return images.find((url) => /\/a1\.[^/]+$/i.test(decodeURIComponent(url))) ?? images[0];
+  }
+
+  async function enrichProductImages(product) {
+    const folderImages = await fetchFolderImages(product);
+    if (folderImages?.length) {
+      product.images = folderImages.slice(0, 3);
+      const thumb = preferA1Thumbnail(product.images);
+      if (thumb) product.thumbnail = thumb;
+      return product.images;
+    }
+
+    return product.images;
+  }
+
   async function resolveGalleryImages(product) {
-    if (product.images.length >= 2) return product.images;
+    if (product.images.length >= 3) return product.images.slice(0, 3);
 
     const thumb = product.thumbnail;
     const folderUrl = thumb.slice(0, thumb.lastIndexOf('/') + 1);
-    const thumbName = decodeURIComponent(thumb.slice(thumb.lastIndexOf('/') + 1));
-    const ext = (thumbName.match(/(\.[^.]+)$/i) || [null, '.jpeg'])[1];
     const resolved = [];
+    const extensions = ['.jpeg', '.jpg', '.JPEG', '.JPG', '.png', '.webp'];
 
     for (let i = 1; i <= 3; i += 1) {
-      const names = [
-        `A${i}${ext}`,
-        `a${i}${ext}`,
-        `A${i}.jpeg`,
-        `A${i}.jpg`,
-        `a${i}.jpeg`,
-        `a${i}.jpg`,
-      ];
-
       let matched = null;
-      for (const name of names) {
-        const url = folderUrl + encodeURIComponent(name);
-        if (await probeImage(url)) {
-          matched = url;
-          break;
+
+      for (const ext of extensions) {
+        const names = [`A${i}${ext}`, `a${i}${ext}`];
+        for (const name of names) {
+          const url = folderUrl + encodeURIComponent(name);
+          if (await probeImage(url)) {
+            matched = url;
+            break;
+          }
         }
+        if (matched) break;
       }
 
       if (matched) resolved.push(matched);
     }
 
-    return resolved.length ? resolved : product.images;
+    if (resolved.length >= 3) return resolved.slice(0, 3);
+
+    for (const url of product.images) {
+      if (!resolved.includes(url)) resolved.push(url);
+      if (resolved.length >= 3) break;
+    }
+
+    return resolved.length ? resolved.slice(0, 3) : product.images;
   }
 
   function preloadAdjacent(product) {
@@ -228,8 +263,11 @@
     const product = products[productIndex];
     if (!product || !product.images?.length) return;
 
-    if (product.images.length < 2 && !product._galleryResolved) {
-      product.images = await resolveGalleryImages(product);
+    if (!product._galleryResolved) {
+      product.images = await enrichProductImages(product);
+      if (product.images.length < 3) {
+        product.images = await resolveGalleryImages(product);
+      }
       product._galleryResolved = true;
     }
 
@@ -395,6 +433,17 @@
       if (!response.ok) throw new Error('Catalog unavailable');
       const data = await response.json();
       products = Array.isArray(data.products) ? data.products : [];
+
+      await Promise.all(
+        products.map(async (product) => {
+          const images = await enrichProductImages(product);
+          if (images?.length) {
+            product.images = images.slice(0, 3);
+            const thumb = preferA1Thumbnail(product.images);
+            if (thumb) product.thumbnail = thumb;
+          }
+        }),
+      );
     } catch {
       products = [];
     }

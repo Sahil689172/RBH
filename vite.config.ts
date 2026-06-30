@@ -4,6 +4,12 @@ import { fileURLToPath } from 'node:url';
 import type { IncomingMessage, ServerResponse } from 'node:http';
 import { defineConfig, type Plugin } from 'vite';
 import react from '@vitejs/plugin-react';
+import {
+  buildLeatherCatalog,
+  readFolderImages,
+  toPublicUrl,
+  pickThumbnail,
+} from './scripts/leather-catalog-core.mjs';
 
 const rootDir = path.dirname(fileURLToPath(import.meta.url));
 
@@ -84,6 +90,46 @@ function staticSitePlugin(): Plugin {
 
           const url = rawUrl.split('?')[0];
           if (!url) return next();
+
+          if (url === '/leather-shoes-catalog.json' && req.method === 'GET') {
+            const catalog = buildLeatherCatalog(rootDir);
+            res.setHeader('Content-Type', 'application/json');
+            res.end(
+              JSON.stringify(
+                {
+                  generatedAt: catalog.generatedAt,
+                  source: catalog.sources[0] ?? null,
+                  products: catalog.products,
+                },
+                null,
+                2,
+              ),
+            );
+            return;
+          }
+
+          if (url === '/api/leather-product-images' && req.method === 'GET') {
+            const folder = new URL(rawUrl, 'http://localhost').searchParams.get('folder');
+            if (!folder) {
+              res.statusCode = 400;
+              res.end(JSON.stringify({ error: 'folder required' }));
+              return;
+            }
+
+            const imageFiles = readFolderImages(rootDir, folder);
+            const thumbnailFile = pickThumbnail(imageFiles);
+            res.setHeader('Content-Type', 'application/json');
+            res.end(
+              JSON.stringify({
+                folder,
+                thumbnail: thumbnailFile
+                  ? toPublicUrl(folder, thumbnailFile)
+                  : null,
+                images: imageFiles.map((file) => toPublicUrl(folder, file)),
+              }),
+            );
+            return;
+          }
 
           const decodedUrl = decodeURIComponent(url);
           if (
