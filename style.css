@@ -917,14 +917,19 @@ img, canvas {
 }
 
 .collection-scroll-room {
-  min-height: 70vh;
-  background: linear-gradient(to bottom, transparent, var(--bg-elevated) 40%, var(--bg));
+  min-height: 0;
+  height: 0;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background: transparent;
 }
 
 /* ── Leather shoe catalog ── */
 .collection-catalog-section {
   position: relative;
-  padding: clamp(3.5rem, 8vh, 6rem) 0 clamp(4.5rem, 10vh, 7rem);
+  margin-top: clamp(2rem, 5vw, 3rem);
+  padding: 0 0 clamp(4.5rem, 10vh, 7rem);
   background:
     radial-gradient(ellipse 70% 45% at 50% 0%, rgba(212, 175, 55, 0.06) 0%, transparent 70%),
     var(--bg);
@@ -1005,21 +1010,25 @@ img, canvas {
 }
 
 .leather-product-card__body {
-  padding: 1.25rem 1.35rem 1.5rem;
-  text-align: left;
+  padding: 1.35rem 1.25rem 1.6rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
 }
 
 .leather-product-card__title {
   font-family: var(--font-display);
-  font-size: clamp(1.2rem, 2vw, 1.45rem);
+  font-size: clamp(1.15rem, 2vw, 1.4rem);
   font-weight: 600;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.03em;
   color: #f5f5f5;
   margin: 0;
 }
 
 .leather-product-card__price {
-  margin: 0.65rem 0 0;
+  margin: 0;
   font-family: var(--font-display);
   font-size: clamp(1.35rem, 2.2vw, 1.65rem);
   font-weight: 600;
@@ -1028,6 +1037,76 @@ img, canvas {
   transition:
     color 300ms ease,
     text-shadow 300ms ease;
+}
+
+.leather-product-card__sizes {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.65rem;
+  margin-top: 0.15rem;
+}
+
+.leather-product-card__sizes-label {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.leather-size-pills {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.45rem;
+}
+
+.leather-size-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.35rem;
+  height: 2.1rem;
+  padding: 0 0.7rem;
+  border-radius: 999px;
+  border: 1px solid rgba(212, 175, 55, 0.55);
+  background: rgba(8, 8, 8, 0.9);
+  color: #f5f5f5;
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  font-weight: 500;
+  line-height: 1;
+  pointer-events: auto;
+  transition:
+    background-color 300ms ease,
+    color 300ms ease,
+    border-color 300ms ease;
+}
+
+.leather-size-pill:hover {
+  background: var(--gold);
+  color: #050505;
+  border-color: var(--gold);
+}
+
+.leather-product-card__cta {
+  margin-top: 0.15rem;
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--gold);
+  transition: color 300ms ease;
+}
+
+.leather-product-card:hover .leather-product-card__cta,
+.leather-product-card:focus-visible .leather-product-card__cta {
+  color: #f0d878;
 }
 
 .leather-product-card:hover .leather-product-card__price,
@@ -1202,12 +1281,20 @@ body.leather-gallery-open {
 }
 
 @media (min-width: 640px) {
+  .collection-catalog-section {
+    margin-top: clamp(2.5rem, 4.5vw, 3.5rem);
+  }
+
   .leather-catalog-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
 
 @media (min-width: 1024px) {
+  .collection-catalog-section {
+    margin-top: clamp(3rem, 4vw, 4rem);
+  }
+
   .leather-catalog-grid {
     grid-template-columns: repeat(4, minmax(0, 1fr));
   }

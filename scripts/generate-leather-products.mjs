@@ -14,7 +14,10 @@ const SOURCE_CANDIDATES = [
 ];
 
 const FOLDER_PATTERN = /^s(\d+)\s+(\d+)$/i;
-const IMAGE_PATTERN = /^a(\d+)\.(jpe?g|png|webp)$/i;
+
+function isImageFile(name) {
+  return /\.(jpe?g|png|webp|jfif)$/i.test(name);
+}
 
 function copyDir(src, dest) {
   fs.mkdirSync(dest, { recursive: true });
@@ -65,21 +68,34 @@ function toPublicUrl(folderName, fileName) {
 }
 
 function readImages(folderPath) {
-  const files = fs.readdirSync(folderPath, { withFileTypes: true });
-  const images = [];
+  const entries = fs.readdirSync(folderPath, { withFileTypes: true });
+  const aImages = [];
 
-  for (const entry of files) {
+  for (const entry of entries) {
     if (!entry.isFile()) continue;
-    const match = entry.name.match(IMAGE_PATTERN);
+    if (!isImageFile(entry.name)) continue;
+
+    const stem = path.parse(entry.name).name.toLowerCase().replace(/\s+/g, '');
+    const match = stem.match(/^a(\d+)$/);
     if (!match) continue;
-    images.push({
+
+    aImages.push({
       index: Number.parseInt(match[1], 10),
       file: entry.name,
     });
   }
 
-  images.sort((a, b) => a.index - b.index);
-  return images.map((item) => item.file);
+  if (aImages.length > 0) {
+    aImages.sort((a, b) => a.index - b.index);
+    return aImages.map((item) => item.file);
+  }
+
+  const fallback = entries
+    .filter((entry) => entry.isFile() && isImageFile(entry.name))
+    .map((entry) => entry.name)
+    .sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
+
+  return fallback;
 }
 
 function buildCatalog(catalogRoot) {
@@ -103,6 +119,7 @@ function buildCatalog(catalogRoot) {
 
     products.push({
       id: `s${match[1]}`,
+      number: Number.parseInt(match[1], 10),
       folder: folderName,
       price: Number.parseInt(match[2], 10),
       thumbnail: toPublicUrl(folderName, thumbnailFile),

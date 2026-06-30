@@ -6,18 +6,23 @@
 
   const CATALOG_URL = '/leather-shoes-catalog.json';
   const FADE_MS = 300;
+  const SIZES = [8, 9, 10, 11, 12];
+  const SWIPE_THRESHOLD = 48;
 
   let products = [];
   let galleryIndex = -1;
   let galleryImageIndex = 0;
   let galleryOpen = false;
-  let transitionTimer = 0;
+  let touchStartX = 0;
+  let touchStartY = 0;
+  const loadedGalleryImages = new Map();
 
   const els = {
     grid: null,
     gallery: null,
     backdrop: null,
     panel: null,
+    stage: null,
     imageA: null,
     imageB: null,
     imageActive: 'a',
@@ -31,6 +36,12 @@
 
   function formatPrice(value) {
     return `₹${Number(value).toLocaleString('en-IN')}`;
+  }
+
+  function formatProductTitle(product) {
+    const num = product.number ?? Number.parseInt(String(product.id).replace(/^s/i, ''), 10);
+    const padded = String(num).padStart(2, '0');
+    return `Leather Shoe ${padded}`;
   }
 
   function escapeHtml(value) {
@@ -49,12 +60,78 @@
     return els.imageActive === 'a' ? els.imageB : els.imageA;
   }
 
-  function preloadImages(imageUrls) {
-    imageUrls.forEach((src) => {
+  function renderSizePills() {
+    return SIZES.map(
+      (size) => `<span class="leather-size-pill">${size}</span>`,
+    ).join('');
+  }
+
+  function loadImage(src) {
+    if (loadedGalleryImages.has(src)) {
+      return loadedGalleryImages.get(src);
+    }
+
+    const promise = new Promise((resolve) => {
       const img = new Image();
       img.decoding = 'async';
+      img.onload = () => resolve(src);
+      img.onerror = () => resolve(null);
       img.src = src;
     });
+
+    loadedGalleryImages.set(src, promise);
+    return promise;
+  }
+
+  async function probeImage(url) {
+    const loaded = await loadImage(url);
+    return Boolean(loaded);
+  }
+
+  async function resolveGalleryImages(product) {
+    if (product.images.length >= 2) return product.images;
+
+    const thumb = product.thumbnail;
+    const folderUrl = thumb.slice(0, thumb.lastIndexOf('/') + 1);
+    const thumbName = decodeURIComponent(thumb.slice(thumb.lastIndexOf('/') + 1));
+    const ext = (thumbName.match(/(\.[^.]+)$/i) || [null, '.jpeg'])[1];
+    const resolved = [];
+
+    for (let i = 1; i <= 3; i += 1) {
+      const names = [
+        `A${i}${ext}`,
+        `a${i}${ext}`,
+        `A${i}.jpeg`,
+        `A${i}.jpg`,
+        `a${i}.jpeg`,
+        `a${i}.jpg`,
+      ];
+
+      let matched = null;
+      for (const name of names) {
+        const url = folderUrl + encodeURIComponent(name);
+        if (await probeImage(url)) {
+          matched = url;
+          break;
+        }
+      }
+
+      if (matched) resolved.push(matched);
+    }
+
+    return resolved.length ? resolved : product.images;
+  }
+
+  function preloadAdjacent(product) {
+    if (!product?.images?.length) return;
+    const next =
+      product.images[(galleryImageIndex + 1) % product.images.length];
+    const prev =
+      product.images[
+        (galleryImageIndex - 1 + product.images.length) % product.images.length
+      ];
+    if (next) loadImage(next);
+    if (prev) loadImage(prev);
   }
 
   function renderGrid() {
@@ -67,46 +144,69 @@
     }
 
     els.grid.innerHTML = products
-      .map(
-        (product, index) => `
-      <article class="leather-product-card" data-product-index="${index}" tabindex="0" role="button" aria-label="View leather shoe, ${formatPrice(product.price)}">
+      .map((product, index) => {
+        const title = formatProductTitle(product);
+        return `
+      <article
+        class="leather-product-card"
+        data-product-index="${index}"
+        tabindex="0"
+        role="button"
+        aria-label="View ${escapeHtml(title)}, ${formatPrice(product.price)}"
+      >
         <div class="leather-product-card__media">
           <img
             src="${escapeHtml(product.thumbnail)}"
-            alt="Leather Shoe"
+            alt="${escapeHtml(title)}"
             loading="lazy"
             decoding="async"
           />
         </div>
         <div class="leather-product-card__body">
-          <h3 class="leather-product-card__title">Leather Shoe</h3>
+          <h3 class="leather-product-card__title">${escapeHtml(title)}</h3>
           <p class="leather-product-card__price">${formatPrice(product.price)}</p>
+          <div class="leather-product-card__sizes">
+            <p class="leather-product-card__sizes-label">Available Sizes</p>
+            <div class="leather-size-pills" aria-hidden="true">
+              ${renderSizePills()}
+            </div>
+          </div>
+          <span class="leather-product-card__cta">View Gallery &rarr;</span>
         </div>
       </article>
-    `,
-      )
+    `;
+      })
       .join('');
   }
 
   function updateGalleryMeta(product) {
-    els.title.textContent = 'Leather Shoe';
+    els.title.textContent = formatProductTitle(product);
     els.price.textContent = formatPrice(product.price);
     els.counter.textContent = `${galleryImageIndex + 1} / ${product.images.length}`;
+    const hasMultiple = product.images.length > 1;
+    els.prev.disabled = !hasMultiple;
+    els.next.disabled = !hasMultiple;
   }
 
-  function setGalleryImage(src, { animate = true } = {}) {
+  async function setGalleryImage(src, { animate = true } = {}) {
     const product = products[galleryIndex];
-    if (!product) return;
+    if (!product || !src) return;
+
+    const loaded = await loadImage(src);
+    if (!loaded) return;
 
     const active = getActiveImageEl();
     const idle = getIdleImageEl();
+    const hasCurrent = Boolean(active.getAttribute('src'));
 
-    if (!animate || !active.src) {
+    if (!animate || !hasCurrent) {
       active.src = src;
       active.classList.add('is-visible');
       idle.classList.remove('is-visible');
+      idle.removeAttribute('src');
       els.imageActive = active === els.imageA ? 'a' : 'b';
       updateGalleryMeta(product);
+      preloadAdjacent(product);
       return;
     }
 
@@ -115,11 +215,25 @@
     active.classList.remove('is-visible');
     els.imageActive = idle === els.imageA ? 'a' : 'b';
     updateGalleryMeta(product);
+    preloadAdjacent(product);
+
+    window.setTimeout(() => {
+      if (!active.classList.contains('is-visible')) {
+        active.removeAttribute('src');
+      }
+    }, FADE_MS);
   }
 
-  function openGallery(productIndex) {
+  async function openGallery(productIndex) {
     const product = products[productIndex];
-    if (!product) return;
+    if (!product || !product.images?.length) return;
+
+    if (product.images.length < 2 && !product._galleryResolved) {
+      product.images = await resolveGalleryImages(product);
+      product._galleryResolved = true;
+    }
+
+    if (!product.images.length) return;
 
     galleryIndex = productIndex;
     galleryImageIndex = 0;
@@ -133,10 +247,7 @@
       els.gallery.classList.add('is-open');
     });
 
-    setGalleryImage(product.images[0], { animate: false });
-    preloadImages(product.images);
-    els.prev.disabled = product.images.length <= 1;
-    els.next.disabled = product.images.length <= 1;
+    await setGalleryImage(product.images[0], { animate: false });
     els.close.focus();
   }
 
@@ -151,35 +262,36 @@
     els.gallery.setAttribute('aria-hidden', 'true');
     document.body.classList.remove('leather-gallery-open');
 
-    window.clearTimeout(transitionTimer);
-    transitionTimer = window.setTimeout(() => {
+    window.setTimeout(() => {
       if (!galleryOpen) {
         els.gallery.hidden = true;
         getActiveImageEl().removeAttribute('src');
         getIdleImageEl().removeAttribute('src');
+        getActiveImageEl().classList.remove('is-visible');
+        getIdleImageEl().classList.remove('is-visible');
       }
     }, FADE_MS);
   }
 
-  function stepGallery(delta) {
+  async function stepGallery(delta) {
     const product = products[galleryIndex];
     if (!product || product.images.length <= 1) return;
 
     galleryImageIndex =
       (galleryImageIndex + delta + product.images.length) % product.images.length;
 
-    window.clearTimeout(transitionTimer);
-    transitionTimer = window.setTimeout(() => {
-      setGalleryImage(product.images[galleryImageIndex], { animate: true });
-    }, 0);
+    await setGalleryImage(product.images[galleryImageIndex], { animate: true });
+  }
+
+  function openFromCard(card) {
+    if (!card) return;
+    const index = Number.parseInt(card.dataset.productIndex, 10);
+    if (!Number.isNaN(index)) openGallery(index);
   }
 
   function bindEvents() {
     els.grid.addEventListener('click', (event) => {
-      const card = event.target.closest('.leather-product-card');
-      if (!card) return;
-      const index = Number.parseInt(card.dataset.productIndex, 10);
-      if (!Number.isNaN(index)) openGallery(index);
+      openFromCard(event.target.closest('.leather-product-card'));
     });
 
     els.grid.addEventListener('keydown', (event) => {
@@ -187,8 +299,7 @@
       const card = event.target.closest('.leather-product-card');
       if (!card) return;
       event.preventDefault();
-      const index = Number.parseInt(card.dataset.productIndex, 10);
-      if (!Number.isNaN(index)) openGallery(index);
+      openFromCard(card);
     });
 
     els.close.addEventListener('click', closeGallery);
@@ -197,6 +308,30 @@
 
     els.prev.addEventListener('click', () => stepGallery(-1));
     els.next.addEventListener('click', () => stepGallery(1));
+
+    els.stage.addEventListener(
+      'touchstart',
+      (event) => {
+        if (!galleryOpen || event.touches.length !== 1) return;
+        touchStartX = event.touches[0].clientX;
+        touchStartY = event.touches[0].clientY;
+      },
+      { passive: true },
+    );
+
+    els.stage.addEventListener(
+      'touchend',
+      (event) => {
+        if (!galleryOpen || event.changedTouches.length !== 1) return;
+        const touch = event.changedTouches[0];
+        const deltaX = touch.clientX - touchStartX;
+        const deltaY = touch.clientY - touchStartY;
+        if (Math.abs(deltaX) < SWIPE_THRESHOLD) return;
+        if (Math.abs(deltaX) < Math.abs(deltaY)) return;
+        stepGallery(deltaX < 0 ? 1 : -1);
+      },
+      { passive: true },
+    );
 
     document.addEventListener('keydown', (event) => {
       if (!galleryOpen) return;
@@ -215,7 +350,7 @@
         <div class="leather-gallery__backdrop" data-gallery-backdrop></div>
         <div class="leather-gallery__panel" data-gallery-panel>
           <button type="button" class="leather-gallery__close" data-gallery-close aria-label="Close gallery">&times;</button>
-          <div class="leather-gallery__stage">
+          <div class="leather-gallery__stage" data-gallery-stage>
             <button type="button" class="leather-gallery__nav leather-gallery__nav--prev" data-gallery-prev aria-label="Previous image">&#8592;</button>
             <div class="leather-gallery__image-wrap">
               <img class="leather-gallery__image is-visible" data-gallery-image-a alt="" decoding="async" />
@@ -235,6 +370,7 @@
     els.gallery = root.querySelector('#leather-gallery');
     els.backdrop = root.querySelector('[data-gallery-backdrop]');
     els.panel = root.querySelector('[data-gallery-panel]');
+    els.stage = root.querySelector('[data-gallery-stage]');
     els.imageA = root.querySelector('[data-gallery-image-a]');
     els.imageB = root.querySelector('[data-gallery-image-b]');
     els.title = root.querySelector('[data-gallery-title]');
