@@ -14,66 +14,68 @@
   <link rel="stylesheet" href="../style.css" />
   <link rel="stylesheet" href="../mobile.css" />
   <style>
-    /* Timeline GIF visuals — scoped to about page (do not edit global style.css) */
-    .about-page .timeline-entry {
-      padding: 1.05rem 0;
-    }
+    /* Timeline visuals — desktop only (mobile layout in mobile.css) */
+    @media (min-width: 769px) {
+      .about-page .timeline-entry {
+        padding: 1.05rem 0;
+      }
 
-    .about-page .timeline-entries {
-      gap: 0.15rem;
-    }
+      .about-page .timeline-entries {
+        gap: 0.15rem;
+      }
 
-    .about-page .timeline-col--gif {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      align-self: stretch;
-    }
+      .about-page .timeline-col--gif {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        align-self: stretch;
+      }
 
-    .about-page .timeline-entry--left .timeline-col--gif {
-      grid-column: 3;
-    }
+      .about-page .timeline-entry--left .timeline-col--gif {
+        grid-column: 3;
+      }
 
-    .about-page .timeline-entry--right .timeline-col--gif {
-      grid-column: 1;
-    }
+      .about-page .timeline-entry--right .timeline-col--gif {
+        grid-column: 1;
+      }
 
-    .about-page .timeline-gif-wrap {
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-    }
+      .about-page .timeline-gif-wrap {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
 
-    .about-page .timeline-gif-glow {
-      position: absolute;
-      width: 400px;
-      height: 400px;
-      background: radial-gradient(circle, rgba(212, 175, 55, 0.06) 0%, transparent 70%);
-      pointer-events: none;
-      z-index: 0;
-    }
+      .about-page .timeline-gif-glow {
+        position: absolute;
+        width: 400px;
+        height: 400px;
+        background: radial-gradient(circle, rgba(212, 175, 55, 0.06) 0%, transparent 70%);
+        pointer-events: none;
+        z-index: 0;
+      }
 
-    .about-page .timeline-gif-container {
-      position: relative;
-      z-index: 1;
-      width: 260px;
-      height: 260px;
-      border-radius: 16px;
-      overflow: hidden;
-      border: 1px solid rgba(212, 175, 55, 0.18);
-      box-shadow: 0 0 40px rgba(212, 175, 55, 0.07), 0 8px 32px rgba(0, 0, 0, 0.4);
-      background: rgba(255, 255, 255, 0.02);
-      flex-shrink: 0;
-    }
+      .about-page .timeline-gif-container {
+        position: relative;
+        z-index: 1;
+        width: 260px;
+        height: 260px;
+        border-radius: 16px;
+        overflow: hidden;
+        border: 1px solid rgba(212, 175, 55, 0.18);
+        box-shadow: 0 0 40px rgba(212, 175, 55, 0.07), 0 8px 32px rgba(0, 0, 0, 0.4);
+        background: rgba(255, 255, 255, 0.02);
+        flex-shrink: 0;
+      }
 
-    .about-page .timeline-gif-container img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-      border-radius: 16px;
+      .about-page .timeline-gif-container img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+        border-radius: 16px;
+      }
     }
 
     .about-page .timeline-card {
@@ -98,10 +100,6 @@
       opacity: 0.04;
       pointer-events: none;
       user-select: none;
-    }
-
-    @media (max-width: 767px) {
-      /* GIF column layout handled in mobile.css */
     }
   </style>
 </head>
@@ -171,7 +169,7 @@
         <div class="timeline-entries">
 
           <!-- ENTRY 1 — 1959 — g1.gif -->
-          <article class="timeline-entry timeline-entry--left" data-gif="../public2/g1.gif">
+          <article class="timeline-entry timeline-entry--left" data-gif="/public2/g1.gif">
             <div class="timeline-col timeline-col--card">
               <div class="timeline-card">
                 <span class="timeline-card-quote" aria-hidden="true">❝</span>
@@ -186,23 +184,23 @@
               <span class="timeline-connector"></span>
               <span class="timeline-year">1959</span>
             </div>
-            <div class="timeline-col timeline-col--gif" aria-hidden="true">
+            <div class="timeline-col timeline-col--gif">
               <div class="timeline-gif-wrap">
                 <div class="timeline-gif-glow"></div>
                 <div class="timeline-gif-container">
-                  <img src="../public2/g1.gif" alt="" width="260" height="260" loading="eager" decoding="async" />
+                  <img src="/public2/g1.gif" alt="" width="260" height="260" loading="eager" decoding="async" />
                 </div>
               </div>
             </div>
           </article>
 
           <!-- ENTRY 2 — 1970 — g2.gif -->
-          <article class="timeline-entry timeline-entry--right" data-gif="../public2/g2.gif">
-            <div class="timeline-col timeline-col--gif" aria-hidden="true">
+          <article class="timeline-entry timeline-entry--right" data-gif="/public2/g2.gif">
+            <div class="timeline-col timeline-col--gif">
               <div class="timeline-gif-wrap">
                 <div class="timeline-gif-glow"></div>
                 <div class="timeline-gif-container">
-                  <img src="../public2/g2.gif" alt="" width="260" height="260" loading="eager" decoding="async" />
+                  <img src="/public2/g2.gif" alt="" width="260" height="260" loading="eager" decoding="async" />
                 </div>
               </div>
             </div>
@@ -224,7 +222,7 @@
           </article>
 
           <!-- ENTRY 3 — 1984 — g3.gif -->
-          <article class="timeline-entry timeline-entry--left" data-gif="../public2/g3.gif">
+          <article class="timeline-entry timeline-entry--left" data-gif="/public2/g3.gif">
             <div class="timeline-col timeline-col--card">
               <div class="timeline-card">
                 <span class="timeline-card-quote" aria-hidden="true">❝</span>
@@ -242,23 +240,23 @@
               <span class="timeline-connector"></span>
               <span class="timeline-year">1984</span>
             </div>
-            <div class="timeline-col timeline-col--gif" aria-hidden="true">
+            <div class="timeline-col timeline-col--gif">
               <div class="timeline-gif-wrap">
                 <div class="timeline-gif-glow"></div>
                 <div class="timeline-gif-container">
-                  <img src="../public2/g3.gif" alt="" width="260" height="260" loading="lazy" decoding="async" />
+                  <img src="/public2/g3.gif" alt="" width="260" height="260" loading="lazy" decoding="async" />
                 </div>
               </div>
             </div>
           </article>
 
           <!-- ENTRY 4 — 1987 — g4.gif -->
-          <article class="timeline-entry timeline-entry--right" data-gif="../public2/g4.gif">
-            <div class="timeline-col timeline-col--gif" aria-hidden="true">
+          <article class="timeline-entry timeline-entry--right" data-gif="/public2/g4.gif">
+            <div class="timeline-col timeline-col--gif">
               <div class="timeline-gif-wrap">
                 <div class="timeline-gif-glow"></div>
                 <div class="timeline-gif-container">
-                  <img src="../public2/g4.gif" alt="" width="260" height="260" loading="lazy" decoding="async" />
+                  <img src="/public2/g4.gif" alt="" width="260" height="260" loading="lazy" decoding="async" />
                 </div>
               </div>
             </div>
@@ -281,7 +279,7 @@
           </article>
 
           <!-- ENTRY 5 — 1990s — g5.gif -->
-          <article class="timeline-entry timeline-entry--left" data-gif="../public2/g5.gif">
+          <article class="timeline-entry timeline-entry--left" data-gif="/public2/g5.gif">
             <div class="timeline-col timeline-col--card">
               <div class="timeline-card">
                 <span class="timeline-card-quote" aria-hidden="true">❝</span>
@@ -297,23 +295,23 @@
               <span class="timeline-connector"></span>
               <span class="timeline-year">1990s</span>
             </div>
-            <div class="timeline-col timeline-col--gif" aria-hidden="true">
+            <div class="timeline-col timeline-col--gif">
               <div class="timeline-gif-wrap">
                 <div class="timeline-gif-glow"></div>
                 <div class="timeline-gif-container">
-                  <img src="../public2/g5.gif" alt="" width="260" height="260" loading="lazy" decoding="async" />
+                  <img src="/public2/g5.gif" alt="" width="260" height="260" loading="lazy" decoding="async" />
                 </div>
               </div>
             </div>
           </article>
 
           <!-- ENTRY 6 — 2009 — g6.gif -->
-          <article class="timeline-entry timeline-entry--right" data-gif="../public2/g6.gif">
-            <div class="timeline-col timeline-col--gif" aria-hidden="true">
+          <article class="timeline-entry timeline-entry--right" data-gif="/public2/g6.gif">
+            <div class="timeline-col timeline-col--gif">
               <div class="timeline-gif-wrap">
                 <div class="timeline-gif-glow"></div>
                 <div class="timeline-gif-container">
-                  <img src="../public2/g6.gif" alt="" width="260" height="260" loading="lazy" decoding="async" />
+                  <img src="/public2/g6.gif" alt="" width="260" height="260" loading="lazy" decoding="async" />
                 </div>
               </div>
             </div>
@@ -335,7 +333,7 @@
           </article>
 
           <!-- ENTRY 7 — 2013 — g7.gif -->
-          <article class="timeline-entry timeline-entry--left" data-gif="../public2/g7.gif">
+          <article class="timeline-entry timeline-entry--left" data-gif="/public2/g7.gif">
             <div class="timeline-col timeline-col--card">
               <div class="timeline-card">
                 <span class="timeline-card-quote" aria-hidden="true">❝</span>
@@ -351,23 +349,23 @@
               <span class="timeline-connector"></span>
               <span class="timeline-year">2013</span>
             </div>
-            <div class="timeline-col timeline-col--gif" aria-hidden="true">
+            <div class="timeline-col timeline-col--gif">
               <div class="timeline-gif-wrap">
                 <div class="timeline-gif-glow"></div>
                 <div class="timeline-gif-container">
-                  <img src="../public2/g7.gif" alt="" width="260" height="260" loading="lazy" decoding="async" />
+                  <img src="/public2/g7.gif" alt="" width="260" height="260" loading="lazy" decoding="async" />
                 </div>
               </div>
             </div>
           </article>
 
           <!-- ENTRY 8 — 2024 — g8.gif -->
-          <article class="timeline-entry timeline-entry--right" data-gif="../public2/g8.gif">
-            <div class="timeline-col timeline-col--gif" aria-hidden="true">
+          <article class="timeline-entry timeline-entry--right" data-gif="/public2/g8.gif">
+            <div class="timeline-col timeline-col--gif">
               <div class="timeline-gif-wrap">
                 <div class="timeline-gif-glow"></div>
                 <div class="timeline-gif-container">
-                  <img src="../public2/g8.gif" alt="" width="260" height="260" loading="lazy" decoding="async" />
+                  <img src="/public2/g8.gif" alt="" width="260" height="260" loading="lazy" decoding="async" />
                 </div>
               </div>
             </div>
@@ -389,7 +387,7 @@
           </article>
 
           <!-- ENTRY 9 — Today — g9.gif -->
-          <article class="timeline-entry timeline-entry--left" data-gif="../public2/g9.gif">
+          <article class="timeline-entry timeline-entry--left" data-gif="/public2/g9.gif">
             <div class="timeline-col timeline-col--card">
               <div class="timeline-card">
                 <span class="timeline-card-quote" aria-hidden="true">❝</span>
@@ -408,11 +406,11 @@
               <span class="timeline-connector"></span>
               <span class="timeline-year">Today</span>
             </div>
-            <div class="timeline-col timeline-col--gif" aria-hidden="true">
+            <div class="timeline-col timeline-col--gif">
               <div class="timeline-gif-wrap">
                 <div class="timeline-gif-glow"></div>
                 <div class="timeline-gif-container">
-                  <img src="../public2/g9.gif" alt="" width="260" height="260" loading="lazy" decoding="async" />
+                  <img src="/public2/g9.gif" alt="" width="260" height="260" loading="lazy" decoding="async" />
                 </div>
               </div>
             </div>

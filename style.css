@@ -3239,6 +3239,12 @@ body.leather-gallery-open {
   margin-bottom: 2rem;
 }
 
+/* Visible before GSAP runs (no-js / script failure fallback) */
+.about-page:not(.js-ready) .about-closing-inner > * {
+  opacity: 1;
+  transform: none;
+}
+
 /* ── Placeholder pages ── */
 .placeholder-page {
   min-height: 100vh;
@@ -3304,22 +3310,6 @@ body.leather-gallery-open {
   .collection-grid {
     grid-template-columns: repeat(2, 1fr);
   }
-
-  .contact-primary__grid {
-    grid-template-columns: 1fr;
-    gap: 2.5rem;
-  }
-
-  .contact-primary__media {
-    position: static;
-    max-width: 420px;
-    margin-inline: auto;
-    width: 100%;
-  }
-
-  .contact-details-grid {
-    grid-template-columns: 1fr;
-  }
 }
 
 @media (max-width: 767px) {
@@ -3340,43 +3330,43 @@ body.leather-gallery-open {
     transform: none;
   }
 
-  .timeline-entry,
-  .timeline-entry--left,
-  .timeline-entry--right {
+  body:not([data-page="about"]) .timeline-entry,
+  body:not([data-page="about"]) .timeline-entry--left,
+  body:not([data-page="about"]) .timeline-entry--right {
     grid-template-columns: 40px 1fr;
     padding: 1.25rem 0;
   }
 
-  .timeline-entry--left .timeline-col--card,
-  .timeline-entry--right .timeline-col--card {
+  body:not([data-page="about"]) .timeline-entry--left .timeline-col--card,
+  body:not([data-page="about"]) .timeline-entry--right .timeline-col--card {
     grid-column: 2;
     padding-left: 1rem;
     padding-right: 0;
   }
 
-  .timeline-entry--left .timeline-col--axis,
-  .timeline-entry--right .timeline-col--axis {
+  body:not([data-page="about"]) .timeline-entry--left .timeline-col--axis,
+  body:not([data-page="about"]) .timeline-entry--right .timeline-col--axis {
     grid-column: 1;
   }
 
-  .timeline-entry--left .timeline-col--spacer,
-  .timeline-entry--right .timeline-col--spacer {
+  body:not([data-page="about"]) .timeline-entry--left .timeline-col--spacer,
+  body:not([data-page="about"]) .timeline-entry--right .timeline-col--spacer {
     display: none;
   }
 
-  .timeline-entry--left .timeline-card,
-  .timeline-entry--right .timeline-card {
+  body:not([data-page="about"]) .timeline-entry--left .timeline-card,
+  body:not([data-page="about"]) .timeline-entry--right .timeline-card {
     text-align: left;
   }
 
-  .timeline-entry--left .timeline-connector {
+  body:not([data-page="about"]) .timeline-entry--left .timeline-connector {
     right: auto;
     left: calc(50% + 7px);
     transform-origin: left center;
     background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.75));
   }
 
-  .timeline-year {
+  body:not([data-page="about"]) .timeline-year {
     top: -1.35rem;
     font-size: 0.62rem;
     padding: 0.25rem 0.7rem;

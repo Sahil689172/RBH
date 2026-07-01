@@ -493,7 +493,19 @@
   }
 
   .contact-primary__grid {
+    grid-template-columns: 1fr;
     gap: 2rem;
+  }
+
+  .contact-primary__media {
+    position: static;
+    max-width: min(100%, 420px);
+    margin-inline: auto;
+    width: 100%;
+  }
+
+  .contact-details-grid {
+    grid-template-columns: 1fr;
   }
 
   .contact-card {
@@ -516,10 +528,8 @@
   .about-closing {
     padding-block: clamp(3rem, 8vh, 4.5rem);
   }
-}
 
-@media (max-width: 767px) {
-  /* ── About page: mobile storytelling layout ── */
+  /* ── About page: true single-column mobile layout ── */
   .about-page .section-container {
     width: 100%;
     max-width: 100%;
@@ -569,56 +579,101 @@
     gap: 0;
   }
 
-  /* Entry: axis left · card then gif stacked right */
+  /* Entry: flex column — card, then gif (axis overlays left) */
   .about-page .timeline-entry,
   .about-page .timeline-entry--left,
   .about-page .timeline-entry--right {
-    display: grid;
-    grid-template-columns: 46px minmax(0, 1fr);
-    grid-template-rows: auto auto;
-    align-items: start;
-    gap: 0;
-    padding: 0;
-    margin: 0 0 48px;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch;
+    grid-template-columns: unset !important;
+    grid-template-rows: unset !important;
+    position: relative;
+    box-sizing: border-box;
     width: 100%;
+    max-width: 100%;
+    padding: 0 0 0 52px;
+    margin: 0 0 48px;
+    gap: 0;
   }
 
   .about-page .timeline-entry:last-child {
     margin-bottom: 0;
   }
 
+  /* Reset all desktop grid placement */
+  .about-page .timeline-entry--left .timeline-col--card,
+  .about-page .timeline-entry--right .timeline-col--card,
+  .about-page .timeline-entry--left .timeline-col--gif,
+  .about-page .timeline-entry--right .timeline-col--gif,
   .about-page .timeline-entry--left .timeline-col--axis,
   .about-page .timeline-entry--right .timeline-col--axis {
-    grid-column: 1;
-    grid-row: 1 / span 2;
-    align-self: stretch;
-    justify-content: flex-start;
-    min-height: 100%;
-    padding-top: 0;
+    grid-column: unset !important;
+    grid-row: unset !important;
+    flex: none !important;
+    flex-basis: auto !important;
+    min-width: 0;
+    max-width: none;
   }
 
-  /* Card always above GIF */
+  /* Axis dot/year — pinned left, does not steal content width */
+  .about-page .timeline-entry--left .timeline-col--axis,
+  .about-page .timeline-entry--right .timeline-col--axis {
+    position: absolute;
+    left: 0;
+    top: 24px;
+    width: 46px;
+    height: auto;
+    min-height: 0;
+    margin: 0;
+    padding: 0;
+    order: 0;
+    align-self: auto;
+    justify-content: flex-start;
+  }
+
+  /* Card always above GIF regardless of DOM order */
   .about-page .timeline-entry--left .timeline-col--card,
   .about-page .timeline-entry--right .timeline-col--card {
-    grid-column: 2;
-    grid-row: 1;
+    order: 1;
     width: 100%;
-    min-width: 0;
-    margin-top: 24px;
-    margin-bottom: 20px;
+    max-width: none;
+    margin: 24px 0 20px;
     padding: 0;
   }
 
   .about-page .timeline-entry--left .timeline-col--gif,
   .about-page .timeline-entry--right .timeline-col--gif {
-    display: flex !important;
-    grid-column: 2;
-    grid-row: 2;
+    order: 2;
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
     width: 100%;
-    min-width: 0;
+    max-width: none;
+    height: auto;
+    margin: 0;
     padding: 0;
-    justify-content: center;
-    align-items: center;
+    overflow: visible;
+  }
+
+  .about-page .timeline-gif-container {
+    display: block;
+    position: relative;
+    width: 100%;
+    max-width: none;
+    height: auto;
+    min-height: 0;
+    padding: 12px;
+    overflow: hidden;
+    opacity: 1;
+    visibility: visible;
+    border-radius: 18px;
+    border: 1px solid rgba(212, 175, 55, 0.22);
+    background: linear-gradient(165deg, #121212 0%, #080808 100%);
+    box-shadow:
+      0 16px 40px rgba(0, 0, 0, 0.42),
+      0 0 0 1px rgba(212, 175, 55, 0.06);
+    z-index: 3;
   }
 
   .about-page .timeline-dot {
@@ -643,16 +698,22 @@
     font-size: 0.62rem;
     padding: 0.28rem 0.75rem;
     z-index: 4;
+    opacity: 1 !important;
+    visibility: visible !important;
   }
 
-  /* Cards — nearly full width, luxury treatment */
+  /* Cards — full width text, always visible on mobile (no scroll animation) */
   .about-page .timeline-entry--left .timeline-card,
   .about-page .timeline-entry--right .timeline-card,
   .about-page .timeline-entry--right .timeline-card.card-right {
     width: 100%;
-    max-width: 100%;
-    padding: 24px;
+    max-width: none;
+    flex: none;
+    padding: 20px;
     text-align: left;
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: none !important;
     border-radius: 18px;
     border: 1px solid rgba(212, 175, 55, 0.22);
     background: linear-gradient(165deg, #121212 0%, #080808 100%);
@@ -671,6 +732,7 @@
   .about-page .timeline-card-body {
     width: 100%;
     max-width: none;
+    flex: none;
     gap: 0.75rem;
   }
 
@@ -678,9 +740,10 @@
   .about-page .timeline-card-body .timeline-card-text,
   .about-page .timeline-card-values,
   .about-page .timeline-card-closing {
+    width: 100%;
+    max-width: none;
     font-size: clamp(0.9375rem, 4.1vw, 1rem);
     line-height: 1.7;
-    max-width: none;
     text-align: left;
   }
 
@@ -694,34 +757,16 @@
     font-size: clamp(4rem, 18vw, 6rem);
   }
 
-  /* GIF sections — full-width premium blocks */
+  /* GIF — full-width block, no reserved empty column */
   .about-page .timeline-gif-wrap {
+    display: block;
     width: 100%;
-    max-width: 100%;
-    margin-inline: auto;
+    max-width: none;
+    margin: 0;
   }
 
   .about-page .timeline-gif-glow {
-    width: 100%;
-    max-width: 100%;
-    height: auto;
-    aspect-ratio: 1;
-    max-height: 360px;
-  }
-
-  .about-page .timeline-gif-container {
-    width: 100%;
-    max-width: 100%;
-    height: auto;
-    min-height: 0;
-    padding: 14px;
-    overflow: hidden;
-    border-radius: 18px;
-    border: 1px solid rgba(212, 175, 55, 0.22);
-    background: linear-gradient(165deg, #121212 0%, #080808 100%);
-    box-shadow:
-      0 16px 40px rgba(0, 0, 0, 0.42),
-      0 0 0 1px rgba(212, 175, 55, 0.06);
+    display: none;
   }
 
   .about-page .timeline-gif-container img {
@@ -736,6 +781,12 @@
 
   .about-page .about-closing {
     padding-block: clamp(3rem, 8vh, 4rem);
+  }
+
+  .about-page .about-closing-inner > * {
+    opacity: 1 !important;
+    transform: none !important;
+    visibility: visible !important;
   }
 
   .about-page.js-ready .timeline-gif-container {

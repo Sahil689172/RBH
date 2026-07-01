@@ -61,7 +61,7 @@
       const img = new Image();
       img.decoding = 'async';
       img.loading = index < 2 ? 'eager' : 'lazy';
-      img.src = `../public2/${name}`;
+      img.src = `/public2/${name}`;
     });
 
     document.querySelectorAll('.timeline-gif-container img').forEach((img) => {
@@ -75,6 +75,17 @@
         img.loading = 'lazy';
       }
 
+      const refreshLayout = () => {
+        ScrollTrigger.refresh(false);
+        syncInitialTimelineState();
+      };
+
+      if (img.complete) {
+        requestAnimationFrame(refreshLayout);
+      } else {
+        img.addEventListener('load', refreshLayout, { once: true });
+      }
+
       img.addEventListener('error', () => {
         const entry = img.closest('.timeline-entry');
         const src = entry?.dataset.gif;
@@ -86,29 +97,61 @@
   }
 
   function syncInitialTimelineState() {
+    if (isMobileViewport()) {
+      timelineEntries.forEach((entry) => {
+        const dot = entry.querySelector('.timeline-dot');
+        const connector = entry.querySelector('.timeline-connector');
+        const card = entry.querySelector('.timeline-card');
+        const year = entry.querySelector('.timeline-year');
+        const gif = entry.querySelector('.timeline-gif-container');
+
+        if (dot) gsap.set(dot, { scale: 1 });
+        if (connector) gsap.set(connector, { scaleX: 1 });
+        if (card) gsap.set(card, { x: 0, y: 0, opacity: 1 });
+        if (year) gsap.set(year, { y: 0, opacity: 1 });
+        if (gif) gsap.set(gif, { x: 0, y: 0, scale: 1, opacity: 1, visibility: 'visible' });
+      });
+      return;
+    }
+
     timelineEntries.forEach((entry) => {
       const trigger = ScrollTrigger.getById(entry.dataset.timelineTriggerId);
       const anim = trigger?.animation;
       const gif = entry.querySelector('.timeline-gif-container');
       if (!trigger || !anim) return;
 
-      if (trigger.isActive) {
-        anim.progress(1);
-        if (gif) startGifFloat(gif);
-      } else {
-        anim.progress(0);
-        if (gif) stopGifFloat(gif);
+      if (trigger.progress > 0.001) {
+        anim.progress(trigger.progress);
+        if (gif) {
+          if (trigger.progress >= 0.9) startGifFloat(gif);
+          else stopGifFloat(gif);
+        }
       }
     });
   }
 
   function refreshScrollTriggers(runInitialSync) {
-    ScrollTrigger.refresh(true);
+    ScrollTrigger.refresh(false);
 
     if (runInitialSync) {
       requestAnimationFrame(() => {
         syncInitialTimelineState();
+        syncClosingRevealState();
       });
+    }
+  }
+
+  function syncClosingRevealState() {
+    const closing = document.querySelector('.about-closing-inner');
+    if (!closing || isMobileViewport()) return;
+
+    const triggers = ScrollTrigger.getAll().filter(
+      (st) => st.trigger === closing,
+    );
+    const st = triggers[0];
+    const anim = st?.animation;
+    if (anim && st.progress > 0.001) {
+      anim.progress(st.progress);
     }
   }
 
@@ -215,7 +258,20 @@
 
     initSpineDraw();
     initTimelineEntries();
+    resetClosingReveal();
     refreshScrollTriggers(true);
+  }
+
+  function resetClosingReveal() {
+    const closing = document.querySelector('.about-closing-inner');
+    if (!closing) return;
+
+    ScrollTrigger.getAll()
+      .filter((st) => st.trigger === closing)
+      .forEach((st) => st.kill());
+
+    gsap.killTweensOf(closing.children);
+    initClosingReveal();
   }
 
   function initTimelineEntries() {
@@ -237,53 +293,36 @@
       timelineEntries.push(entry);
 
       const isMobile = isMobileViewport();
-      const xFrom = isMobile ? 0 : isLeft ? -80 : 80;
-      const connectorOrigin = isMobile || !isLeft ? 'left center' : 'right center';
       const triggerId = `timeline-entry-${index}`;
-      const animDuration = isMobile ? 0.75 : 0.9;
+      const animDuration = 1.35;
 
       entry.dataset.timelineTriggerId = triggerId;
 
       const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-      if (reducedMotion) {
+      if (reducedMotion || isMobile) {
         gsap.set(dot, { scale: 1 });
         gsap.set(connector, { scaleX: 1 });
         gsap.set(card, { x: 0, y: 0, opacity: 1 });
         gsap.set(year, { y: 0, opacity: 1 });
         if (gif) {
           gsap.set(gif, { x: 0, y: 0, scale: 1, opacity: 1, visibility: 'visible' });
-          startGifFloat(gif);
+          if (!reducedMotion) startGifFloat(gif);
         }
         return;
       }
 
       gsap.set(dot, { scale: 0, transformOrigin: 'center center' });
-      gsap.set(connector, { scaleX: 0, transformOrigin: connectorOrigin });
-
-      if (isMobile) {
-        gsap.set(card, { x: 0, y: 44, opacity: 0 });
-        gsap.set(year, { y: 14, opacity: 0 });
-        if (gif) {
-          gsap.set(gif, {
-            x: 0,
-            y: 28,
-            scale: 0.94,
-            opacity: 0,
-            visibility: 'visible',
-          });
-        }
-      } else {
-        gsap.set(card, { x: xFrom, opacity: 0 });
-        gsap.set(year, { y: 14, opacity: 0 });
-        if (gif) {
-          gsap.set(gif, {
-            x: isLeft ? 80 : -80,
-            y: 0,
-            opacity: 1,
-            visibility: 'visible',
-          });
-        }
+      gsap.set(connector, { scaleX: 0, transformOrigin: isLeft ? 'right center' : 'left center' });
+      gsap.set(card, { x: isLeft ? -80 : 80, opacity: 0 });
+      gsap.set(year, { y: 14, opacity: 0 });
+      if (gif) {
+        gsap.set(gif, {
+          x: isLeft ? 80 : -80,
+          y: 0,
+          opacity: 1,
+          visibility: 'visible',
+        });
       }
 
       const tl = gsap.timeline({
@@ -291,66 +330,35 @@
           id: triggerId,
           trigger: entry,
           start: 'top 88%',
-          end: 'bottom 12%',
-          toggleActions: 'play reverse play reverse',
+          end: 'top 38%',
+          scrub: 0.9,
           invalidateOnRefresh: true,
-          onEnter: () => {
-            if (gif) startGifFloat(gif);
-          },
-          onLeave: () => stopGifFloat(gif),
-          onLeaveBack: () => stopGifFloat(gif),
-          onEnterBack: () => {
-            if (gif) startGifFloat(gif);
+          onUpdate(self) {
+            if (!gif) return;
+            if (self.progress >= 0.9) startGifFloat(gif);
+            else stopGifFloat(gif);
           },
         },
       });
 
-      tl.to(dot, { scale: 1, duration: 0.5, ease: 'power3.out' })
-        .to(connector, { scaleX: 1, duration: 0.45, ease: 'power3.out' }, '+=0.1');
+      tl.to(dot, { scale: 1, duration: 0.65, ease: 'power2.out' })
+        .to(connector, { scaleX: 1, duration: 0.55, ease: 'power2.out' }, '+=0.15')
+        .to(card, { x: 0, opacity: 1, duration: animDuration, ease: 'power2.out' }, '+=0.2');
 
-      if (isMobile) {
+      if (gif) {
         tl.to(
-          card,
-          { x: 0, y: 0, opacity: 1, duration: animDuration, ease: 'power3.out' },
-          '+=0.1',
+          gif,
+          {
+            x: 0,
+            y: 0,
+            duration: animDuration,
+            ease: 'power2.out',
+          },
+          '-=0.55',
         );
-
-        if (gif) {
-          tl.to(
-            gif,
-            {
-              x: 0,
-              y: 0,
-              scale: 1,
-              opacity: 1,
-              duration: animDuration,
-              ease: 'power3.out',
-              onComplete: () => startGifFloat(gif),
-              onReverseComplete: () => stopGifFloat(gif),
-            },
-            '-=0.45',
-          );
-        }
-      } else {
-        tl.to(card, { x: 0, opacity: 1, duration: animDuration, ease: 'power3.out' }, '+=0.1');
-
-        if (gif) {
-          tl.to(
-            gif,
-            {
-              x: 0,
-              y: 0,
-              duration: animDuration,
-              ease: 'power3.out',
-              onComplete: () => startGifFloat(gif),
-              onReverseComplete: () => stopGifFloat(gif),
-            },
-            '-=0.75',
-          );
-        }
       }
 
-      tl.to(year, { y: 0, opacity: 1, duration: 0.6, ease: 'power3.out' }, '+=0.1');
+      tl.to(year, { y: 0, opacity: 1, duration: 0.75, ease: 'power2.out' }, '+=0.25');
 
       if (TIMELINE_GIFS[index] && entry.dataset.gif) {
         if (!entry.dataset.gif.endsWith(TIMELINE_GIFS[index])) {
@@ -454,20 +462,34 @@
     const closing = document.querySelector('.about-closing-inner');
     if (!closing) return;
 
-    gsap.set(closing.children, { opacity: 0, y: 24 });
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    gsap.to(closing.children, {
+    if (isMobileViewport() || reducedMotion) {
+      gsap.set(closing.children, { opacity: 1, y: 0, clearProps: 'transform' });
+      return;
+    }
+
+    gsap.set(closing.children, { opacity: 0, y: 28 });
+
+    const reveal = gsap.to(closing.children, {
       opacity: 1,
       y: 0,
-      duration: 0.85,
-      stagger: 0.12,
-      ease: 'power3.out',
+      duration: 1,
+      stagger: 0.18,
+      ease: 'power2.out',
       scrollTrigger: {
         trigger: closing,
         start: 'top 88%',
-        end: 'bottom 12%',
-        toggleActions: 'play reverse play reverse',
+        end: 'top 42%',
+        scrub: 0.9,
+        invalidateOnRefresh: true,
       },
+    });
+
+    requestAnimationFrame(() => {
+      if (reveal.scrollTrigger?.progress > 0.001) {
+        reveal.progress(reveal.scrollTrigger.progress);
+      }
     });
   }
 
