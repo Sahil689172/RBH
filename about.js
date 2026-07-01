@@ -68,6 +68,13 @@
       if (img.dataset.fallbackReady === 'true') return;
       img.dataset.fallbackReady = 'true';
 
+      const entryIndex = TIMELINE_GIFS.findIndex((name) =>
+        img.src.includes(name),
+      );
+      if (entryIndex >= 2) {
+        img.loading = 'lazy';
+      }
+
       img.addEventListener('error', () => {
         const entry = img.closest('.timeline-entry');
         const src = entry?.dataset.gif;
@@ -185,10 +192,30 @@
         trigger: section,
         start: 'top 70%',
         end: 'bottom 85%',
-        scrub: isMobileViewport() ? 0.6 : 1,
+        scrub: isMobileViewport() ? 0.65 : 1,
         invalidateOnRefresh: true,
       },
     });
+  }
+
+  function rebuildTimelineOnResize() {
+    ScrollTrigger.getAll().forEach((trigger) => {
+      const id = trigger.vars?.id;
+      if (typeof id === 'string' && id.startsWith('timeline-entry-')) {
+        trigger.kill();
+      }
+    });
+
+    const spineTween = gsap.getTweensOf('.timeline-spine-line').find(
+      (tween) => tween.scrollTrigger,
+    );
+    if (spineTween?.scrollTrigger) {
+      spineTween.scrollTrigger.kill();
+    }
+
+    initSpineDraw();
+    initTimelineEntries();
+    refreshScrollTriggers(true);
   }
 
   function initTimelineEntries() {
@@ -210,10 +237,8 @@
       timelineEntries.push(entry);
 
       const isMobile = isMobileViewport();
-      const xFrom = isMobile || isLeft ? -80 : 80;
+      const xFrom = isMobile ? 0 : isLeft ? -80 : 80;
       const connectorOrigin = isMobile || !isLeft ? 'left center' : 'right center';
-      const gifXFrom = isMobile ? 0 : isLeft ? 80 : -80;
-      const gifYFrom = isMobile ? 36 : 0;
       const triggerId = `timeline-entry-${index}`;
       const animDuration = isMobile ? 0.75 : 0.9;
 
@@ -224,10 +249,10 @@
       if (reducedMotion) {
         gsap.set(dot, { scale: 1 });
         gsap.set(connector, { scaleX: 1 });
-        gsap.set(card, { x: 0, opacity: 1 });
+        gsap.set(card, { x: 0, y: 0, opacity: 1 });
         gsap.set(year, { y: 0, opacity: 1 });
         if (gif) {
-          gsap.set(gif, { x: 0, y: 0, opacity: 1, visibility: 'visible' });
+          gsap.set(gif, { x: 0, y: 0, scale: 1, opacity: 1, visibility: 'visible' });
           startGifFloat(gif);
         }
         return;
@@ -235,16 +260,30 @@
 
       gsap.set(dot, { scale: 0, transformOrigin: 'center center' });
       gsap.set(connector, { scaleX: 0, transformOrigin: connectorOrigin });
-      gsap.set(card, { x: xFrom, opacity: 0 });
-      gsap.set(year, { y: 14, opacity: 0 });
 
-      if (gif) {
-        gsap.set(gif, {
-          x: gifXFrom,
-          y: gifYFrom,
-          opacity: 1,
-          visibility: 'visible',
-        });
+      if (isMobile) {
+        gsap.set(card, { x: 0, y: 44, opacity: 0 });
+        gsap.set(year, { y: 14, opacity: 0 });
+        if (gif) {
+          gsap.set(gif, {
+            x: 0,
+            y: 28,
+            scale: 0.94,
+            opacity: 0,
+            visibility: 'visible',
+          });
+        }
+      } else {
+        gsap.set(card, { x: xFrom, opacity: 0 });
+        gsap.set(year, { y: 14, opacity: 0 });
+        if (gif) {
+          gsap.set(gif, {
+            x: isLeft ? 80 : -80,
+            y: 0,
+            opacity: 1,
+            visibility: 'visible',
+          });
+        }
       }
 
       const tl = gsap.timeline({
@@ -267,22 +306,48 @@
       });
 
       tl.to(dot, { scale: 1, duration: 0.5, ease: 'power3.out' })
-        .to(connector, { scaleX: 1, duration: 0.45, ease: 'power3.out' }, '+=0.1')
-        .to(card, { x: 0, opacity: 1, duration: animDuration, ease: 'power3.out' }, '+=0.1');
+        .to(connector, { scaleX: 1, duration: 0.45, ease: 'power3.out' }, '+=0.1');
 
-      if (gif) {
+      if (isMobile) {
         tl.to(
-          gif,
-          {
-            x: 0,
-            y: 0,
-            duration: animDuration,
-            ease: 'power3.out',
-            onComplete: () => startGifFloat(gif),
-            onReverseComplete: () => stopGifFloat(gif),
-          },
-          '-=0.75',
+          card,
+          { x: 0, y: 0, opacity: 1, duration: animDuration, ease: 'power3.out' },
+          '+=0.1',
         );
+
+        if (gif) {
+          tl.to(
+            gif,
+            {
+              x: 0,
+              y: 0,
+              scale: 1,
+              opacity: 1,
+              duration: animDuration,
+              ease: 'power3.out',
+              onComplete: () => startGifFloat(gif),
+              onReverseComplete: () => stopGifFloat(gif),
+            },
+            '-=0.45',
+          );
+        }
+      } else {
+        tl.to(card, { x: 0, opacity: 1, duration: animDuration, ease: 'power3.out' }, '+=0.1');
+
+        if (gif) {
+          tl.to(
+            gif,
+            {
+              x: 0,
+              y: 0,
+              duration: animDuration,
+              ease: 'power3.out',
+              onComplete: () => startGifFloat(gif),
+              onReverseComplete: () => stopGifFloat(gif),
+            },
+            '-=0.75',
+          );
+        }
       }
 
       tl.to(year, { y: 0, opacity: 1, duration: 0.6, ease: 'power3.out' }, '+=0.1');
@@ -415,11 +480,20 @@
   refreshScrollTriggers(true);
 
   let resizeTimer;
+  let lastMobileState = isMobileViewport();
   window.addEventListener(
     'resize',
     () => {
       clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(() => refreshScrollTriggers(false), 150);
+      resizeTimer = setTimeout(() => {
+        const mobileNow = isMobileViewport();
+        if (mobileNow !== lastMobileState) {
+          lastMobileState = mobileNow;
+          rebuildTimelineOnResize();
+          return;
+        }
+        refreshScrollTriggers(false);
+      }, 150);
     },
     { passive: true },
   );

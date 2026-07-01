@@ -30,12 +30,71 @@ export function HeroNav({ className = '', activeNav = 'home' }: HeroNavProps) {
   const closeMobile = () => {
     setMobileOpen(false);
     document.body.classList.remove('nav-menu-open');
+    document.documentElement.style.overflow = '';
+    document.body.style.overflow = '';
   };
 
   useEffect(() => {
+    const nav = document.getElementById('nav-links');
+    const navbarInner = document.querySelector('.navbar-inner');
+    const navbarActions = document.querySelector('.navbar-actions');
+    if (!nav || !navbarInner || !navbarActions) return;
+
+    let backdrop = document.getElementById('mobile-nav-backdrop');
+    if (!backdrop) {
+      backdrop = document.createElement('div');
+      backdrop.id = 'mobile-nav-backdrop';
+      backdrop.className = 'mobile-nav-backdrop';
+      backdrop.setAttribute('aria-hidden', 'true');
+    }
+
+    const mq = window.matchMedia('(max-width: 768px)');
+
+    const positionNav = () => {
+      if (mq.matches) {
+        if (backdrop.parentNode !== document.body) {
+          document.body.appendChild(backdrop);
+        }
+        if (nav.parentNode !== document.body) {
+          document.body.appendChild(nav);
+        }
+        return;
+      }
+
+      if (nav.parentNode === document.body) {
+        navbarInner.insertBefore(nav, navbarActions);
+      }
+
+      setMobileOpen(false);
+    };
+
+    positionNav();
+    mq.addEventListener('change', positionNav);
+    backdrop.addEventListener('click', closeMobile);
+
+    return () => {
+      mq.removeEventListener('change', positionNav);
+      backdrop.removeEventListener('click', closeMobile);
+    };
+  }, []);
+
+  useEffect(() => {
+    const backdrop = document.getElementById('mobile-nav-backdrop');
+    const nav = document.getElementById('nav-links');
+
     document.body.classList.toggle('nav-menu-open', mobileOpen);
     document.documentElement.style.overflow = mobileOpen ? 'hidden' : '';
     document.body.style.overflow = mobileOpen ? 'hidden' : '';
+
+    if (backdrop) {
+      backdrop.classList.toggle('open', mobileOpen);
+      backdrop.setAttribute('aria-hidden', String(!mobileOpen));
+    }
+
+    if (nav) {
+      nav.setAttribute('aria-hidden', String(!mobileOpen));
+    }
+
     return () => {
       document.body.classList.remove('nav-menu-open');
       document.documentElement.style.overflow = '';
