@@ -249,3 +249,26 @@
     transform: none;
   }
 }
+
+/* Mobile home — loaded after base rules; must override 60vh / centering gap */
+@media (max-width: 767px) {
+  body[data-page='home'] .home-brands-section {
+    min-height: 0 !important;
+    justify-content: flex-start !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  body[data-page='home'] .home-brands-section .home-section-header {
+    margin-bottom: 0.65rem;
+    padding-top: 0;
+  }
+
+  body[data-page='home'] .home-testimonials-section {
+    padding-top: 2.75rem;
+  }
+
+  body[data-page='home'] .home-trust-section {
+    padding-top: 2.75rem;
+  }
+}

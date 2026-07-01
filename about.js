@@ -233,9 +233,9 @@
       ease: 'none',
       scrollTrigger: {
         trigger: section,
-        start: 'top 70%',
-        end: 'bottom 85%',
-        scrub: isMobileViewport() ? 0.65 : 1,
+        start: 'top 78%',
+        end: 'bottom 12%',
+        scrub: isMobileViewport() ? 0.65 : 2,
         invalidateOnRefresh: true,
       },
     });
@@ -295,6 +295,7 @@
       const isMobile = isMobileViewport();
       const triggerId = `timeline-entry-${index}`;
       const animDuration = 1.35;
+      const timelineScrub = 2.15;
 
       entry.dataset.timelineTriggerId = triggerId;
 
@@ -326,17 +327,18 @@
       }
 
       const tl = gsap.timeline({
+        defaults: { ease: 'none' },
         scrollTrigger: {
           id: triggerId,
           trigger: entry,
-          start: 'top 88%',
-          end: 'top 38%',
-          scrub: 0.9,
+          start: 'top 94%',
+          end: 'top 18%',
+          scrub: timelineScrub,
           invalidateOnRefresh: true,
           onUpdate(self) {
             if (!gif) return;
+            if (self.direction === -1 || self.progress < 0.9) stopGifFloat(gif);
             if (self.progress >= 0.9) startGifFloat(gif);
-            else stopGifFloat(gif);
           },
         },
       });
@@ -479,9 +481,9 @@
       ease: 'power2.out',
       scrollTrigger: {
         trigger: closing,
-        start: 'top 88%',
-        end: 'top 42%',
-        scrub: 0.9,
+        start: 'top 92%',
+        end: 'top 22%',
+        scrub: 2.15,
         invalidateOnRefresh: true,
       },
     });

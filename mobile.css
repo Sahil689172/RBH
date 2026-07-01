@@ -793,18 +793,187 @@
     will-change: transform, opacity;
   }
 
-  /* ── Brands marquee ── */
-  .home-marquee-track {
+  /* ── Mobile home: dock brands into hero black zone below CTAs ── */
+  body[data-page='home'] .pin-spacer {
+    margin-bottom: 0 !important;
+    padding-bottom: 0 !important;
+    min-height: 0 !important;
+  }
+
+  body[data-page='home'] .scroll-hero-root {
+    margin-bottom: 0;
+    padding-bottom: 0;
+  }
+
+  body[data-page='home'] .scroll-hero-pin {
+    margin-bottom: 0;
+    padding-bottom: 0;
+  }
+
+  /* Shoe loop — below Contact Us, above brands dock */
+  body[data-page='home'] .scroll-hero-sticky .hero-mobile-shoe-loop {
+    display: block;
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: calc(0.65rem + env(safe-area-inset-bottom, 0px));
+    z-index: 62;
+    overflow: hidden;
+    pointer-events: none;
+    opacity: 1;
+    mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
+  }
+
+  body[data-page='home'] .hero-mobile-shoe-loop__track {
+    display: flex;
+    width: max-content;
+    animation: heroMobileShoeLoop 50s linear infinite;
+    will-change: transform;
+  }
+
+  body[data-page='home'] .hero-mobile-shoe-loop__row {
+    display: flex;
+    align-items: stretch;
+    flex-shrink: 0;
+  }
+
+  body[data-page='home'] .hero-mobile-shoe-loop__card {
+    flex-shrink: 0;
+    width: 6.25rem;
+    height: 7.75rem;
+    margin-right: 0.65rem;
+    border-radius: 12px;
+    border: 1px solid rgba(212, 175, 55, 0.14);
+    background: #0a0a0a;
+    box-shadow: 0 14px 32px rgba(0, 0, 0, 0.38);
+    overflow: hidden;
+  }
+
+  body[data-page='home'] .hero-mobile-shoe-loop__card img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center;
+  }
+
+  @keyframes heroMobileShoeLoop {
+    from {
+      transform: translate3d(0, 0, 0);
+    }
+    to {
+      transform: translate3d(-50%, 0, 0);
+    }
+  }
+
+  body[data-page='home'] .site-main {
+    margin-top: 0;
+    padding-top: 0;
+    position: relative;
+    z-index: 8;
+    background: #050505;
+  }
+
+  /* While hero is pinned: fill the empty area below Contact Us */
+  body[data-page='home'].hero-brands-dock .home-brands-section {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 60;
+    height: calc(42vh + env(safe-area-inset-bottom, 0px));
+    max-height: calc(42vh + env(safe-area-inset-bottom, 0px));
+    min-height: 0 !important;
+    justify-content: flex-start !important;
+    padding: 0.35rem 0 0 !important;
+    margin: 0 !important;
+    background: linear-gradient(180deg, rgba(5, 5, 5, 0) 0%, #050505 16%);
+    opacity: 1;
+    transform: none;
+    overflow: hidden;
+    box-sizing: border-box;
+  }
+
+  body[data-page='home'].hero-brands-dock .home-marquee-wrap {
+    margin-top: 0.15rem;
+  }
+
+  /* Keep document flow so testimonials do not jump while brands is fixed */
+  body[data-page='home'].hero-brands-dock .site-main::before {
+    content: '';
+    display: block;
+    height: calc(42vh + 7rem);
+  }
+
+  body[data-page='home'] .home-brands-section {
+    min-height: 0 !important;
+    justify-content: flex-start !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    background: #050505;
+    opacity: 1;
+    transform: none;
+    will-change: auto;
+  }
+
+  body[data-page='home'] .home-brands-section .reveal-item {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+
+  body[data-page='home'] .home-brands-section .home-section-header {
+    margin-bottom: 0.65rem;
+    padding-inline: 1.15rem;
+    padding-top: 0;
+  }
+
+  body[data-page='home'] .site-main .home-section-header {
+    margin-bottom: 1.25rem;
+    padding-inline: 1.15rem;
+  }
+
+  body[data-page='home'] .site-main .home-section-label {
+    margin-bottom: 0.35rem;
+  }
+
+  body[data-page='home'] .home-brands-section .home-section-title {
+    font-size: clamp(1.65rem, 6.8vw, 2rem);
+    line-height: 1;
+  }
+
+  body[data-page='home'] .home-brands-section .home-section-label {
+    font-size: 9px;
+    letter-spacing: 0.16em;
+    margin-bottom: 0.25rem;
+  }
+
+  body[data-page='home'] .home-marquee-wrap {
+    margin-top: 0;
+    mask-image: linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent);
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent);
+  }
+
+  body[data-page='home'] .home-marquee-row {
+    gap: 0.55rem;
+    padding-inline: 0.55rem;
+  }
+
+  body[data-page='home'] .home-marquee-track {
     animation-duration: 72s;
   }
 
-  .home-brand-name {
-    font-size: clamp(1.65rem, 7.5vw, 2.35rem);
+  body[data-page='home'] .home-brand-name {
+    font-size: clamp(1.2rem, 5.5vw, 1.7rem);
   }
 
-  .home-marquee-wrap {
-    mask-image: linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent);
-    -webkit-mask-image: linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent);
+  body[data-page='home'] .home-testimonials-section {
+    padding: 2.75rem 0 0;
+  }
+
+  body[data-page='home'] .home-testimonial-carousel {
+    margin-top: 0;
   }
 
   /* ── Testimonials: swipe carousel ── */
@@ -839,15 +1008,11 @@
     width: min(88vw, 320px);
   }
 
-  .home-testimonials-section {
-    padding-bottom: clamp(3rem, 8vh, 4.5rem);
-  }
-
-  .home-testimonial-carousel::after {
+  body[data-page='home'] .home-testimonial-carousel::after {
     content: 'Swipe to read';
     display: block;
     text-align: center;
-    margin-top: 1rem;
+    margin-top: 0.65rem;
     font-size: 0.68rem;
     letter-spacing: 0.18em;
     text-transform: uppercase;
@@ -855,12 +1020,17 @@
   }
 
   /* ── Trust section ── */
-  .home-trust-section {
-    padding-inline: 1.25rem;
+  body[data-page='home'] .home-trust-section {
+    padding: 2.75rem 1.25rem 3rem;
   }
 
-  .home-trust-headline {
+  body[data-page='home'] .home-trust-headline {
     font-size: clamp(2rem, 9vw, 2.75rem);
+    margin-bottom: 0.5rem;
+  }
+
+  body[data-page='home'] .home-trust-subline {
+    margin-bottom: 1.25rem;
   }
 }
 
@@ -943,7 +1113,8 @@
 /* ── Reduced motion on mobile ── */
 @media (max-width: 767px) and (prefers-reduced-motion: reduce) {
   .home-marquee-track,
-  .home-testimonial-track {
+  .home-testimonial-track,
+  body[data-page='home'] .hero-mobile-shoe-loop__track {
     animation: none !important;
   }
 }

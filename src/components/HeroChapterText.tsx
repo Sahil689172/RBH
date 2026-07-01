@@ -5,7 +5,7 @@ type HeroChapterTextProps = {
   chapter: HeroChapter;
 };
 
-export const HeroChapterText = memo(function HeroChapterText({ chapter }: HeroChapterTextProps) {
+function HeroChapterTextComponent({ chapter }: HeroChapterTextProps) {
   return (
     <>
       <div className="hero-text-slot hero-text-slot--heading">
@@ -23,4 +23,7 @@ export const HeroChapterText = memo(function HeroChapterText({ chapter }: HeroCh
       </div>
     </>
   );
-});
+}
+
+export const HeroChapterText = memo(HeroChapterTextComponent);
+export default HeroChapterText;

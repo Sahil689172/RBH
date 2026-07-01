@@ -16,6 +16,13 @@
     <link rel="stylesheet" href="/hero-mobile.css" />
   </head>
   <body data-page="home">
+    <script>
+      (function () {
+        if (window.matchMedia('(max-width: 767px)').matches) {
+          document.body.classList.add('hero-brands-dock');
+        }
+      })();
+    </script>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
