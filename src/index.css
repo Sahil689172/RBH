@@ -129,6 +129,24 @@
 
 .hero-text-stage {
   position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  width: 100%;
+  flex-shrink: 0;
+}
+
+.scroll-hero-brand {
+  width: 100%;
+  text-align: right;
+  margin-bottom: 0.55rem;
+  flex-shrink: 0;
+  opacity: 1;
+  text-shadow: 0 1px 10px rgba(0, 0, 0, 0.55);
+}
+
+.hero-text-stage-inner {
+  position: relative;
   width: 100%;
   height: var(--scroll-hero-text-height);
   overflow: hidden;
@@ -152,12 +170,6 @@
   display: flex;
   justify-content: flex-end;
   flex-shrink: 0;
-}
-
-.hero-text-slot-placeholder {
-  display: block;
-  width: 100%;
-  min-height: 1.1rem;
 }
 
 .hero-text-slot--heading {
@@ -201,8 +213,7 @@
 
 .scroll-hero-root {
   --scroll-hero-text-height: calc(
-    1.1rem + 1.25rem + (clamp(56px, 5vw, 96px) * 0.95 * 2) + 2rem + 28px + 1.75rem +
-      (20px * 1.5 * 3)
+    1.25rem + (clamp(56px, 5vw, 96px) * 0.95 * 2) + 2rem + 28px + 1.75rem + (20px * 1.5 * 3)
   );
 }
 
@@ -240,8 +251,8 @@
 
   .scroll-hero-root {
     --scroll-hero-text-height: calc(
-      1.1rem + 1.25rem + (clamp(2.35rem, 10vw, 3.25rem) * 0.95 * 2) + 2rem +
-        clamp(1.35rem, 5vw, 1.75rem) + 1.75rem + (clamp(1rem, 3.8vw, 1.15rem) * 1.5 * 3)
+      1.25rem + (clamp(2.35rem, 10vw, 3.25rem) * 0.95 * 2) + 2rem + clamp(1.35rem, 5vw, 1.75rem) +
+        1.75rem + (clamp(1rem, 3.8vw, 1.15rem) * 1.5 * 3)
     );
   }
 

@@ -37,6 +37,8 @@ const ROOT_FILES = [
   'about.js',
   'collection.js',
   'collection-catalog.js',
+  'collection-buy.js',
+  'google-sheets-service.js',
   'contact.js',
   ...ROOT_ASSETS,
 ];

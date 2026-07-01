@@ -1,5 +1,4 @@
 export type HeroChapter = {
-  showLabel: boolean;
   heading: string;
   headingAria: string;
   gold: string;
@@ -8,7 +7,6 @@ export type HeroChapter = {
 
 export const HERO_CHAPTERS: HeroChapter[] = [
   {
-    showLabel: true,
     heading: 'Walking With\u00A0You',
     headingAria: 'Walking With You',
     gold: 'Since 1959',
@@ -16,7 +14,6 @@ export const HERO_CHAPTERS: HeroChapter[] = [
       "For over six decades, we've been helping generations take every step with confidence.",
   },
   {
-    showLabel: false,
     heading: 'Footwear For Every Occasion',
     headingAria: 'Footwear For Every Occasion',
     gold: 'From Everyday To Extraordinary',
@@ -24,7 +21,6 @@ export const HERO_CHAPTERS: HeroChapter[] = [
       'From timeless leather shoes to modern sneakers, discover footwear crafted for every journey.',
   },
   {
-    showLabel: false,
     heading: 'Trusted Brands. Genuine Quality.',
     headingAria: 'Trusted Brands. Genuine Quality.',
     gold: 'One Destination',
@@ -32,7 +28,6 @@ export const HERO_CHAPTERS: HeroChapter[] = [
       'Featuring Bata, Campus, Liberty, Red Chief, Lakhani, Abros and many more under one roof.',
   },
   {
-    showLabel: false,
     heading: 'Three Generations Of Trust',
     headingAria: 'Three Generations Of Trust',
     gold: 'Still Walking With You',

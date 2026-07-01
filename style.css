@@ -1064,6 +1064,85 @@ img, canvas {
   gap: clamp(1rem, 2.5vw, 1.75rem);
 }
 
+.collection-catalog-outro {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin-top: clamp(100px, 12vw, 140px);
+  padding-bottom: clamp(1rem, 3vw, 2rem);
+  opacity: 0;
+  transform: translateY(32px);
+  transition:
+    opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.85s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.collection-catalog-outro.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.collection-catalog-outro__divider {
+  width: min(120px, 28vw);
+  height: 1px;
+  margin-bottom: clamp(1.75rem, 3vw, 2.25rem);
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(212, 175, 55, 0.15) 15%,
+    rgba(212, 175, 55, 0.55) 50%,
+    rgba(212, 175, 55, 0.15) 85%,
+    transparent 100%
+  );
+}
+
+.collection-catalog-outro__label {
+  display: block;
+  margin-bottom: clamp(1rem, 2vw, 1.35rem);
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: #d4af37;
+}
+
+.collection-catalog-outro__title {
+  margin: 0 0 clamp(0.75rem, 1.8vw, 1rem);
+  font-family: var(--font-display);
+  font-size: clamp(1.85rem, 4.5vw, 3rem);
+  font-weight: 500;
+  line-height: 1.15;
+  letter-spacing: 0.02em;
+  color: #f5f5f5;
+}
+
+.collection-catalog-outro__subtitle {
+  margin: 0 0 clamp(1rem, 2vw, 1.35rem);
+  font-family: var(--font-display);
+  font-size: clamp(1.1rem, 2.2vw, 1.45rem);
+  font-weight: 500;
+  font-style: italic;
+  color: #d4af37;
+}
+
+.collection-catalog-outro__description {
+  margin: 0;
+  max-width: 700px;
+  font-family: var(--font-body);
+  font-size: clamp(1rem, 1.6vw, 1.125rem);
+  font-weight: 300;
+  line-height: 1.75;
+  color: #a8a8a8;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .collection-catalog-outro {
+    transition: none;
+  }
+}
+
 .leather-catalog-empty {
   grid-column: 1 / -1;
   text-align: center;
@@ -1232,6 +1311,402 @@ img, canvas {
 .leather-product-card:focus-visible .leather-product-card__price {
   color: #f0d878;
   text-shadow: 0 0 18px rgba(212, 175, 55, 0.45);
+}
+
+/* ── Leather Buy Now button ── */
+.leather-buy-now {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 220px;
+  margin-top: 0.35rem;
+  padding: 0.72rem 1.5rem;
+  border-radius: 999px;
+  border: 1px solid var(--gold);
+  background: #050505;
+  color: var(--gold);
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  line-height: 1;
+  cursor: pointer;
+  pointer-events: auto;
+  transition:
+    background-color 250ms ease,
+    color 250ms ease,
+    border-color 250ms ease,
+    box-shadow 250ms ease;
+}
+
+.leather-buy-now:hover,
+.leather-buy-now:focus-visible {
+  background: var(--gold);
+  color: #050505;
+  border-color: var(--gold);
+  outline: none;
+  box-shadow: 0 0 20px rgba(212, 175, 55, 0.28);
+}
+
+/* ── Leather Buy Now order modal ── */
+body.leather-buy-open {
+  overflow: hidden;
+}
+
+.leather-buy-order,
+.leather-buy-success {
+  position: fixed;
+  inset: 0;
+  z-index: 10050;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(1rem, 3vw, 2rem);
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 350ms ease,
+    visibility 350ms ease;
+}
+
+.leather-buy-order.is-open,
+.leather-buy-success.is-open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.leather-buy-order__backdrop,
+.leather-buy-success__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.78);
+  backdrop-filter: blur(6px);
+}
+
+.leather-buy-order__panel,
+.leather-buy-success__panel {
+  position: relative;
+  z-index: 1;
+  width: min(560px, 100%);
+  max-height: min(92dvh, 900px);
+  overflow: auto;
+  border-radius: 20px;
+  border: 1px solid rgba(212, 175, 55, 0.28);
+  background: linear-gradient(165deg, #121212 0%, #060606 100%);
+  box-shadow:
+    0 28px 64px rgba(0, 0, 0, 0.65),
+    0 0 0 1px rgba(212, 175, 55, 0.1);
+  padding: clamp(1.35rem, 3vw, 2rem);
+  transform: scale(0.96);
+  opacity: 0;
+  transition:
+    transform 350ms ease,
+    opacity 350ms ease;
+}
+
+.leather-buy-order.is-open .leather-buy-order__panel,
+.leather-buy-success.is-open .leather-buy-success__panel {
+  transform: scale(1);
+  opacity: 1;
+}
+
+.leather-buy-order__close {
+  position: absolute;
+  top: 0.85rem;
+  right: 0.85rem;
+  width: 2.25rem;
+  height: 2.25rem;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.06);
+  color: #f5f5f5;
+  font-size: 1.35rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: background-color 200ms ease;
+}
+
+.leather-buy-order__close:hover,
+.leather-buy-order__close:focus-visible {
+  background: rgba(212, 175, 55, 0.2);
+  outline: none;
+}
+
+.leather-buy-order__head {
+  text-align: center;
+  margin-bottom: 1.35rem;
+  padding-right: 2rem;
+}
+
+.leather-buy-order__label {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 0.72rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 0.65rem;
+}
+
+.leather-buy-order__title {
+  margin: 0 0 0.5rem;
+  font-family: var(--font-display);
+  font-size: clamp(1.45rem, 3vw, 1.85rem);
+  font-weight: 600;
+  color: #f5f5f5;
+}
+
+.leather-buy-order__product {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: 0.88rem;
+  color: #c8c8c8;
+}
+
+.leather-buy-order__price {
+  margin: 0.35rem 0 0;
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 600;
+  font-style: italic;
+  color: var(--gold);
+}
+
+.leather-buy-order__form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.95rem;
+}
+
+.leather-buy-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.leather-buy-field-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.85rem;
+}
+
+.leather-buy-field label {
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  color: #d8d8d8;
+}
+
+.leather-buy-field label span[aria-hidden='true'] {
+  color: var(--gold);
+}
+
+.leather-buy-optional {
+  color: var(--text-muted);
+  font-weight: 400;
+}
+
+.leather-buy-field input,
+.leather-buy-field textarea,
+.leather-buy-field select {
+  width: 100%;
+  padding: 0.72rem 0.85rem;
+  border-radius: 10px;
+  border: 1px solid rgba(212, 175, 55, 0.22);
+  background: rgba(8, 8, 8, 0.92);
+  color: #f5f5f5;
+  font-family: var(--font-body);
+  font-size: 0.92rem;
+  transition:
+    border-color 200ms ease,
+    box-shadow 200ms ease;
+}
+
+.leather-buy-field input:focus,
+.leather-buy-field textarea:focus,
+.leather-buy-field select:focus {
+  outline: none;
+  border-color: rgba(212, 175, 55, 0.55);
+  box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.12);
+}
+
+.leather-buy-field textarea {
+  resize: vertical;
+  min-height: 4.5rem;
+}
+
+.leather-buy-field select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23d4af37' d='M1 1l5 5 5-5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.85rem center;
+  padding-right: 2rem;
+}
+
+.leather-buy-submit {
+  margin-top: 0.35rem;
+  width: 100%;
+  padding: 0.9rem 1.25rem;
+  border: none;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #d4af37 0%, #b8942d 100%);
+  color: #050505;
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition:
+    transform 200ms ease,
+    box-shadow 200ms ease;
+}
+
+.leather-buy-submit:hover,
+.leather-buy-submit:focus-visible {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 24px rgba(212, 175, 55, 0.35);
+  outline: none;
+}
+
+.leather-buy-submit:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.leather-buy-feedback {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  color: transparent;
+  min-height: 0;
+}
+
+.leather-buy-feedback--error {
+  color: #ff8a8a;
+}
+
+/* ── Leather Buy Now success modal ── */
+.leather-buy-success__panel {
+  text-align: center;
+  width: min(520px, 100%);
+}
+
+.leather-buy-success__icon {
+  width: 3.5rem;
+  height: 3.5rem;
+  margin: 0 auto 1rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--gold);
+  color: var(--gold);
+  font-size: 1.65rem;
+  font-weight: 700;
+  box-shadow: 0 0 24px rgba(212, 175, 55, 0.25);
+}
+
+.leather-buy-success__title {
+  margin: 0 0 1rem;
+  font-family: var(--font-display);
+  font-size: clamp(1.4rem, 3vw, 1.75rem);
+  font-weight: 600;
+  color: #f5f5f5;
+}
+
+.leather-buy-success__message {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  margin-bottom: 1.5rem;
+  text-align: left;
+}
+
+.leather-buy-success__message p {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  line-height: 1.65;
+  color: #c0c0c0;
+}
+
+.leather-buy-success__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.leather-buy-success__btn {
+  width: 100%;
+  padding: 0.85rem 1.25rem;
+  border-radius: 999px;
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition:
+    background-color 250ms ease,
+    color 250ms ease,
+    border-color 250ms ease;
+}
+
+.leather-buy-success__btn--primary {
+  border: none;
+  background: var(--gold);
+  color: #050505;
+}
+
+.leather-buy-success__btn--primary:hover,
+.leather-buy-success__btn--primary:focus-visible {
+  background: #f0d878;
+  outline: none;
+}
+
+.leather-buy-success__btn--secondary {
+  border: 1px solid rgba(212, 175, 55, 0.45);
+  background: transparent;
+  color: var(--gold);
+}
+
+.leather-buy-success__btn--secondary:hover,
+.leather-buy-success__btn--secondary:focus-visible {
+  background: rgba(212, 175, 55, 0.12);
+  outline: none;
+}
+
+@media (max-width: 560px) {
+  .leather-buy-field-row {
+    grid-template-columns: 1fr;
+  }
+
+  .leather-buy-order__panel,
+  .leather-buy-success__panel {
+    border-radius: 16px;
+    padding: 1.15rem;
+  }
+
+  .leather-buy-now {
+    max-width: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .leather-buy-order,
+  .leather-buy-success,
+  .leather-buy-order__panel,
+  .leather-buy-success__panel,
+  .leather-buy-now,
+  .leather-buy-submit {
+    transition: none;
+  }
 }
 
 /* ── Leather gallery modal ── */
@@ -2920,15 +3395,7 @@ body.leather-gallery-open {
     padding-inline: 1rem;
   }
 
-  /* Mobile slide-in menu — see mobile.css */
-
-  .navbar-actions .btn-accent {
-    display: none;
-  }
-
-  .navbar-actions .call-dropdown {
-    display: block;
-  }
+  /* Mobile top bar + drawer — see mobile.css */
 
   .hamburger {
     display: flex;

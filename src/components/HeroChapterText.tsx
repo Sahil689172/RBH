@@ -8,14 +8,6 @@ type HeroChapterTextProps = {
 export const HeroChapterText = memo(function HeroChapterText({ chapter }: HeroChapterTextProps) {
   return (
     <>
-      <div className="hero-text-slot hero-text-slot--label">
-        {chapter.showLabel ? (
-          <p className="hero-lux-label scroll-hero-label">✦ RAHI BOOT HOUSE ✦</p>
-        ) : (
-          <span className="hero-text-slot-placeholder" aria-hidden="true" />
-        )}
-      </div>
-
       <div className="hero-text-slot hero-text-slot--heading">
         <h1 className="hero-lux-heading scroll-hero-heading" aria-label={chapter.headingAria}>
           {chapter.heading}

@@ -38,6 +38,14 @@
   const CARD_TITLE = 'RBH Signature Collection';
   const CARD_SUBTITLE = 'Premium Leather Footwear';
 
+  function productIdFor(product) {
+    return `RBH-LS-${String(product.number).padStart(3, '0')}`;
+  }
+
+  function productNameFor() {
+    return 'Premium Leather Collection';
+  }
+
   function formatPrice(value) {
     return `₹${Number(value).toLocaleString('en-IN')}`;
   }
@@ -182,6 +190,10 @@
       <article
         class="leather-product-card"
         data-product-index="${index}"
+        data-product-id="${escapeHtml(productIdFor(product))}"
+        data-product-folder="${escapeHtml(product.folder)}"
+        data-product-price="${product.price}"
+        data-product-name="${escapeHtml(productNameFor())}"
         tabindex="0"
         role="button"
         aria-label="View ${escapeHtml(CARD_TITLE)}, ${formatPrice(product.price)}"
@@ -204,6 +216,9 @@
               ${renderSizePills()}
             </div>
           </div>
+          <button type="button" class="leather-buy-now" data-buy-now>
+            Buy Now
+          </button>
           <span class="leather-product-card__cta">View Gallery &rarr;</span>
         </div>
       </article>
@@ -328,11 +343,13 @@
 
   function bindEvents() {
     els.grid.addEventListener('click', (event) => {
+      if (event.target.closest('[data-buy-now]')) return;
       openFromCard(event.target.closest('.leather-product-card'));
     });
 
     els.grid.addEventListener('keydown', (event) => {
       if (event.key !== 'Enter' && event.key !== ' ') return;
+      if (event.target.closest('[data-buy-now]')) return;
       const card = event.target.closest('.leather-product-card');
       if (!card) return;
       event.preventDefault();
@@ -445,6 +462,31 @@
     observer.observe(intro);
   }
 
+  function initCatalogOutroReveal() {
+    const outro = document.querySelector('[data-catalog-outro]');
+    if (!outro) return;
+
+    const reveal = () => outro.classList.add('is-visible');
+
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      reveal();
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          reveal();
+          observer.unobserve(entry.target);
+        });
+      },
+      { threshold: 0.12, rootMargin: '0px 0px -40px 0px' },
+    );
+
+    observer.observe(outro);
+  }
+
   async function init() {
     if (!document.querySelector('.collection-page')) return;
 
@@ -476,6 +518,8 @@
 
     renderGrid();
     initCatalogIntroReveal();
+    initCatalogOutroReveal();
+    document.dispatchEvent(new CustomEvent('rbh:catalog-ready'));
   }
 
   if (document.readyState === 'loading') {

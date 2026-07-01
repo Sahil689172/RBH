@@ -3,9 +3,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "predev": "node scripts/generate-leather-products.mjs",
+    "predev": "node scripts/generate-leather-products.mjs && node scripts/build-google-sheets.mjs",
     "dev": "vite",
-    "prebuild": "node scripts/generate-leather-products.mjs",
+    "prebuild": "node scripts/generate-leather-products.mjs && node scripts/build-google-sheets.mjs",
     "build": "vite build && node scripts/copy-static.mjs",
     "preview": "serve dist",
     "serve:static": "serve ."

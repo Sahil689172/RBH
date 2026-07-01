@@ -1,5 +1,5 @@
 /**
- * Contact page — animations & form handling
+ * Contact page — animations
  */
 
 (function () {
@@ -7,37 +7,6 @@
 
   const page = document.querySelector('.contact-page');
   if (!page) return;
-
-  function initForm() {
-    const form = document.getElementById('contact-form');
-    const feedback = document.getElementById('form-feedback');
-    if (!form || !feedback) return;
-
-    form.addEventListener('submit', (e) => {
-      e.preventDefault();
-
-      const name = form.querySelector('#contact-name').value.trim();
-      const phone = form.querySelector('#contact-phone').value.trim();
-      const message = form.querySelector('#contact-message').value.trim();
-
-      if (!name || !phone || !message) {
-        feedback.textContent = 'Please fill in all fields.';
-        feedback.className = 'form-feedback form-feedback--error';
-        return;
-      }
-
-      const waText = encodeURIComponent(
-        `Hello Rahi Boot House,\n\nName: ${name}\nPhone: ${phone}\n\n${message}`
-      );
-      window.open(`https://wa.me/919826270611?text=${waText}`, '_blank', 'noopener,noreferrer');
-
-      feedback.textContent = 'Opening WhatsApp to send your enquiry…';
-      feedback.className = 'form-feedback form-feedback--success';
-      form.reset();
-    });
-  }
-
-  initForm();
 
   function initHeroHoverText() {
     const lines = document.querySelectorAll('.contact-hero-hover-text[data-hover-text]');

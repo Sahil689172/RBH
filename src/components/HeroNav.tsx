@@ -34,7 +34,13 @@ export function HeroNav({ className = '', activeNav = 'home' }: HeroNavProps) {
 
   useEffect(() => {
     document.body.classList.toggle('nav-menu-open', mobileOpen);
-    return () => document.body.classList.remove('nav-menu-open');
+    document.documentElement.style.overflow = mobileOpen ? 'hidden' : '';
+    document.body.style.overflow = mobileOpen ? 'hidden' : '';
+    return () => {
+      document.body.classList.remove('nav-menu-open');
+      document.documentElement.style.overflow = '';
+      document.body.style.overflow = '';
+    };
   }, [mobileOpen]);
 
   useEffect(() => {

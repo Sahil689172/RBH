@@ -289,8 +289,13 @@ export function ScrollFrameHero({ className = '' }: ScrollFrameHeroProps) {
 
           <div className="hero-content-luxury scroll-hero-content">
             <div className="hero-text-stage" aria-live="polite">
-              <div ref={textBlockRef} className="hero-text-block">
-                <HeroChapterText chapter={chapter} />
+              <p className="hero-lux-label scroll-hero-label scroll-hero-brand">
+                RAHI BOOT HOUSE
+              </p>
+              <div className="hero-text-stage-inner">
+                <div ref={textBlockRef} className="hero-text-block">
+                  <HeroChapterText chapter={chapter} />
+                </div>
               </div>
             </div>
 
