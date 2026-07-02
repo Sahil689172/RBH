@@ -252,6 +252,13 @@
     filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.22));
   }
 
+  /* Mobile hamburger menu: force the same premium gold as desktop token. */
+  .navbar-links.open .tubelight-nav-label {
+    background: none;
+    -webkit-text-fill-color: var(--gold);
+    color: var(--gold);
+  }
+
   .tubelight-nav-item.active .tubelight-nav-label,
   .tubelight-nav-item:hover .tubelight-nav-label {
     background: linear-gradient(135deg, #f5e08a 0%, #f0d878 28%, var(--gold) 62%, #d4af37 100%);
