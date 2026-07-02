@@ -39,12 +39,15 @@
 
   function stopGifFloat(gifEl) {
     if (!gifEl) return;
+    if (gifEl.dataset.floating !== 'true') return;
     gsap.killTweensOf(gifEl);
     gsap.set(gifEl, { y: 0 });
+    gifEl.dataset.floating = 'false';
   }
 
   function startGifFloat(gifEl) {
     if (!gifEl) return;
+    if (gifEl.dataset.floating === 'true') return;
     stopGifFloat(gifEl);
 
     gsap.to(gifEl, {
@@ -54,6 +57,7 @@
       yoyo: true,
       repeat: -1,
     });
+    gifEl.dataset.floating = 'true';
   }
 
   function preloadTimelineGifs() {
@@ -361,12 +365,6 @@
       }
 
       tl.to(year, { y: 0, opacity: 1, duration: 0.75, ease: 'power2.out' }, '+=0.25');
-
-      if (TIMELINE_GIFS[index] && entry.dataset.gif) {
-        if (!entry.dataset.gif.endsWith(TIMELINE_GIFS[index])) {
-          console.warn(`Timeline entry ${index + 1}: expected GIF ${TIMELINE_GIFS[index]}`);
-        }
-      }
     });
   }
 

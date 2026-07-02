@@ -233,6 +233,16 @@ export function ScrollFrameHero({ className = '' }: ScrollFrameHeroProps) {
         images[index] = img;
       });
 
+    const idle = () =>
+      new Promise<void>((resolve) => {
+        const cb = () => resolve();
+        if (typeof (window as any).requestIdleCallback === 'function') {
+          (window as any).requestIdleCallback(cb, { timeout: 800 });
+        } else {
+          window.setTimeout(cb, 16);
+        }
+      });
+
     const preload = async () => {
       await loadFrame(0);
       if (cancelled) return;
@@ -241,7 +251,8 @@ export function ScrollFrameHero({ className = '' }: ScrollFrameHeroProps) {
       setFramesReady(true);
       drawFrame(0);
 
-      const batchSize = 16;
+      const mobile = isMobileHeroFrameViewport();
+      const batchSize = mobile ? 8 : 12;
       for (let start = 1; start < FRAME_COUNT; start += batchSize) {
         if (cancelled) return;
         const tasks: Promise<void>[] = [];
@@ -249,6 +260,8 @@ export function ScrollFrameHero({ className = '' }: ScrollFrameHeroProps) {
           tasks.push(loadFrame(i));
         }
         await Promise.all(tasks);
+        // Yield between batches to keep scrolling smooth.
+        await idle();
       }
     };
 
