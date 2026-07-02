@@ -9,7 +9,7 @@
 
   gsap.registerPlugin(ScrollTrigger);
 
-  const TOTAL_FRAMES = 192;
+  const TOTAL_FRAMES = 185;
   const FRAME_PATH = (i) =>
     `/homepage_frames/frame_${String(i).padStart(4, '0')}.jpg`;
 

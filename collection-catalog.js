@@ -94,37 +94,9 @@
     return Boolean(loaded);
   }
 
-  async function fetchFolderImages(product) {
-    if (!product?.folder) return null;
-
-    try {
-      const response = await fetch(
-        `/api/leather-product-images?folder=${encodeURIComponent(product.folder)}`,
-        { cache: 'no-store' },
-      );
-      if (!response.ok) return null;
-      const data = await response.json();
-      return Array.isArray(data.images) ? data.images : null;
-    } catch {
-      return null;
-    }
-  }
-
   function preferA1Thumbnail(images) {
     if (!images?.length) return null;
     return images.find((url) => /\/a1\.[^/]+$/i.test(decodeURIComponent(url))) ?? images[0];
-  }
-
-  async function enrichProductImages(product) {
-    const folderImages = await fetchFolderImages(product);
-    if (folderImages?.length) {
-      product.images = folderImages.slice(0, 3);
-      const thumb = preferA1Thumbnail(product.images);
-      if (thumb) product.thumbnail = thumb;
-      return product.images;
-    }
-
-    return product.images;
   }
 
   async function resolveGalleryImages(product) {
@@ -278,10 +250,8 @@
     if (!product || !product.images?.length) return;
 
     if (!product._galleryResolved) {
-      product.images = await enrichProductImages(product);
-      if (product.images.length < 3) {
-        product.images = await resolveGalleryImages(product);
-      }
+      // Production-safe: rely on catalog JSON image list only.
+      if (product.images.length < 3) product.images = await resolveGalleryImages(product);
       product._galleryResolved = true;
     }
 
@@ -502,16 +472,15 @@
       const data = await response.json();
       products = Array.isArray(data.products) ? data.products : [];
 
-      await Promise.all(
-        products.map(async (product) => {
-          const images = await enrichProductImages(product);
-          if (images?.length) {
-            product.images = images.slice(0, 3);
-            const thumb = preferA1Thumbnail(product.images);
-            if (thumb) product.thumbnail = thumb;
-          }
-        }),
-      );
+      // Production-safe: thumbnails and images come from the generated catalog JSON.
+      // Ensure we keep a stable 3-image gallery preview when possible.
+      products.forEach((product) => {
+        if (Array.isArray(product.images) && product.images.length) {
+          product.images = product.images.slice(0, 3);
+          const thumb = preferA1Thumbnail(product.images);
+          if (thumb) product.thumbnail = thumb;
+        }
+      });
     } catch {
       products = [];
     }

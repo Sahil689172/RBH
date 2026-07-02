@@ -24,12 +24,13 @@ import {
   splitHeroScrollProgress,
 } from '../hero/mobileHeroTail';
 
-const FRAME_COUNT = 192;
+const FRAME_COUNT = 185;
 
 gsap.registerPlugin(ScrollTrigger);
 
 function frameUrl(index: number): string {
-  return `/frames/frame_${String(index + 1).padStart(3, '0')}.jpg`;
+  const clamped = Math.max(0, Math.min(FRAME_COUNT - 1, index));
+  return `/frames/frame_${String(clamped + 1).padStart(3, '0')}.jpg`;
 }
 
 function drawCover(

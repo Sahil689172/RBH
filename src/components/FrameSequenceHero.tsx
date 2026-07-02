@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef } from 'react';
 import gsap from 'gsap';
 
-const FRAME_COUNT = 192;
+const FRAME_COUNT = 185;
 const SCROLL_HEIGHT_VH = 400;
 const SHOE_ANCHOR_Y = 0.625;
 const FINALE_AT = 0.88;
@@ -9,7 +9,8 @@ const FINALE_AT = 0.88;
 const STAGE_COUNT = 4;
 
 function frameUrl(index: number): string {
-  return `/homepage_frames/frame_${String(index + 1).padStart(4, '0')}.jpg`;
+  const clamped = Math.max(0, Math.min(FRAME_COUNT - 1, index));
+  return `/homepage_frames/frame_${String(clamped + 1).padStart(4, '0')}.jpg`;
 }
 
 function clamp(value: number, min: number, max: number): number {
