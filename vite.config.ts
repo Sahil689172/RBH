@@ -27,7 +27,9 @@ const MIME: Record<string, string> = {
   '.mp4': 'video/mp4',
 };
 
-const ROOT_ASSETS = ['i3.png', 'i4.png', 'favicon.svg', 'loader.mp4', 'contact.mp4'];
+// Root-level static assets that must be emitted in production.
+// Note: loader.mp4 is not referenced in the current UI; keep list minimal to avoid missing-asset build issues.
+const ROOT_ASSETS = ['i3.png', 'i4.png', 'favicon.svg', 'contact.mp4'];
 const ROOT_FILES = [
   'style.css',
   'mobile.css',
