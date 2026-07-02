@@ -2,9 +2,23 @@
 
 export const MOBILE_HERO_FRAME_MQ = '(max-width: 767px)';
 
+let cachedNavHeight = 0;
+
 export function isMobileHeroFrameViewport(): boolean {
   if (typeof window === 'undefined') return false;
   return window.matchMedia(MOBILE_HERO_FRAME_MQ).matches;
+}
+
+export function invalidateMobileNavHeightCache(): void {
+  cachedNavHeight = 0;
+}
+
+function getMobileNavHeight(): number {
+  if (cachedNavHeight > 0) return cachedNavHeight;
+  cachedNavHeight =
+    parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--nav-height')) ||
+    56;
+  return cachedNavHeight;
 }
 
 /**
@@ -24,10 +38,7 @@ export function drawMobileHeroFrame(
   const imgH = image.naturalHeight || image.height;
   if (!imgW || !imgH) return;
 
-  const navHeight =
-    typeof window !== 'undefined'
-      ? parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--nav-height')) || 56
-      : 56;
+  const navHeight = typeof window !== 'undefined' ? getMobileNavHeight() : 56;
   const topInset = navHeight + 10;
   const availableHeight = Math.max(height - topInset, height * 0.45);
 

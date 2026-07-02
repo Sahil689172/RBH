@@ -9,7 +9,7 @@ import {
   chapterForProgress,
   HeroTextTransitionController,
 } from './heroTextTransition';
-import { drawMobileHeroFrame, isMobileHeroFrameViewport } from '../hero/mobileFrameDraw';
+import { drawMobileHeroFrame, invalidateMobileNavHeightCache, isMobileHeroFrameViewport } from '../hero/mobileFrameDraw';
 import {
   applyMobileTailVisuals,
   computeMobileTailVisuals,
@@ -25,8 +25,12 @@ import {
 } from '../hero/mobileHeroTail';
 
 const FRAME_COUNT = 185;
+const MOBILE_PRIORITY_FRAMES = 36;
+const MOBILE_PRELOAD_BATCH = 4;
+const DESKTOP_PRELOAD_BATCH = 12;
 
 gsap.registerPlugin(ScrollTrigger);
+ScrollTrigger.config({ limitCallbacks: true });
 
 function frameUrl(index: number): string {
   const clamped = Math.max(0, Math.min(FRAME_COUNT - 1, index));
@@ -70,10 +74,18 @@ export function ScrollFrameHero({ className = '' }: ScrollFrameHeroProps) {
   const frameIndexRef = useRef(-1);
   const rafRef = useRef(0);
   const progressRef = useRef(0);
+  const scrollActiveRef = useRef(false);
+  const scrollIdleTimerRef = useRef(0);
+  const renderScheduledRef = useRef(false);
+  const tailSyncScheduledRef = useRef(false);
+  const lastTailKeyRef = useRef(-1);
+  const lastSequenceProgressRef = useRef(-1);
+  const canvasSizeRef = useRef({ w: 0, h: 0 });
   const scrollTriggerRef = useRef<ScrollTrigger | null>(null);
   const textCtrlRef = useRef<HeroTextTransitionController | null>(null);
   const hoverRevealActiveRef = useRef(true);
   const [framesReady, setFramesReady] = useState(false);
+  const [isMobileViewport, setIsMobileViewport] = useState(() => isMobileHeroFrameViewport());
   const [hoverRevealActive, setHoverRevealActive] = useState(true);
   const [chapterIndex, setChapterIndex] = useState(0);
   const [pinHeightStyle, setPinHeightStyle] = useState(`${DESKTOP_SCROLL_HEIGHT_VH}vh`);
@@ -84,6 +96,14 @@ export function ScrollFrameHero({ className = '' }: ScrollFrameHeroProps) {
     }),
     [],
   );
+
+  const markScrollActive = useCallback(() => {
+    scrollActiveRef.current = true;
+    window.clearTimeout(scrollIdleTimerRef.current);
+    scrollIdleTimerRef.current = window.setTimeout(() => {
+      scrollActiveRef.current = false;
+    }, 180);
+  }, []);
 
   const syncMobileTailVisuals = useCallback(
     (rawProgress: number) => {
@@ -121,6 +141,25 @@ export function ScrollFrameHero({ className = '' }: ScrollFrameHeroProps) {
       );
     },
     [tailElements],
+  );
+
+  const scheduleTailSync = useCallback(
+    (rawProgress: number) => {
+      const split = splitHeroScrollProgress(rawProgress);
+      const tailKey = Math.round(split.tailProgress * 100);
+      const seqKey = Math.round(split.sequenceProgress * 100);
+      const key = tailKey * 1000 + seqKey;
+      if (key === lastTailKeyRef.current) return;
+      lastTailKeyRef.current = key;
+
+      if (tailSyncScheduledRef.current) return;
+      tailSyncScheduledRef.current = true;
+      requestAnimationFrame(() => {
+        tailSyncScheduledRef.current = false;
+        syncMobileTailVisuals(progressRef.current);
+      });
+    },
+    [syncMobileTailVisuals],
   );
 
   const syncHoverReveal = useCallback((atFirstFrame: boolean) => {
@@ -167,10 +206,16 @@ export function ScrollFrameHero({ className = '' }: ScrollFrameHeroProps) {
     const w = sticky.clientWidth;
     const h = sticky.clientHeight;
 
-    canvas.width = Math.floor(w * dpr);
-    canvas.height = Math.floor(h * dpr);
-    canvas.style.width = `${w}px`;
-    canvas.style.height = `${h}px`;
+    const pxW = Math.floor(w * dpr);
+    const pxH = Math.floor(h * dpr);
+
+    if (canvasSizeRef.current.w !== pxW || canvasSizeRef.current.h !== pxH) {
+      canvas.width = pxW;
+      canvas.height = pxH;
+      canvas.style.width = `${w}px`;
+      canvas.style.height = `${h}px`;
+      canvasSizeRef.current = { w: pxW, h: pxH };
+    }
 
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
@@ -189,14 +234,29 @@ export function ScrollFrameHero({ className = '' }: ScrollFrameHeroProps) {
     const targetIndex = Math.round(sequenceProgress * (FRAME_COUNT - 1));
     const frameIndex = resolveFrameIndex(targetIndex, framesRef.current);
 
-    syncHoverReveal(frameIndex === 0);
+    if (!isMobileViewport) {
+      syncHoverReveal(frameIndex === 0);
+    }
 
     if (frameIndex !== frameIndexRef.current) {
       drawFrame(frameIndex);
     }
 
-    textCtrlRef.current?.sync(sequenceProgress);
-  }, [drawFrame, syncHoverReveal, resolveFrameIndex]);
+    const progressKey = Math.round(sequenceProgress * (FRAME_COUNT - 1));
+    if (progressKey !== lastSequenceProgressRef.current) {
+      lastSequenceProgressRef.current = progressKey;
+      textCtrlRef.current?.sync(sequenceProgress);
+    }
+  }, [drawFrame, isMobileViewport, resolveFrameIndex, syncHoverReveal]);
+
+  const scheduleRender = useCallback(() => {
+    if (renderScheduledRef.current) return;
+    renderScheduledRef.current = true;
+    rafRef.current = requestAnimationFrame(() => {
+      renderScheduledRef.current = false;
+      renderFrameForProgress();
+    });
+  }, [renderFrameForProgress]);
 
   useLayoutEffect(() => {
     const block = textBlockRef.current;
@@ -234,15 +294,34 @@ export function ScrollFrameHero({ className = '' }: ScrollFrameHeroProps) {
         images[index] = img;
       });
 
-    const idle = () =>
+    const idle = (timeout = 800) =>
       new Promise<void>((resolve) => {
         const cb = () => resolve();
-        if (typeof (window as any).requestIdleCallback === 'function') {
-          (window as any).requestIdleCallback(cb, { timeout: 800 });
+        if (typeof window.requestIdleCallback === 'function') {
+          window.requestIdleCallback(cb, { timeout });
         } else {
           window.setTimeout(cb, 16);
         }
       });
+
+    const waitForScrollIdle = async () => {
+      while (scrollActiveRef.current && !cancelled) {
+        await idle(1200);
+      }
+    };
+
+    const loadBatch = async (start: number, batchSize: number) => {
+      if (cancelled) return;
+      await waitForScrollIdle();
+      if (cancelled) return;
+
+      const tasks: Promise<void>[] = [];
+      for (let i = start; i < Math.min(start + batchSize, FRAME_COUNT); i += 1) {
+        tasks.push(loadFrame(i));
+      }
+      await Promise.all(tasks);
+      await idle(isMobileHeroFrameViewport() ? 1200 : 800);
+    };
 
     const preload = async () => {
       await loadFrame(0);
@@ -251,18 +330,18 @@ export function ScrollFrameHero({ className = '' }: ScrollFrameHeroProps) {
       framesRef.current = images;
       setFramesReady(true);
       drawFrame(0);
+      scheduleRender();
 
       const mobile = isMobileHeroFrameViewport();
-      const batchSize = mobile ? 8 : 12;
-      for (let start = 1; start < FRAME_COUNT; start += batchSize) {
-        if (cancelled) return;
-        const tasks: Promise<void>[] = [];
-        for (let i = start; i < Math.min(start + batchSize, FRAME_COUNT); i += 1) {
-          tasks.push(loadFrame(i));
-        }
-        await Promise.all(tasks);
-        // Yield between batches to keep scrolling smooth.
-        await idle();
+      const batchSize = mobile ? MOBILE_PRELOAD_BATCH : DESKTOP_PRELOAD_BATCH;
+      const priorityEnd = mobile ? MOBILE_PRIORITY_FRAMES : FRAME_COUNT;
+
+      for (let start = 1; start < priorityEnd; start += batchSize) {
+        await loadBatch(start, batchSize);
+      }
+
+      for (let start = priorityEnd; start < FRAME_COUNT; start += batchSize) {
+        await loadBatch(start, batchSize);
       }
     };
 
@@ -271,7 +350,14 @@ export function ScrollFrameHero({ className = '' }: ScrollFrameHeroProps) {
     return () => {
       cancelled = true;
     };
-  }, [drawFrame]);
+  }, [drawFrame, scheduleRender]);
+
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 767px)');
+    const onChange = () => setIsMobileViewport(mq.matches);
+    mq.addEventListener('change', onChange);
+    return () => mq.removeEventListener('change', onChange);
+  }, []);
 
   useLayoutEffect(() => {
     if (isMobileHeroFrameViewport()) {
@@ -299,10 +385,16 @@ export function ScrollFrameHero({ className = '' }: ScrollFrameHeroProps) {
 
     syncPinHeight();
 
-    window.addEventListener('resize', syncPinHeight, { passive: true });
+    const onResize = () => {
+      invalidateMobileNavHeightCache();
+      canvasSizeRef.current = { w: 0, h: 0 };
+      syncPinHeight();
+    };
+
+    window.addEventListener('resize', onResize, { passive: true });
 
     return () => {
-      window.removeEventListener('resize', syncPinHeight);
+      window.removeEventListener('resize', onResize);
       resetMobileTailVisuals(tailElements());
     };
   }, [tailElements]);
@@ -318,6 +410,22 @@ export function ScrollFrameHero({ className = '' }: ScrollFrameHeroProps) {
 
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     let matchMediaInstance: ReturnType<typeof ScrollTrigger.matchMedia> | null = null;
+    let refreshTimer = 0;
+
+    const debouncedRefresh = () => {
+      window.clearTimeout(refreshTimer);
+      refreshTimer = window.setTimeout(() => {
+        normalizeMobilePinSpacer(sticky);
+        ScrollTrigger.refresh();
+      }, 80);
+    };
+
+    const handleScrollProgress = (progress: number) => {
+      progressRef.current = progress;
+      markScrollActive();
+      scheduleTailSync(progress);
+      scheduleRender();
+    };
 
     if (!reducedMotion) {
       matchMediaInstance = ScrollTrigger.matchMedia({
@@ -332,8 +440,7 @@ export function ScrollFrameHero({ className = '' }: ScrollFrameHeroProps) {
             anticipatePin: 1,
             invalidateOnRefresh: true,
             onUpdate: (self) => {
-              progressRef.current = self.progress;
-              syncMobileTailVisuals(self.progress);
+              handleScrollProgress(self.progress);
             },
           });
 
@@ -369,14 +476,13 @@ export function ScrollFrameHero({ className = '' }: ScrollFrameHeroProps) {
               setMobileBrandsDock(false);
             },
             onUpdate: (self) => {
-              progressRef.current = self.progress;
-              syncMobileTailVisuals(self.progress);
+              handleScrollProgress(self.progress);
             },
           });
 
           normalizeMobilePinSpacer(sticky);
           setMobileBrandsDock(true);
-          ScrollTrigger.refresh();
+          debouncedRefresh();
 
           return () => {
             scrollTriggerRef.current?.kill();
@@ -408,18 +514,17 @@ export function ScrollFrameHero({ className = '' }: ScrollFrameHeroProps) {
       framesRef.current,
     );
     drawFrame(initialFrame);
-    syncHoverReveal(initialFrame === 0);
-
-    const tick = () => {
-      renderFrameForProgress();
-      rafRef.current = requestAnimationFrame(tick);
-    };
+    if (!isMobileViewport) {
+      syncHoverReveal(initialFrame === 0);
+    }
+    scheduleRender();
 
     const onResize = () => {
+      invalidateMobileNavHeightCache();
+      canvasSizeRef.current = { w: 0, h: 0 };
       section.style.height = getScrollPinHeightStyle();
       setPinHeightStyle(getScrollPinHeightStyle());
-      normalizeMobilePinSpacer(sticky);
-      ScrollTrigger.refresh();
+      debouncedRefresh();
       const idx = frameIndexRef.current >= 0 ? frameIndexRef.current : 0;
       drawFrame(idx);
       syncMobileTailVisuals(progressRef.current);
@@ -427,37 +532,32 @@ export function ScrollFrameHero({ className = '' }: ScrollFrameHeroProps) {
 
     const onMobileViewportChange = () => {
       if (!isMobileHeroFrameViewport()) return;
+      invalidateMobileNavHeightCache();
+      canvasSizeRef.current = { w: 0, h: 0 };
       section.style.height = getScrollPinHeightStyle();
       setPinHeightStyle(getScrollPinHeightStyle());
-      normalizeMobilePinSpacer(sticky);
-      ScrollTrigger.refresh();
+      debouncedRefresh();
       const idx = frameIndexRef.current >= 0 ? frameIndexRef.current : 0;
       drawFrame(idx);
       syncMobileTailVisuals(progressRef.current);
     };
 
-    rafRef.current = requestAnimationFrame(tick);
     window.addEventListener('resize', onResize, { passive: true });
     window.visualViewport?.addEventListener('resize', onMobileViewportChange);
     window.addEventListener('orientationchange', onMobileViewportChange);
 
-    const refreshAfterLayout = () => {
-      normalizeMobilePinSpacer(sticky);
-      ScrollTrigger.refresh();
-    };
-
-    ScrollTrigger.refresh();
-    const refreshAfterReveal = window.setTimeout(refreshAfterLayout, 1500);
-    const refreshAfterFrames = window.setTimeout(refreshAfterLayout, 100);
-    void document.fonts?.ready?.then(refreshAfterLayout);
+    debouncedRefresh();
+    const refreshAfterReveal = window.setTimeout(debouncedRefresh, 1500);
+    void document.fonts?.ready?.then(debouncedRefresh);
 
     return () => {
       cancelAnimationFrame(rafRef.current);
+      window.clearTimeout(scrollIdleTimerRef.current);
+      window.clearTimeout(refreshTimer);
       window.removeEventListener('resize', onResize);
       window.visualViewport?.removeEventListener('resize', onMobileViewportChange);
       window.removeEventListener('orientationchange', onMobileViewportChange);
       window.clearTimeout(refreshAfterReveal);
-      window.clearTimeout(refreshAfterFrames);
       matchMediaInstance?.kill();
       scrollTriggerRef.current?.kill();
       scrollTriggerRef.current = null;
@@ -467,7 +567,11 @@ export function ScrollFrameHero({ className = '' }: ScrollFrameHeroProps) {
   }, [
     framesReady,
     drawFrame,
+    isMobileViewport,
+    markScrollActive,
     renderFrameForProgress,
+    scheduleRender,
+    scheduleTailSync,
     resolveFrameIndex,
     syncHoverReveal,
     syncMobileTailVisuals,
@@ -500,7 +604,7 @@ export function ScrollFrameHero({ className = '' }: ScrollFrameHeroProps) {
             aria-hidden="true"
           />
 
-          {framesReady && (
+          {framesReady && !isMobileViewport && (
             <HeroHoverReveal
               containerRef={stickyRef}
               active={hoverRevealActive}

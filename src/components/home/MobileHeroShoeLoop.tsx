@@ -1,3 +1,6 @@
+import { useRef } from 'react';
+import { useVisibilityPause } from '../../hooks/useVisibilityPause';
+
 const SHOE_IMAGES = Array.from({ length: 9 }, (_, index) => ({
   src: `/public3/s${index}.png`,
   alt: `Footwear style ${index + 1}`,
@@ -16,8 +19,12 @@ function ShoeLoopRow({ hidden }: { hidden?: boolean }) {
 }
 
 export function MobileHeroShoeLoop() {
+  const rootRef = useRef<HTMLDivElement>(null);
+
+  useVisibilityPause(rootRef, '.hero-mobile-shoe-loop__track');
+
   return (
-    <div className="hero-mobile-shoe-loop" aria-hidden="true">
+    <div ref={rootRef} className="hero-mobile-shoe-loop" aria-hidden="true">
       <div className="hero-mobile-shoe-loop__track">
         <ShoeLoopRow />
         <ShoeLoopRow hidden />

@@ -1,4 +1,5 @@
 import { Fragment, useEffect, useRef } from 'react';
+import { useVisibilityPause } from '../../hooks/useVisibilityPause';
 
 const BRANDS = [
   'Campus',
@@ -33,6 +34,8 @@ function MarqueeRow({ hidden }: { hidden?: boolean }) {
 
 export function BrandsMarqueeSection() {
   const wrapRef = useRef<HTMLDivElement>(null);
+
+  useVisibilityPause(wrapRef, '.home-marquee-track');
 
   useEffect(() => {
     const wrap = wrapRef.current;

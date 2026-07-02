@@ -144,10 +144,9 @@ export function HeroHoverReveal({ containerRef, active }: HeroHoverRevealProps) 
       if (canvas && ctx) {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
       }
+      return;
     }
-  }, [active]);
 
-  useEffect(() => {
     const tick = (time: number) => {
       const delta = lastTimeRef.current ? time - lastTimeRef.current : 16;
       lastTimeRef.current = time;
@@ -205,7 +204,7 @@ export function HeroHoverReveal({ containerRef, active }: HeroHoverRevealProps) 
     return () => {
       cancelAnimationFrame(rafRef.current);
     };
-  }, [containerRef]);
+  }, [active, containerRef]);
 
   return (
     <>

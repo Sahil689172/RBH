@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import { useVisibilityPause } from '../../hooks/useVisibilityPause';
 
 const TESTIMONIALS = [
   {
@@ -54,6 +55,9 @@ function TestimonialCard({
 
 export function TestimonialsSection() {
   const sectionRef = useRef<HTMLElement>(null);
+  const carouselRef = useRef<HTMLDivElement>(null);
+
+  useVisibilityPause(carouselRef, '.home-testimonial-track');
 
   useEffect(() => {
     const section = sectionRef.current;
@@ -89,7 +93,11 @@ export function TestimonialsSection() {
         </h2>
       </div>
 
-      <div className="home-testimonial-carousel" aria-label="Customer testimonials">
+      <div
+        ref={carouselRef}
+        className="home-testimonial-carousel"
+        aria-label="Customer testimonials"
+      >
         <div className="home-testimonial-track">
           {TESTIMONIALS.map((item) => (
             <TestimonialCard

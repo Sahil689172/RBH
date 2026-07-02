@@ -1227,6 +1227,16 @@
   animation-delay: 0.2s;
 }
 
+@media (max-width: 767px) {
+  .scroll-hero-root.site-reveal-main {
+    animation-delay: 0.1s;
+  }
+
+  .scroll-hero-sticky .hero-lux-actions {
+    animation-delay: 0.36s;
+  }
+}
+
 @keyframes scrollHeroRootReveal {
   to {
     opacity: 1;

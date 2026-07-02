@@ -1,3 +1,10 @@
+.home-below-fold-sentinel {
+  height: 0;
+  width: 100%;
+  pointer-events: none;
+  visibility: hidden;
+}
+
 .home-section-label {
   display: block;
   font-family: 'Inter', system-ui, sans-serif;
