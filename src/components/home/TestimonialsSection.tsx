@@ -55,9 +55,34 @@ function TestimonialCard({
 
 export function TestimonialsSection() {
   const sectionRef = useRef<HTMLElement>(null);
+  const headerRef = useRef<HTMLDivElement>(null);
   const carouselRef = useRef<HTMLDivElement>(null);
 
   useVisibilityPause(carouselRef, '.home-testimonial-track');
+
+  useEffect(() => {
+    const header = headerRef.current;
+    if (!header) return;
+
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reducedMotion) {
+      header.classList.add('revealed');
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          header.classList.add('revealed');
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.12, rootMargin: '0px 0px -8% 0px' },
+    );
+
+    observer.observe(header);
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     const section = sectionRef.current;
@@ -86,7 +111,7 @@ export function TestimonialsSection() {
       className="home-testimonials-section"
       aria-labelledby="home-testimonials-title"
     >
-      <div className="home-section-header reveal-item">
+      <div ref={headerRef} className="home-section-header reveal-item">
         <span className="home-section-label">✦ GENERATIONS OF TRUST ✦</span>
         <h2 id="home-testimonials-title" className="home-section-title">
           What Our Customers Say
