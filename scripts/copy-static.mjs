@@ -11,7 +11,6 @@ const files = [
   'mobile.css',
   'hero-mobile.css',
   'site.js',
-  'landing.js',
   'about.js',
   'collection.js',
   'collection-catalog.js',

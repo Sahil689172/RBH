@@ -80,7 +80,17 @@
     const promise = new Promise((resolve) => {
       const img = new Image();
       img.decoding = 'async';
-      img.onload = () => resolve(src);
+      const done = async () => {
+        if (typeof img.decode === 'function') {
+          try {
+            await img.decode();
+          } catch (_err) {
+            /* ignore */
+          }
+        }
+        resolve(src);
+      };
+      img.onload = () => void done();
       img.onerror = () => resolve(null);
       img.src = src;
     });
@@ -176,6 +186,7 @@
             alt="${escapeHtml(CARD_TITLE)}"
             loading="lazy"
             decoding="async"
+            fetchpriority="low"
           />
         </div>
         <div class="leather-product-card__body">

@@ -35,7 +35,6 @@ const ROOT_FILES = [
   'mobile.css',
   'hero-mobile.css',
   'site.js',
-  'landing.js',
   'about.js',
   'collection.js',
   'collection-catalog.js',
@@ -204,6 +203,13 @@ export default defineConfig({
         main: path.resolve(rootDir, 'index.html'),
         about: path.resolve(rootDir, 'about/index.html'),
         contact: path.resolve(rootDir, 'contact/index.html'),
+        collection: path.resolve(rootDir, 'collection/index.html'),
+      },
+      output: {
+        manualChunks(id) {
+          if (id.includes('node_modules/gsap')) return 'gsap';
+          if (id.includes('node_modules/framer-motion')) return 'framer-motion';
+        },
       },
     },
   },

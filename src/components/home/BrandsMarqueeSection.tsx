@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useRef } from 'react';
+import { Fragment, memo, useEffect, useRef } from 'react';
 import { useVisibilityPause } from '../../hooks/useVisibilityPause';
 
 const BRANDS = [
@@ -19,7 +19,7 @@ const BRANDS = [
   'Lee Cooper',
 ] as const;
 
-function MarqueeRow({ hidden }: { hidden?: boolean }) {
+const MarqueeRow = memo(function MarqueeRow({ hidden }: { hidden?: boolean }) {
   return (
     <div className="home-marquee-row" aria-hidden={hidden}>
       {BRANDS.map((brand) => (
@@ -30,7 +30,7 @@ function MarqueeRow({ hidden }: { hidden?: boolean }) {
       ))}
     </div>
   );
-}
+});
 
 export function BrandsMarqueeSection() {
   const wrapRef = useRef<HTMLDivElement>(null);

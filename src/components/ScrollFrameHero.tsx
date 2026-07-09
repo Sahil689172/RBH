@@ -24,18 +24,15 @@ import {
   splitHeroScrollProgress,
 } from '../hero/mobileHeroTail';
 
-const FRAME_COUNT = 185;
-const MOBILE_PRIORITY_FRAMES = 36;
-const MOBILE_PRELOAD_BATCH = 4;
-const DESKTOP_PRELOAD_BATCH = 12;
+import {
+  FRAME_COUNT,
+  getFrameImages,
+  isFrameDecoded,
+  setFramePreloadScrollPaused,
+} from '../lib/framePreloader';
 
 gsap.registerPlugin(ScrollTrigger);
 ScrollTrigger.config({ limitCallbacks: true });
-
-function frameUrl(index: number): string {
-  const clamped = Math.max(0, Math.min(FRAME_COUNT - 1, index));
-  return `/frames/frame_${String(clamped + 1).padStart(3, '0')}.jpg`;
-}
 
 function drawCover(
   ctx: CanvasRenderingContext2D,
@@ -68,7 +65,6 @@ export function ScrollFrameHero({ className = '' }: ScrollFrameHeroProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const stickyRef = useRef<HTMLDivElement>(null);
   const dimOverlayRef = useRef<HTMLDivElement>(null);
-  const heroContentRef = useRef<HTMLDivElement>(null);
   const textBlockRef = useRef<HTMLDivElement>(null);
   const framesRef = useRef<HTMLImageElement[]>([]);
   const frameIndexRef = useRef(-1);
@@ -99,9 +95,11 @@ export function ScrollFrameHero({ className = '' }: ScrollFrameHeroProps) {
 
   const markScrollActive = useCallback(() => {
     scrollActiveRef.current = true;
+    setFramePreloadScrollPaused(true);
     window.clearTimeout(scrollIdleTimerRef.current);
     scrollIdleTimerRef.current = window.setTimeout(() => {
       scrollActiveRef.current = false;
+      setFramePreloadScrollPaused(false);
     }, 180);
   }, []);
 
@@ -282,73 +280,32 @@ export function ScrollFrameHero({ className = '' }: ScrollFrameHeroProps) {
 
   useEffect(() => {
     let cancelled = false;
-    const images: HTMLImageElement[] = new Array(FRAME_COUNT);
 
-    const loadFrame = (index: number) =>
-      new Promise<void>((resolve) => {
-        const img = new Image();
-        img.decoding = 'async';
-        img.onload = () => resolve();
-        img.onerror = () => resolve();
-        img.src = frameUrl(index);
-        images[index] = img;
-      });
-
-    const idle = (timeout = 800) =>
-      new Promise<void>((resolve) => {
-        const cb = () => resolve();
-        if (typeof window.requestIdleCallback === 'function') {
-          window.requestIdleCallback(cb, { timeout });
-        } else {
-          window.setTimeout(cb, 16);
-        }
-      });
-
-    const waitForScrollIdle = async () => {
-      while (scrollActiveRef.current && !cancelled) {
-        await idle(1200);
-      }
-    };
-
-    const loadBatch = async (start: number, batchSize: number) => {
-      if (cancelled) return;
-      await waitForScrollIdle();
-      if (cancelled) return;
-
-      const tasks: Promise<void>[] = [];
-      for (let i = start; i < Math.min(start + batchSize, FRAME_COUNT); i += 1) {
-        tasks.push(loadFrame(i));
-      }
-      await Promise.all(tasks);
-      await idle(isMobileHeroFrameViewport() ? 1200 : 800);
-    };
-
-    const preload = async () => {
-      await loadFrame(0);
-      if (cancelled) return;
-
-      framesRef.current = images;
+    const tryReady = () => {
+      if (cancelled) return true;
+      framesRef.current = getFrameImages();
+      if (!isFrameDecoded(0)) return false;
       setFramesReady(true);
       drawFrame(0);
       scheduleRender();
-
-      const mobile = isMobileHeroFrameViewport();
-      const batchSize = mobile ? MOBILE_PRELOAD_BATCH : DESKTOP_PRELOAD_BATCH;
-      const priorityEnd = mobile ? MOBILE_PRIORITY_FRAMES : FRAME_COUNT;
-
-      for (let start = 1; start < priorityEnd; start += batchSize) {
-        await loadBatch(start, batchSize);
-      }
-
-      for (let start = priorityEnd; start < FRAME_COUNT; start += batchSize) {
-        await loadBatch(start, batchSize);
-      }
+      return true;
     };
 
-    preload();
+    if (tryReady()) {
+      return () => {
+        cancelled = true;
+      };
+    }
+
+    const timer = window.setInterval(() => {
+      if (tryReady()) {
+        window.clearInterval(timer);
+      }
+    }, 32);
 
     return () => {
       cancelled = true;
+      window.clearInterval(timer);
     };
   }, [drawFrame, scheduleRender]);
 
@@ -614,7 +571,6 @@ export function ScrollFrameHero({ className = '' }: ScrollFrameHeroProps) {
           <div className="hero-text-gradient" aria-hidden="true" />
 
           <div
-            ref={heroContentRef}
             className="hero-content-luxury scroll-hero-content"
           >
             <div className="hero-text-stage" aria-live="polite">

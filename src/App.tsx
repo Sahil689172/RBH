@@ -1,8 +1,11 @@
-import { useState } from 'react';
-import { Hero } from './components/Hero';
+import { Suspense, lazy, useState } from 'react';
 import { HeroNav } from './components/HeroNav';
 import { HomeSections } from './components/home/HomeSections';
 import { Loader } from './components/Loader';
+
+const Hero = lazy(() =>
+  import('./components/Hero').then((module) => ({ default: module.Hero })),
+);
 
 const LOADER_KEY = 'rbh_loader_shown';
 
@@ -42,7 +45,9 @@ export default function App() {
           className={siteReady ? 'site-reveal-nav' : undefined}
           activeNav="home"
         />
-        <Hero className={siteReady ? 'site-reveal-main' : undefined} />
+        <Suspense fallback={null}>
+          <Hero className={siteReady ? 'site-reveal-main' : undefined} />
+        </Suspense>
         <HomeSections />
       </div>
     </>

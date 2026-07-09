@@ -60,41 +60,116 @@
     gifEl.dataset.floating = 'true';
   }
 
-  function preloadTimelineGifs() {
-    TIMELINE_GIFS.forEach((name, index) => {
+  const gifCache = new Map();
+
+  function preloadGif(src) {
+    if (gifCache.has(src)) return gifCache.get(src);
+    const promise = new Promise((resolve) => {
       const img = new Image();
       img.decoding = 'async';
-      img.loading = index < 2 ? 'eager' : 'lazy';
-      img.src = `/public2/${name}`;
+      const done = async () => {
+        if (typeof img.decode === 'function') {
+          try {
+            await img.decode();
+          } catch (_err) {
+            /* ignore decode failures */
+          }
+        }
+        resolve();
+      };
+      img.onload = () => void done();
+      img.onerror = () => resolve();
+      img.src = src;
+    });
+    gifCache.set(src, promise);
+    return promise;
+  }
+
+  function initTimelineGifLazyLoader() {
+    const images = Array.from(
+      document.querySelectorAll('.timeline-gif-container img'),
+    );
+    if (!images.length) return;
+
+    const srcByImg = new Map();
+
+    images.forEach((img) => {
+      const deferred = img.dataset.src;
+      const src = deferred || img.getAttribute('src') || '';
+      if (src) srcByImg.set(img, src);
+      if (deferred) img.removeAttribute('src');
     });
 
-    document.querySelectorAll('.timeline-gif-container img').forEach((img) => {
+    TIMELINE_GIFS.slice(0, 2).forEach((name) => {
+      void preloadGif(`/public2/${name}`);
+    });
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          const img = entry.target;
+          const src = srcByImg.get(img);
+          if (!src) {
+            observer.unobserve(img);
+            return;
+          }
+
+          void preloadGif(src).then(() => {
+            if (!img.src) img.src = src;
+            ScrollTrigger.refresh(false);
+            syncInitialTimelineState();
+          });
+
+          const index = images.indexOf(img);
+          const next = images[index + 1];
+          const nextSrc = next ? srcByImg.get(next) : null;
+          if (nextSrc) void preloadGif(nextSrc);
+
+          observer.unobserve(img);
+        });
+      },
+      { rootMargin: '280px 0px', threshold: 0 },
+    );
+
+    images.forEach((img, index) => {
       if (img.dataset.fallbackReady === 'true') return;
       img.dataset.fallbackReady = 'true';
 
-      const entryIndex = TIMELINE_GIFS.findIndex((name) =>
-        img.src.includes(name),
-      );
-      if (entryIndex >= 2) {
-        img.loading = 'lazy';
+      if (index < 2 && !img.dataset.src) {
+        const src = srcByImg.get(img);
+        if (src) void preloadGif(src);
+        if (img.complete) {
+          requestAnimationFrame(() => {
+            ScrollTrigger.refresh(false);
+            syncInitialTimelineState();
+          });
+        } else {
+          img.addEventListener(
+            'load',
+            () => {
+              ScrollTrigger.refresh(false);
+              syncInitialTimelineState();
+            },
+            { once: true },
+          );
+        }
+        img.addEventListener('error', () => {
+          const entry = img.closest('.timeline-entry');
+          const fallback = entry?.dataset.gif;
+          if (fallback && img.src !== new URL(fallback, window.location.href).href) {
+            img.src = fallback;
+          }
+        });
+        return;
       }
 
-      const refreshLayout = () => {
-        ScrollTrigger.refresh(false);
-        syncInitialTimelineState();
-      };
-
-      if (img.complete) {
-        requestAnimationFrame(refreshLayout);
-      } else {
-        img.addEventListener('load', refreshLayout, { once: true });
-      }
-
+      observer.observe(img);
       img.addEventListener('error', () => {
         const entry = img.closest('.timeline-entry');
-        const src = entry?.dataset.gif;
-        if (src && img.src !== new URL(src, window.location.href).href) {
-          img.src = src;
+        const fallback = entry?.dataset.gif;
+        if (fallback && img.src !== new URL(fallback, window.location.href).href) {
+          img.src = fallback;
         }
       });
     });
@@ -493,7 +568,7 @@
     });
   }
 
-  preloadTimelineGifs();
+  initTimelineGifLazyLoader();
   initHeroFade();
   initSpineDraw();
   initTimelineEntries();

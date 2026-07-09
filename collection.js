@@ -34,10 +34,24 @@
       this.smoothVelocity = 0;
       this.lastTime = performance.now();
       this.scrollThreshold = 5;
+      this.visible = true;
 
       this.duplicateChildren();
+
+      this.observer = new IntersectionObserver(
+        ([entry]) => {
+          this.visible = entry.isIntersecting;
+        },
+        { threshold: 0, rootMargin: '64px 0px' },
+      );
+      this.observer.observe(this.root);
+
       this.tick = this.tick.bind(this);
       requestAnimationFrame(this.tick);
+    }
+
+    destroy() {
+      this.observer?.disconnect();
     }
 
     duplicateChildren() {
@@ -50,6 +64,11 @@
     }
 
     tick(now) {
+      if (!this.visible) {
+        requestAnimationFrame(this.tick);
+        return;
+      }
+
       const delta = Math.min(now - this.lastTime, 64);
       this.lastTime = now;
 
